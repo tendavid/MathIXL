@@ -80,30 +80,27 @@
       gap: 2px;
     }
 
-    .title-block h1 {
+    .title-button {
       margin: 0;
+      padding: 0;
+      background: none;
+      border: none;
       font-size: 1.6rem;
-      font-weight: 700;
-      letter-spacing: 0.02em;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      color: #111827;
+      text-align: left;
+    }
+
+    .title-button:hover {
+      color: #1d4ed8;
     }
 
     .subtitle {
       margin: 0;
       font-size: 0.9rem;
       color: var(--text-muted);
-    }
-
-    .meta-chip {
-      font-size: 0.8rem;
-      padding: 5px 10px;
-      border-radius: 999px;
-      background: var(--accent-soft);
-      color: var(--accent);
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      white-space: nowrap;
     }
 
     main {
@@ -133,6 +130,82 @@
       gap: 12px;
     }
 
+    /* Fun styling for home screen card */
+    .home-card {
+      background: radial-gradient(circle at top left, #fee2e2 0, #fef3c7 35%, #e0f2fe 100%);
+      border: none;
+      box-shadow: 0 14px 32px rgba(30, 64, 175, 0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .home-card::before,
+    .home-card::after {
+      content: "";
+      position: absolute;
+      border-radius: 999px;
+      opacity: 0.18;
+      filter: blur(1px);
+    }
+
+    .home-card::before {
+      width: 140px;
+      height: 140px;
+      background: #f97316;
+      top: -40px;
+      right: -20px;
+    }
+
+    .home-card::after {
+      width: 120px;
+      height: 120px;
+      background: #22c55e;
+      bottom: -50px;
+      left: -20px;
+    }
+
+    .home-card-inner {
+      position: relative;
+      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .home-heading-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .home-heading-main {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .home-heading-note {
+      font-size: 0.85rem;
+      color: #374151;
+    }
+
+    .home-emoji-badge {
+      font-size: 1.4rem;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 999px;
+      padding: 6px 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .home-emoji-badge span {
+      font-size: 0.85rem;
+      color: #4b5563;
+    }
+
     .field-row {
       display: grid;
       grid-template-columns: 1fr;
@@ -155,6 +228,10 @@
     label {
       font-weight: 600;
       color: var(--text-main);
+    }
+
+    .home-card label {
+      text-shadow: 0 1px 2px rgba(255, 255, 255, 0.8);
     }
 
     select,
@@ -191,7 +268,7 @@
     }
 
     .btn-primary {
-      background: var(--accent);
+      background: linear-gradient(90deg, #2563eb, #4f46e5);
       color: #ffffff;
       box-shadow: 0 12px 22px rgba(37, 99, 235, 0.35);
       white-space: nowrap;
@@ -200,7 +277,7 @@
     .btn-primary:hover {
       transform: translateY(-1px);
       box-shadow: 0 14px 26px rgba(37, 99, 235, 0.42);
-      background: #1d4ed8;
+      background: linear-gradient(90deg, #1d4ed8, #4338ca);
     }
 
     .btn-primary:active {
@@ -233,6 +310,11 @@
     .helper-text {
       font-size: 0.8rem;
       color: var(--text-muted);
+    }
+
+    .home-card .helper-text {
+      color: #4b5563;
+      text-shadow: 0 1px 1px rgba(255, 255, 255, 0.8);
     }
 
     /* Quiz view */
@@ -475,7 +557,7 @@
     }
 
     @media (max-width: 480px) {
-      .title-block h1 {
+      .title-button {
         font-size: 1.3rem;
       }
     }
@@ -486,61 +568,73 @@
     <div class="app-container">
       <header class="app-header">
         <div class="title-block">
-          <h1>Math Practice</h1>
-          <p class="subtitle">Singapore-style mastery practice from Grade 1 to Grade 12</p>
-        </div>
-        <div class="meta-chip">
-          <span>Mastery Mode</span>
+          <button id="home-title-btn" class="title-button">Math Practice</button>
+          <p class="subtitle">Math Practice from Grade 1 to Grade 12</p>
         </div>
       </header>
 
       <main>
         <!-- HOME SCREEN -->
         <section id="home-screen" class="screen active">
-          <div class="card">
-            <div class="field-row">
-              <div class="field">
-                <label for="grade-select">Grade</label>
-                <select id="grade-select">
-                  <option value="">Select grade</option>
-                  <option value="1">Grade 1</option>
-                  <option value="2">Grade 2</option>
-                  <option value="3">Grade 3</option>
-                  <option value="4">Grade 4</option>
-                  <option value="5">Grade 5</option>
-                  <option value="6">Grade 6</option>
-                  <option value="7">Grade 7</option>
-                  <option value="8">Grade 8</option>
-                  <option value="9">Grade 9</option>
-                  <option value="10">Grade 10</option>
-                  <option value="11">Grade 11</option>
-                  <option value="12">Grade 12</option>
-                </select>
-              </div>
-
-              <div class="field">
-                <label for="progressive-select">Progressive (Topic)</label>
-                <select id="progressive-select">
-                  <option value="">Select grade first</option>
-                </select>
-                <div class="helper-text">
-                  Each grade has 7 progressives based on Singapore curriculum.
+          <div class="card home-card">
+            <div class="home-card-inner">
+              <div class="home-heading-row">
+                <div>
+                  <div class="home-heading-main">Choose your practice</div>
+                  <div class="home-heading-note">
+                    Pick a grade, topic, and number. Higher numbers = more challenge.
+                  </div>
+                </div>
+                <div class="home-emoji-badge">
+                  🎓
+                  <span>Daily math training</span>
                 </div>
               </div>
 
-              <div class="field">
-                <label for="number-input">Number (1–100)</label>
-                <input id="number-input" type="number" min="1" max="100" placeholder="1–100" />
-                <div class="helper-text">
-                  Higher numbers = more challenging within this progressive.
+              <div class="field-row">
+                <div class="field">
+                  <label for="grade-select">Grade</label>
+                  <select id="grade-select">
+                    <option value="">Select grade</option>
+                    <option value="1">Grade 1</option>
+                    <option value="2">Grade 2</option>
+                    <option value="3">Grade 3</option>
+                    <option value="4">Grade 4</option>
+                    <option value="5">Grade 5</option>
+                    <option value="6">Grade 6</option>
+                    <option value="7">Grade 7</option>
+                    <option value="8">Grade 8</option>
+                    <option value="9">Grade 9</option>
+                    <option value="10">Grade 10</option>
+                    <option value="11">Grade 11</option>
+                    <option value="12">Grade 12</option>
+                  </select>
+                </div>
+
+                <div class="field">
+                  <label for="progressive-select">Progressive (Topic)</label>
+                  <select id="progressive-select">
+                    <option value="">Select grade first</option>
+                  </select>
+                  <div class="helper-text">
+                    Each grade has 7 progressives aligned with US curriculum topics.
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label for="number-input">Number (1–100)</label>
+                  <input id="number-input" type="number" min="1" max="100" placeholder="1–100" />
+                  <div class="helper-text">
+                    Higher numbers = more challenging questions within this topic.
+                  </div>
                 </div>
               </div>
-            </div>
 
-            <div class="actions-row">
-              <button id="start-quiz-btn" class="btn-primary">Start Quiz</button>
+              <div class="actions-row">
+                <button id="start-quiz-btn" class="btn-primary">Start Quiz</button>
+              </div>
+              <div id="home-error" class="feedback error"></div>
             </div>
-            <div id="home-error" class="feedback error"></div>
           </div>
         </section>
 
@@ -666,124 +760,124 @@
     <!-- Correct answer flash -->
     <div id="correct-flash" class="correct-flash">Awesome!</div>
 
-    <!-- Audio (you can add correct.mp3 and result-melody.mp3 in same folder) -->
+    <!-- Audio (optional: add these files in same folder) -->
     <audio id="correct-sound" src="correct.mp3" preload="auto"></audio>
     <audio id="result-sound" src="result-melody.mp3" preload="auto"></audio>
   </div>
 
   <script>
     // -----------------------------
-    // Curriculum & topic mapping
+    // Curriculum & topic mapping (US-style)
     // -----------------------------
 
     const curriculum = {
       1: [
-        { topic: "Numbers to 100", typeKey: "numbers_basic" },
-        { topic: "Addition & Subtraction within 100", typeKey: "add_sub" },
-        { topic: "Patterns & Comparison", typeKey: "patterns_basic" },
-        { topic: "Shapes & Spatial Awareness", typeKey: "shapes_basic" },
+        { topic: "Counting & Comparing Numbers to 120", typeKey: "numbers_basic" },
+        { topic: "Add & Subtract within 20", typeKey: "add_sub" },
+        { topic: "Place Value (Tens & Ones)", typeKey: "add_sub" },
+        { topic: "Shapes & Equal Parts", typeKey: "shapes_basic" },
         { topic: "Length, Time, and Money", typeKey: "measurement_basic" },
-        { topic: "Simple Word Problems", typeKey: "add_sub_word" },
-        { topic: "Mixed Review (Early Skills)", typeKey: "mixed_early" }
+        { topic: "Basic Word Problems (Add/Sub)", typeKey: "add_sub_word" },
+        { topic: "Mixed Review (Grade 1 Skills)", typeKey: "mixed_early" }
       ],
       2: [
-        { topic: "Numbers to 1000", typeKey: "numbers_1000" },
-        { topic: "Addition & Subtraction within 1000", typeKey: "add_sub" },
-        { topic: "Multiplication & Division Concepts", typeKey: "mul_div_basic" },
-        { topic: "Money & Time", typeKey: "measurement_basic" },
-        { topic: "Geometry Basics", typeKey: "shapes_basic" },
-        { topic: "Early Bar Model Problems", typeKey: "bar_basic" },
-        { topic: "Two-step Word Problems", typeKey: "add_sub_word" }
+        { topic: "Place Value to 1000", typeKey: "numbers_1000" },
+        { topic: "Add & Subtract within 1000", typeKey: "add_sub" },
+        { topic: "Intro to Multiplication & Division", typeKey: "mul_div_basic" },
+        { topic: "Time, Money & Measurement", typeKey: "measurement_basic" },
+        { topic: "Shapes & Partitioning", typeKey: "shapes_basic" },
+        { topic: "Two-Step Word Problems", typeKey: "add_sub_word" },
+        { topic: "Mixed Review (Grade 2 Skills)", typeKey: "mixed_early" }
       ],
       3: [
-        { topic: "Multiplication Tables", typeKey: "mul_div_basic" },
-        { topic: "Division Facts", typeKey: "mul_div_basic" },
-        { topic: "Fractions (Basics)", typeKey: "fraction_of_number" },
-        { topic: "Area & Perimeter", typeKey: "area_perimeter" },
-        { topic: "Bar Models (Part–Whole)", typeKey: "bar_basic" },
-        { topic: "Measurement (Mass/Capacity)", typeKey: "measurement_basic" },
+        { topic: "Multiplication & Division Facts", typeKey: "mul_div_basic" },
+        { topic: "Division with Remainders", typeKey: "mul_div_basic" },
+        { topic: "Intro Fractions (Unit Fractions)", typeKey: "fraction_of_number" },
+        { topic: "Area & Perimeter (Rectangles)", typeKey: "area_perimeter" },
+        { topic: "Number Lines & Fractions", typeKey: "fraction_of_number" },
+        { topic: "Measurement (Mass & Capacity)", typeKey: "measurement_basic" },
         { topic: "Multi-Step Word Problems", typeKey: "mixed_primary_word" }
       ],
       4: [
-        { topic: "Fractions (Unlike Denominators)", typeKey: "fraction_add_sub" },
-        { topic: "Decimals (Intro & Operations)", typeKey: "decimals_basic" },
+        { topic: "Fractions (Add/Sub with Like Denominators)", typeKey: "fraction_add_sub" },
+        { topic: "Fractions (Equivalence & Comparison)", typeKey: "fraction_of_number" },
         { topic: "Multi-Digit Multiplication", typeKey: "mul_multi" },
-        { topic: "Long Division", typeKey: "long_division" },
+        { topic: "Long Division (1-Digit Divisors)", typeKey: "long_division" },
         { topic: "Factors & Multiples", typeKey: "factors_multiples" },
-        { topic: "Angles & Geometry Basics", typeKey: "angles_basic" },
-        { topic: "Advanced Bar Model Problems", typeKey: "bar_advanced" }
+        { topic: "Angles & Lines", typeKey: "angles_basic" },
+        { topic: "Word Problems with Fractions", typeKey: "mixed_primary_word" }
       ],
       5: [
-        { topic: "Fractions (Multiply & Divide)", typeKey: "fraction_mul_div" },
-        { topic: "Decimal Operations", typeKey: "decimals_basic" },
-        { topic: "Ratio Basics", typeKey: "ratio_basic" },
-        { topic: "Percentage Basics", typeKey: "percent_basic" },
+        { topic: "Add & Subtract Fractions", typeKey: "fraction_add_sub" },
+        { topic: "Multiply & Divide Fractions", typeKey: "fraction_mul_div" },
+        { topic: "Decimal Place Value & Operations", typeKey: "decimals_basic" },
         { topic: "Volume (Rectangular Prisms)", typeKey: "volume_rect" },
-        { topic: "Rate (Intro)", typeKey: "rate_basic" },
-        { topic: "Complex Word Problems", typeKey: "mixed_primary_word" }
+        { topic: "Intro to Percent", typeKey: "percent_basic" },
+        { topic: "Patterns & Graphing", typeKey: "patterns_basic" },
+        { topic: "Multi-Step Word Problems", typeKey: "mixed_primary_word" }
       ],
       6: [
-        { topic: "Ratio Advanced", typeKey: "ratio_basic" },
-        { topic: "Percentage Advanced", typeKey: "percent_basic" },
-        { topic: "Speed/Time/Distance", typeKey: "rate_basic" },
-        { topic: "Average", typeKey: "average_basic" },
-        { topic: "Algebra Introduction", typeKey: "linear_eq" },
-        { topic: "Geometry (Triangles & Angles)", typeKey: "angles_basic" },
-        { topic: "Hard Word Problems", typeKey: "mixed_primary_word" }
+        { topic: "Ratios & Unit Rates", typeKey: "ratio_basic" },
+        { topic: "Fractions, Decimals, Percents", typeKey: "percent_basic" },
+        { topic: "Expressions & Equations (Intro)", typeKey: "linear_eq" },
+        { topic: "Area, Surface Area, Volume", typeKey: "area_perimeter" },
+        { topic: "Statistics: Data Displays & Measures", typeKey: "stats_basic" },
+        { topic: "Integers & the Number Line", typeKey: "integers_basic" },
+        { topic: "Word Problems (Rates & Ratios)", typeKey: "rate_basic" }
       ],
       7: [
-        { topic: "Negative Numbers & Integer Operations", typeKey: "integers_basic" },
-        { topic: "Algebra Basics (Expressions)", typeKey: "algebra_expr" },
-        { topic: "Linear Equations", typeKey: "linear_eq" },
-        { topic: "Coordinate Geometry (Intro)", typeKey: "coordinate_basic" },
-        { topic: "Geometry (Parallel Lines & Angles)", typeKey: "angles_basic" },
-        { topic: "Area/Volume Advanced", typeKey: "area_perimeter" },
-        { topic: "Algebra Word Problems", typeKey: "linear_eq_word" }
+        { topic: "Operations with Rational Numbers", typeKey: "integers_basic" },
+        { topic: "Algebraic Expressions & Properties", typeKey: "algebra_expr" },
+        { topic: "Linear Equations in One Variable", typeKey: "linear_eq" },
+        { topic: "Proportional Relationships", typeKey: "ratio_basic" },
+        { topic: "Geometry: Angles & Triangles", typeKey: "angles_basic" },
+        { topic: "Probability (Intro)", typeKey: "probability_basic" },
+        { topic: "Word Problems (Algebra & Proportion)", typeKey: "linear_eq_word" }
       ],
       8: [
-        { topic: "Linear Equations Mastery", typeKey: "linear_eq" },
-        { topic: "Simultaneous Equations", typeKey: "simultaneous_eq" },
-        { topic: "Exponents", typeKey: "exponents_basic" },
-        { topic: "Ratio & Rate (Advanced)", typeKey: "ratio_basic" },
-        { topic: "Probability Basics", typeKey: "probability_basic" },
-        { topic: "Similarity & Congruence", typeKey: "similarity_basic" },
-        { topic: "Functions (Intro)", typeKey: "functions_basic" }
+        { topic: "Linear Equations & Systems", typeKey: "linear_eq" },
+        { topic: "Functions & Graphs", typeKey: "functions_basic" },
+        { topic: "Exponents & Scientific Notation", typeKey: "exponents_basic" },
+        { topic: "Pythagorean Theorem", typeKey: "trig_right" },
+        { topic: "Transformations & Congruence", typeKey: "similarity_basic" },
+        { topic: "Volume of Cylinders & Cones", typeKey: "volume_rect" },
+        { topic: "Statistics (Two-Variable Data)", typeKey: "stats_basic" }
       ],
       9: [
-        { topic: "Quadratic Expressions", typeKey: "quadratic_expr" },
-        { topic: "Factoring Techniques", typeKey: "quadratic_factor" },
-        { topic: "Graphing Quadratics (Value at x)", typeKey: "quadratic_value" },
-        { topic: "Inequalities", typeKey: "inequalities_basic" },
-        { topic: "Algebraic Manipulation", typeKey: "algebra_expr" },
-        { topic: "Trigonometry (Intro)", typeKey: "trig_right" },
-        { topic: "Circle Properties", typeKey: "circle_basic" }
+        { topic: "Linear & Quadratic Expressions", typeKey: "quadratic_expr" },
+        { topic: "Factoring Quadratics", typeKey: "quadratic_factor" },
+        { topic: "Solving Quadratic Equations", typeKey: "quadratic_value" },
+        { topic: "Linear Inequalities", typeKey: "inequalities_basic" },
+        { topic: "Intro to Functions", typeKey: "functions_basic" },
+        { topic: "Right Triangle Trigonometry (Intro)", typeKey: "trig_right" },
+        { topic: "Geometry: Circles & Area", typeKey: "circle_basic" }
       ],
       10: [
-        { topic: "Trigonometry Deeper", typeKey: "trig_right" },
-        { topic: "Polynomial Functions", typeKey: "poly_basic" },
-        { topic: "Rational Functions (Simplify)", typeKey: "rational_simplify" },
-        { topic: "Coordinate Geometry (Advanced)", typeKey: "coordinate_basic" },
-        { topic: "Statistics (Basics)", typeKey: "stats_basic" },
-        { topic: "Algebraic Fractions", typeKey: "rational_simplify" },
-        { topic: "Identities & Equations", typeKey: "algebra_expr" }
+        { topic: "Quadratic Functions (Graphs & Roots)", typeKey: "quadratic_value" },
+        { topic: "Polynomials (Add, Subtract, Multiply)", typeKey: "poly_basic" },
+        { topic: "Rational Expressions (Simplify)", typeKey: "rational_simplify" },
+        { topic: "Exponential Functions", typeKey: "exponents_basic" },
+        { topic: "Right Triangle Trigonometry", typeKey: "trig_right" },
+        { topic: "Coordinate Geometry (Lines)", typeKey: "coordinate_basic" },
+        { topic: "Statistics (Normal Ideas)", typeKey: "stats_basic" }
       ],
       11: [
-        { topic: "Exponential Functions", typeKey: "exponents_basic" },
-        { topic: "Logarithmic Functions (Intro)", typeKey: "logs_basic" },
-        { topic: "Quadratic Word Problems", typeKey: "quadratic_value" },
-        { topic: "Composite & Inverse Functions", typeKey: "functions_basic" },
-        { topic: "Sequences & Series", typeKey: "sequences_basic" },
+        { topic: "Exponential & Logarithmic Functions", typeKey: "logs_basic" },
+        { topic: "Advanced Quadratic Applications", typeKey: "quadratic_value" },
+        { topic: "Sequences & Series (Arithmetic/Geometric)", typeKey: "sequences_basic" },
         { topic: "Probability & Combinatorics", typeKey: "probability_basic" },
-        { topic: "Advanced Algebra Problems", typeKey: "algebra_expr" }
+        { topic: "Rational Functions (Advanced)", typeKey: "rational_simplify" },
+        { topic: "Trigonometric Functions (Intro)", typeKey: "trig_right" },
+        { topic: "Algebraic Modeling Word Problems", typeKey: "algebra_expr" }
       ],
       12: [
-        { topic: "Trigonometry Full", typeKey: "trig_right" },
-        { topic: "Limits (Intro)", typeKey: "limits_basic" },
-        { topic: "Differentiation (Basics)", typeKey: "diff_basic" },
+        { topic: "Trigonometric Identities & Equations", typeKey: "trig_right" },
+        { topic: "Limits (Intro idea)", typeKey: "limits_basic" },
+        { topic: "Derivatives (Concept & Basic Rules)", typeKey: "diff_basic" },
         { topic: "Advanced Sequences & Series", typeKey: "sequences_basic" },
-        { topic: "Vectors (Intro)", typeKey: "vectors_basic" },
-        { topic: "Statistics (Variance)", typeKey: "stats_basic" },
-        { topic: "Non-Routine Heuristic Problems", typeKey: "mixed_secondary_challenge" }
+        { topic: "Vectors (Basics)", typeKey: "vectors_basic" },
+        { topic: "Statistics (Variation & Spread)", typeKey: "stats_basic" },
+        { topic: "Non-Routine Algebra/Function Problems", typeKey: "mixed_secondary_challenge" }
       ]
     };
 
@@ -841,7 +935,7 @@
     }
 
     // -----------------------------
-    // Question generation templates
+    // Question templates
     // -----------------------------
 
     function createQuestionObject({
@@ -852,10 +946,8 @@
       grade,
       params
     }) {
-      // params is used to avoid using same numbers in example
       const hint = buildHint(typeKey, grade);
       const { explanation, example } = buildExplanationAndExample(typeKey, grade, params);
-
       return {
         text,
         answer,
@@ -868,73 +960,67 @@
     }
 
     function buildHint(typeKey, grade) {
-      const primary = grade <= 6;
-      const lowerSec = grade >= 7 && grade <= 9;
-      // Basic hints by type
+      const primary = grade <= 5;
+      const middle = grade >= 6 && grade <= 8;
+
       switch (typeKey) {
         case "add_sub":
         case "add_sub_word":
           return primary
-            ? "Think about whether you are putting things together (add) or taking away (subtract)."
-            : "Decide if the situation adds to or subtracts from the starting amount, then calculate.";
+            ? "Think about whether you are putting numbers together (add) or taking some away (subtract)."
+            : "Decide if the situation adds to or subtracts from the starting amount, then calculate step by step.";
         case "mul_div_basic":
           return primary
-            ? "For multiplication, think of equal groups. For division, think of sharing equally."
-            : "Use multiplication for repeated equal groups and division for splitting into equal groups.";
+            ? "Multiplication is equal groups. Division is sharing into equal groups."
+            : "Use multiplication for repeated equal groups and division for splitting into equal parts.";
         case "fraction_of_number":
         case "fraction_mul_div":
           return primary
-            ? "Use the denominator to split into equal parts, then take the number of parts in the numerator."
-            : "First find one part by dividing by the denominator, then multiply by the numerator.";
+            ? "Use the bottom number (denominator) to split into equal parts, then count the top number (numerator) of those parts."
+            : "Divide by the denominator to find one part, then multiply by the numerator.";
         case "decimals_basic":
           return primary
             ? "Line up the decimal points vertically before you add or subtract."
-            : "Align the decimal points and keep track of place value when you operate.";
+            : "Align decimal points and be careful with each place value when operating.";
         case "ratio_basic":
           return primary
-            ? "Add all the parts to get the total number of parts, then find the value of one part."
-            : "Think in units: total parts, one part, then multiply by the needed parts.";
+            ? "Add the ratio parts to find the total number of parts, then find one part."
+            : "Treat the ratio as parts of a whole: total parts, one unit, then scale.";
         case "percent_basic":
           return primary
-            ? "Think of percent as 'out of 100'. Start with easy ones like 10%, 25%, 50%."
-            : "Convert percentage to a fraction or decimal, then multiply by the whole.";
+            ? "Percent means 'out of 100'. Think of easy ones like 10%, 25%, and 50%."
+            : "Rewrite the percent as a fraction or decimal, then multiply by the whole quantity.";
         case "rate_basic":
           return primary
-            ? "Use 'distance = speed × time' and make sure the units match."
-            : "Check which variable you know: distance, speed, or time, then rearrange the formula.";
+            ? "Use 'distance = speed × time'. Make sure the units match."
+            : "Remember: distance = rate × time. Rearrange the formula for what you need.";
         case "linear_eq":
         case "simultaneous_eq":
-          return lowerSec
-            ? "Isolate the unknown by undoing addition/subtraction first, then multiplication/division."
-            : "Use inverse operations to move terms across the equals sign step by step.";
+          return middle
+            ? "Undo what is happening to the variable, one step at a time, on both sides of the equation."
+            : "Use inverse operations to isolate the variable and keep the equation balanced.";
         case "trig_right":
-          return "Identify the opposite, adjacent, and hypotenuse sides, then choose sin, cos, or tan accordingly.";
+          return "Label the opposite, adjacent, and hypotenuse sides, then choose sin, cos, or tan using SOH-CAH-TOA.";
         default:
           return primary
-            ? "Read the question slowly, underline key numbers, and decide what the question is asking."
+            ? "Read the question slowly, circle the important numbers, and decide what the question is asking you to find."
             : "Identify what is known, what is unknown, and which relationship connects them.";
       }
     }
 
     function buildExplanationAndExample(typeKey, grade, params) {
-      const primary = grade <= 6;
-      const lowerSec = grade >= 7 && grade <= 9;
-      const upperSec = grade >= 10;
+      const primary = grade <= 5;
+      const middle = grade >= 6 && grade <= 8;
+      const upper = grade >= 9;
 
       let explanation = "";
       let example = "";
 
-      // We'll pick different numbers from params to avoid same question
-      function differentSimplePair() {
-        // generic simple pair, not using params
-        return { a: 18, b: 7 };
-      }
-
       switch (typeKey) {
         case "add_sub": {
           explanation = primary
-            ? "When we add, we join quantities together. When we subtract, we find how much is left or how much more one quantity is than another."
-            : "Addition combines quantities while subtraction measures difference or what remains. Choose the operation that matches the situation, then calculate carefully.";
+            ? "When we add, we put amounts together. When we subtract, we find how much is left or how much bigger one number is than another."
+            : "Addition combines quantities while subtraction measures difference or remaining amount. Choose the operation that matches the story, then compute carefully.";
           const a = 27, b = 15;
           example =
             "Example (step by step):\n" +
@@ -942,188 +1028,184 @@
             "1. Subtract the ones: 7 − 5 = 2.\n" +
             "2. Subtract the tens: 2 tens − 1 ten = 1 ten.\n" +
             "3. So 27 − 15 = 12.\n" +
-            "This is how we subtract by place value.";
+            "This uses place value to subtract.";
           break;
         }
         case "mul_div_basic": {
           explanation = primary
-            ? "Multiplication is repeated addition of equal groups. Division is sharing a total into equal groups or finding how many groups there are."
-            : "Use multiplication when you have equal groups combined, and division when you partition a total into equal groups.";
+            ? "Multiplication is like 'groups of'. Division is sharing or splitting into equal groups."
+            : "Use multiplication when you are combining equal groups, and division when you partition a total into equal groups.";
           const groups = 4, each = 6;
           example =
             "Example (step by step):\n" +
-            "There are 4 groups with 6 apples in each group. How many apples are there in total?\n" +
-            "1. We have 4 equal groups of 6.\n" +
+            "There are 4 groups with 6 apples in each group. How many apples are there?\n" +
+            "1. There are 4 equal groups of 6.\n" +
             "2. Multiply: 4 × 6.\n" +
             "3. 4 × 6 = 24.\n" +
-            "This is how we use multiplication to count equal groups.";
+            "So there are 24 apples in all.";
           break;
         }
         case "fraction_of_number": {
           explanation = primary
-            ? "To find a fraction of a number, we first split the whole into equal parts using the denominator. Then we take as many parts as the numerator tells us."
-            : "To calculate a fraction of a quantity, divide the whole by the denominator to get one unit, then multiply that unit by the numerator.";
+            ? "To find a fraction of a number, use the bottom number to split the whole into equal parts, then take as many parts as the top number says."
+            : "To calculate a fraction of a quantity, divide the whole by the denominator, then multiply by the numerator.";
           const whole = 24, num = 3, den = 4;
           example =
             "Example (step by step):\n" +
             "We want to find 3/4 of 24.\n" +
             "1. The denominator 4 means we split 24 into 4 equal parts.\n" +
             "2. 24 ÷ 4 = 6, so 1 part is 6.\n" +
-            "3. The numerator 3 means we take 3 of these parts.\n" +
+            "3. The numerator 3 means we take 3 of those parts.\n" +
             "4. 3 × 6 = 18.\n" +
-            "This is the method for finding a fraction of a number.";
+            "So 3/4 of 24 is 18.";
           break;
         }
         case "fraction_mul_div": {
           explanation = primary
-            ? "When multiplying fractions, multiply the numerators together and the denominators together. When dividing by a fraction, we multiply by its 'flip' (reciprocal)."
-            : "To multiply fractions, multiply across numerators and denominators. To divide by a fraction, multiply by the reciprocal.";
+            ? "To multiply fractions, multiply the top numbers together and the bottom numbers together. To divide by a fraction, we multiply by its flip (reciprocal)."
+            : "For multiplication of fractions, multiply numerators and denominators. For division, multiply by the reciprocal of the divisor.";
           example =
             "Example (step by step):\n" +
-            "We want to multiply 2/3 by 5/4.\n" +
+            "Multiply 2/3 by 5/4.\n" +
             "1. Multiply the numerators: 2 × 5 = 10.\n" +
             "2. Multiply the denominators: 3 × 4 = 12.\n" +
             "3. The result is 10/12.\n" +
-            "4. Simplify 10/12 to 5/6 by dividing top and bottom by 2.\n" +
-            "This is the method for multiplying fractions.";
+            "4. Simplify 10/12 to 5/6 by dividing both by 2.\n" +
+            "That is how we multiply and simplify fractions.";
           break;
         }
         case "decimals_basic": {
           explanation = primary
-            ? "With decimals, each place to the right is ten times smaller. When we add or subtract, we line up the decimal points so the places match."
-            : "Think of decimals as fractions with denominators of 10, 100, or 1000. Align decimal points when adding or subtracting so corresponding place values line up.";
+            ? "With decimals, each place to the right is ten times smaller. When we add or subtract, we line up the decimal points so the digits match in place value."
+            : "Think of decimals as tenths, hundredths, and thousandths. Align decimal points when adding or subtracting to keep place values correct.";
           example =
             "Example (step by step):\n" +
-            "We want to add 3.4 and 1.75.\n" +
+            "Add 3.4 and 1.75.\n" +
             "1. Line up the decimal points:\n" +
             "   3.40\n" +
             " + 1.75\n" +
-            "2. Add the hundredths: 0 + 5 = 5.\n" +
-            "3. Add the tenths: 4 + 7 = 11, write 1 and carry 1.\n" +
-            "4. Add the ones: 3 + 1 + 1 (carried) = 5.\n" +
+            "2. Add hundredths: 0 + 5 = 5.\n" +
+            "3. Add tenths: 4 + 7 = 11. Write 1 and carry 1.\n" +
+            "4. Add ones: 3 + 1 + 1 (carried) = 5.\n" +
             "5. The answer is 5.15.\n" +
-            "This is how we add decimals carefully.";
+            "So 3.4 + 1.75 = 5.15.";
           break;
         }
         case "ratio_basic": {
           explanation = primary
-            ? "Ratios compare parts. We add all the parts to get the total number of parts, then find the value of one part and multiply."
-            : "Think in units: add the ratio parts to find total parts, divide the whole by total parts to get one unit, then multiply by however many parts you need.";
+            ? "Ratios compare parts. We can add the parts to get the total, find one part, then work out each group."
+            : "Treat the ratio as parts of a whole. First find the value of one part, then scale that value to each part in the ratio.";
           example =
             "Example (step by step):\n" +
-            "In a bag, the ratio of red to blue beads is 1 : 3. There are 40 beads altogether.\n" +
-            "1. Add the parts: 1 + 3 = 4 parts in total.\n" +
-            "2. Find 1 part: 40 ÷ 4 = 10.\n" +
-            "3. Red beads = 1 part, so 10 red beads.\n" +
-            "4. Blue beads = 3 parts, so 3 × 10 = 30 blue beads.\n" +
-            "This is how we use ratios to split a total.";
+            "In a bag, the ratio of red to blue beads is 1 : 3. There are 40 beads total.\n" +
+            "1. Total parts = 1 + 3 = 4.\n" +
+            "2. One part = 40 ÷ 4 = 10.\n" +
+            "3. Red beads = 1 part = 10.\n" +
+            "4. Blue beads = 3 parts = 3 × 10 = 30.\n" +
+            "So there are 10 red beads and 30 blue beads.";
           break;
         }
         case "percent_basic": {
           explanation = primary
-            ? "Percent means 'out of 100'. For simple percentages like 10%, 25%, or 50%, we can use easy fraction ideas."
-            : "Convert the percent to a fraction or decimal, then multiply by the whole. For example, 25% is 1/4 and 10% is 0.1.";
+            ? "Percent means 'out of 100'. We can use friendly fractions for 25%, 50%, and 10%."
+            : "To find a percentage of a quantity, rewrite the percentage as a fraction or decimal and multiply by the whole.";
           example =
             "Example (step by step):\n" +
-            "We want to find 25% of 80.\n" +
-            "1. 25% means 25 out of 100, which is the same as 1/4.\n" +
+            "Find 25% of 80.\n" +
+            "1. 25% means 25 out of 100, which is 1/4.\n" +
             "2. Find 1/4 of 80: 80 ÷ 4 = 20.\n" +
             "3. So 25% of 80 is 20.\n" +
-            "This is how we convert percent to a fraction and use it.";
+            "This uses the fraction view of percent.";
           break;
         }
         case "rate_basic": {
           explanation = primary
-            ? "For speed, distance, and time, we use the relationship: distance = speed × time. We can rearrange this to find the missing value."
-            : "Use the formula distance = speed × time. To find speed, divide distance by time. To find time, divide distance by speed.";
+            ? "For speed, distance, and time, the rule is: distance = speed × time."
+            : "Use d = rt. To find speed, divide distance by time. To find time, divide distance by speed.";
           example =
             "Example (step by step):\n" +
-            "A car travels at 60 km/h for 2 hours. How far does it go?\n" +
+            "A car drives at 60 miles per hour for 2 hours. How far does it go?\n" +
             "1. Use distance = speed × time.\n" +
-            "2. Substitute: distance = 60 × 2.\n" +
-            "3. Calculate: 60 × 2 = 120.\n" +
-            "4. The car travels 120 km.\n" +
-            "This is how we use the speed formula.";
+            "2. Plug in: distance = 60 × 2.\n" +
+            "3. Distance = 120 miles.\n" +
+            "The car travels 120 miles.";
           break;
         }
         case "linear_eq": {
-          explanation = lowerSec || upperSec
-            ? "To solve a linear equation, we isolate the variable by applying inverse operations to both sides. Undo addition/subtraction first, then multiplication/division."
-            : "Treat both sides of the equation the same. Whatever you do to one side, do to the other, so the balance is kept.";
+          explanation = middle || upper
+            ? "To solve a linear equation, undo operations in reverse order using inverse operations on both sides of the equation."
+            : "Whatever you do to one side of the equation, do the same to the other side to keep it balanced.";
           example =
             "Example (step by step):\n" +
             "Solve 3x + 5 = 20.\n" +
-            "1. Undo +5 by subtracting 5 from both sides: 3x = 15.\n" +
-            "2. Undo ×3 by dividing both sides by 3: x = 15 ÷ 3.\n" +
+            "1. Subtract 5 from both sides: 3x = 15.\n" +
+            "2. Divide both sides by 3: x = 15 ÷ 3.\n" +
             "3. x = 5.\n" +
-            "This shows how we undo operations step by step.";
+            "Check: 3(5) + 5 = 15 + 5 = 20 ✔";
           break;
         }
         case "simultaneous_eq": {
           explanation =
-            "Simultaneous equations are solved by finding a value of the variables that works in both equations. Common methods are substitution and elimination.";
+            "A system of equations is solved by finding a value for each variable that makes all the equations true. Common methods are substitution and elimination.";
           example =
             "Example (step by step):\n" +
             "Solve the system:\n" +
             "  x + y = 10\n" +
             "  x − y = 2\n" +
-            "1. Add the two equations: (x + y) + (x − y) = 10 + 2.\n" +
+            "1. Add the equations: (x + y) + (x − y) = 10 + 2.\n" +
             "2. This gives 2x = 12.\n" +
             "3. Divide by 2: x = 6.\n" +
-            "4. Substitute x = 6 into x + y = 10: 6 + y = 10.\n" +
-            "5. y = 4.\n" +
-            "This is the elimination method.";
+            "4. Substitute x = 6 into x + y = 10: 6 + y = 10 → y = 4.\n" +
+            "So the solution is (x, y) = (6, 4).";
           break;
         }
         case "trig_right": {
           explanation =
-            "In a right triangle, sine, cosine, and tangent relate angles to side lengths. SOH-CAH-TOA reminds us which sides to use for each ratio.";
+            "In a right triangle, sine, cosine, and tangent connect angles to side lengths. SOH-CAH-TOA reminds you which sides go with sin, cos, and tan.";
           example =
             "Example (step by step):\n" +
             "In a right triangle, the hypotenuse is 10 cm and the side opposite angle A is 6 cm. Find sin A.\n" +
             "1. Identify opposite side and hypotenuse.\n" +
             "2. Use sin A = opposite ÷ hypotenuse.\n" +
             "3. sin A = 6 ÷ 10 = 0.6.\n" +
-            "This shows how we use the sine ratio.";
+            "So sin A = 0.6.";
           break;
         }
         case "average_basic": {
           explanation = primary
-            ? "The average (mean) is found by adding all the values and then dividing by how many there are."
-            : "To find the mean, sum the data points and divide by the count. This gives a central value.";
+            ? "The average (mean) is all the numbers added together, divided by how many numbers there are."
+            : "To find the mean of a data set, sum all the values and divide by the number of data points.";
           example =
             "Example (step by step):\n" +
             "The numbers are 4, 7, and 9. Find the average.\n" +
             "1. Add them: 4 + 7 + 9 = 20.\n" +
             "2. There are 3 numbers.\n" +
             "3. Divide: 20 ÷ 3 ≈ 6.67.\n" +
-            "This is how we compute the mean.";
+            "So the average is about 6.67.";
           break;
         }
         case "integers_basic": {
           explanation =
-            "Negative numbers are values less than zero. When adding and subtracting integers, think about movement along a number line or use sign rules.";
+            "Negative numbers are less than zero. When adding and subtracting integers, think of moving left and right on a number line or use sign rules.";
           example =
             "Example (step by step):\n" +
-            "Calculate −3 + 7.\n" +
+            "Compute −3 + 7.\n" +
             "1. Start at −3 on the number line.\n" +
-            "2. Adding 7 means move 7 units to the right.\n" +
-            "3. You land at 4.\n" +
-            "So −3 + 7 = 4.\n" +
-            "This is how integer addition works on a number line.";
+            "2. Move 7 steps to the right (adding 7).\n" +
+            "3. You land on 4.\n" +
+            "So −3 + 7 = 4.";
           break;
         }
         default: {
           explanation = primary
-            ? "Focus on what the question is asking, identify the important numbers, and choose an operation that fits the situation."
-            : "Identify known quantities, unknowns, and relationships. Translate the situation into an equation or structured plan, then solve step by step.";
+            ? "Look for what the question is asking you to find, circle the key numbers, then choose the operation that fits (add, subtract, multiply, or divide)."
+            : "Identify knowns and unknowns, set up an equation or plan, and solve it step by step.";
           example =
             "Example (step by step):\n" +
-            "A student reads 12 pages on Monday and 15 pages on Tuesday. How many pages in total?\n" +
-            "1. Identify the operation: we combine two amounts, so we add.\n" +
-            "2. Add 12 and 15.\n" +
-            "3. 12 + 15 = 27.\n" +
-            "This is how we convert a story into a calculation.";
+            "A student reads 12 pages on Monday and 15 pages on Tuesday. How many pages is that in all?\n" +
+            "1. We are putting two amounts together, so we add.\n" +
+            "2. 12 + 15 = 27.\n" +
+            "So the student read 27 pages total.";
         }
       }
 
@@ -1131,15 +1213,12 @@
     }
 
     // -----------------------------
-    // Simple question generators
-    // (Not full Singapore coverage,
-    //  but structured and extendable)
+    // Simple question generators (language varies with grade)
     // -----------------------------
 
     function generateQuestion(grade, progressiveIndex, number, typeKey) {
       const tier = getDifficultyTier(number);
 
-      // We'll focus on integer answers, numeric input only.
       switch (typeKey) {
         case "add_sub":
         case "add_sub_word":
@@ -1169,9 +1248,14 @@
         case "trig_right":
           return generateTrigQuestion(grade, tier);
         default:
-          // Fallback: simple add/sub
           return generateAddSubQuestion(grade, tier);
       }
+    }
+
+    function gradeStyle(grade, basicPrompt, middlePrompt, highPrompt) {
+      if (grade <= 5) return basicPrompt;
+      if (grade <= 8) return middlePrompt;
+      return highPrompt;
     }
 
     function generateAddSubQuestion(grade, tier) {
@@ -1188,12 +1272,24 @@
       const op = Math.random() < 0.5 ? "+" : "-";
       let text, answer;
       if (op === "+") {
-        text = `Compute: ${a} + ${b}`;
+        const phrase = gradeStyle(
+          grade,
+          `What is ${a} + ${b}?`,
+          `Find the value of ${a} + ${b}.`,
+          `Evaluate ${a} + ${b}.`
+        );
+        text = phrase;
         answer = a + b;
       } else {
         const bigger = Math.max(a, b);
         const smaller = Math.min(a, b);
-        text = `Compute: ${bigger} - ${smaller}`;
+        const phrase = gradeStyle(
+          grade,
+          `What is ${bigger} - ${smaller}?`,
+          `Find the value of ${bigger} - ${smaller}.`,
+          `Evaluate ${bigger} - ${smaller}.`
+        );
+        text = phrase;
         answer = bigger - smaller;
       }
 
@@ -1221,14 +1317,28 @@
       const b = randomInt(2, maxFactor);
       const useMult = Math.random() < 0.6;
       let text, answer;
+
       if (useMult) {
-        text = `Compute: ${a} × ${b}`;
+        const phrase = gradeStyle(
+          grade,
+          `What is ${a} × ${b}?`,
+          `Find the product of ${a} and ${b}.`,
+          `Evaluate ${a} · ${b}.`
+        );
+        text = phrase;
         answer = a * b;
       } else {
         const product = a * b;
-        text = `Compute: ${product} ÷ ${a}`;
+        const phrase = gradeStyle(
+          grade,
+          `What is ${product} ÷ ${a}?`,
+          `Find the value of ${product} ÷ ${a}.`,
+          `Evaluate ${product} / ${a}.`
+        );
+        text = phrase;
         answer = b;
       }
+
       const concept = "Multiplication/Division facts and equal groups";
       return createQuestionObject({
         text,
@@ -1252,7 +1362,14 @@
       else base = 120;
       const whole = denom * randomInt(2, base / denom + 2);
       const answer = (whole / denom) * numer;
-      const text = `Find ${numer}/${denom} of ${whole}.`;
+
+      const phrase = gradeStyle(
+        grade,
+        `What is ${numer}/${denom} of ${whole}?`,
+        `Find ${numer}/${denom} of ${whole}.`,
+        `Determine the value of ${numer}/${denom} · ${whole}.`
+      );
+      const text = phrase;
       const concept = "Fraction of a whole number";
       return createQuestionObject({
         text,
@@ -1272,27 +1389,39 @@
       let n2 = randomInt(1, d2 - 1);
       const useMult = Math.random() < 0.65;
       let text, answer;
+
       if (useMult) {
-        text = `Multiply the fractions: ${n1}/${d1} × ${n2}/${d2}. (Give answer as a whole number if it simplifies nicely.)`;
+        const basePrompt = `Multiply the fractions: ${n1}/${d1} × ${n2}/${d2}. (Give answer as a whole number if it simplifies nicely.)`;
+        const phrase = gradeStyle(
+          grade,
+          basePrompt,
+          basePrompt,
+          `Evaluate (${n1}/${d1}) · (${n2}/${d2}). (Give a simplified answer; whole number if possible.)`
+        );
+        text = phrase;
         const num = n1 * n2;
         const den = d1 * d2;
-        // We keep only cases with integer answers by construction
         const factor = randomInt(1, 3);
         const whole = (num * factor) / den;
         if (Number.isInteger(whole)) {
           answer = whole;
         } else {
-          // Fallback simple: just product if not integer
-          answer = num; // approximate, but still numeric
+          answer = num;
         }
       } else {
-        // Whole ÷ fraction with integer answer
         const denom = d1;
         const numer = n1;
-        const whole = denom * randomInt(2, 10); // ensures integer multiple
-        text = `Compute: ${whole} ÷ (${numer}/${denom}). (Answer as whole number)`;
+        const whole = denom * randomInt(2, 10);
+        const phrase = gradeStyle(
+          grade,
+          `What is ${whole} ÷ (${numer}/${denom})? (Answer as whole number)`,
+          `Compute ${whole} ÷ (${numer}/${denom}). (Answer as whole number)`,
+          `Evaluate ${whole} ÷ (${numer}/${denom}). (Answer as an integer.)`
+        );
+        text = phrase;
         answer = (whole * denom) / numer;
       }
+
       const concept = "Multiplying or dividing with fractions";
       return createQuestionObject({
         text,
@@ -1311,13 +1440,27 @@
       const op = Math.random() < 0.5 ? "+" : "-";
       let text, answer;
       const fa = parseFloat(a), fb = parseFloat(b);
+
       if (op === "+") {
-        text = `Compute: ${a} + ${b} (Round to 1 decimal place if needed)`;
+        const phrase = gradeStyle(
+          grade,
+          `What is ${a} + ${b}? (Round to 1 decimal place if needed)`,
+          `Find the value of ${a} + ${b}. (Round to 1 decimal place if needed)`,
+          `Evaluate ${a} + ${b}. (Round to 1 decimal place if necessary.)`
+        );
+        text = phrase;
         answer = parseFloat((fa + fb).toFixed(1));
       } else {
-        text = `Compute: ${a} - ${b} (Round to 1 decimal place if needed)`;
+        const phrase = gradeStyle(
+          grade,
+          `What is ${a} - ${b}? (Round to 1 decimal place if needed)`,
+          `Find the value of ${a} - ${b}. (Round to 1 decimal place if needed)`,
+          `Evaluate ${a} - ${b}. (Round to 1 decimal place if necessary.)`
+        );
+        text = phrase;
         answer = parseFloat((fa - fb).toFixed(1));
       }
+
       const concept = "Addition and subtraction with decimals";
       return createQuestionObject({
         text,
@@ -1340,9 +1483,20 @@
       else total = totalParts * randomInt(8, 30);
 
       const focusFirst = Math.random() < 0.5;
-      const text = focusFirst
-        ? `In a class, the ratio of boys to girls is ${part1} : ${part2}. There are ${total} students in total. How many boys are there?`
-        : `In a class, the ratio of boys to girls is ${part1} : ${part2}. There are ${total} students in total. How many girls are there?`;
+      let baseText;
+      if (focusFirst) {
+        baseText = `In a class, the ratio of boys to girls is ${part1} : ${part2}. There are ${total} students in total. How many boys are there?`;
+      } else {
+        baseText = `In a class, the ratio of boys to girls is ${part1} : ${part2}. There are ${total} students in total. How many girls are there?`;
+      }
+      const phrase = gradeStyle(
+        grade,
+        baseText,
+        baseText,
+        baseText
+      );
+      const text = phrase;
+
       const onePart = total / totalParts;
       const answer = focusFirst ? onePart * part1 : onePart * part2;
       const concept = "Ratio as equal parts of a whole";
@@ -1362,7 +1516,14 @@
         : [5, 10, 15, 20, 25, 30, 40, 50];
       const p = percOptions[randomInt(0, percOptions.length - 1)];
       const base = tier === "challenge" ? randomInt(200, 800) : randomInt(40, 300);
-      const text = `Find ${p}% of ${base}. (Answer as whole number)`;
+
+      const phrase = gradeStyle(
+        grade,
+        `What is ${p}% of ${base}? (Answer as whole number)`,
+        `Find ${p}% of ${base}. (Answer as whole number)`,
+        `Determine ${p}% of ${base}. (Give an integer result.)`
+      );
+      const text = phrase;
       const answer = Math.round(base * p / 100);
       const concept = "Percent as 'out of 100'";
       return createQuestionObject({
@@ -1381,13 +1542,27 @@
       const distance = speed * time;
       const mode = Math.random();
       let text, answer;
+
       if (mode < 0.5) {
-        text = `A car travels at ${speed} km/h for ${time} hours. How far does it go? (Answer in km)`;
+        const phrase = gradeStyle(
+          grade,
+          `A car travels at ${speed} miles per hour for ${time} hours. How far does it go? (Answer in miles)`,
+          `A car travels at ${speed} mph for ${time} hours. Find the distance traveled (in miles).`,
+          `A car moves at ${speed} mph for ${time} hours. Determine the distance traveled.`
+        );
+        text = phrase;
         answer = distance;
       } else {
-        text = `A car travels ${distance} km in ${time} hours. What is its speed? (Answer in km/h)`;
+        const phrase = gradeStyle(
+          grade,
+          `A car travels ${distance} miles in ${time} hours. What is its speed? (Answer in miles per hour)`,
+          `A car travels ${distance} miles in ${time} hours. Find its speed (mph).`,
+          `A car covers ${distance} miles in ${time} hours. Determine its average speed in mph.`
+        );
+        text = phrase;
         answer = Math.round(distance / time);
       }
+
       const concept = "Speed, distance, and time relationship";
       return createQuestionObject({
         text,
@@ -1409,8 +1584,14 @@
         sum += n;
       }
       const avg = sum / count;
-      const text =
-        `The numbers are ${nums.join(", ")}. What is their average (mean)? (Round to nearest whole number)`;
+
+      const phrase = gradeStyle(
+        grade,
+        `The numbers are ${nums.join(", ")}. What is their average (mean)? (Round to the nearest whole number)`,
+        `The data set is: ${nums.join(", ")}. Find the mean. (Round to the nearest whole number)`,
+        `Given the data ${nums.join(", ")}, determine the mean, rounded to the nearest integer.`
+      );
+      const text = phrase;
       const answer = Math.round(avg);
       const concept = "Average as total divided by number of items";
       return createQuestionObject({
@@ -1435,7 +1616,14 @@
         b = randomInt(-20, 30);
       }
       c = a * x + b;
-      text = `Solve for x: ${a}x + ${b} = ${c}`;
+
+      const phrase = gradeStyle(
+        grade,
+        `Solve for x: ${a}x + ${b} = ${c}`,
+        `Solve the equation for x: ${a}x + ${b} = ${c}`,
+        `Solve for x in the equation ${a}x + ${b} = ${c}.`
+      );
+      text = phrase;
       const answer = x;
       const concept = "Solving linear equations in one variable";
       return createQuestionObject({
@@ -1449,7 +1637,6 @@
     }
 
     function generateSimultaneousEqQuestion(grade, tier) {
-      // Generate simple 2-variable system with integer solution
       const x = randomInt(1, 10);
       const y = randomInt(1, 10);
       const a1 = randomInt(1, 5);
@@ -1459,11 +1646,21 @@
       const c1 = a1 * x + b1 * y;
       const c2 = a2 * x + b2 * y;
       const askForX = Math.random() < 0.5;
-      const text =
+
+      let baseText =
         `Solve the system:\n` +
         `${a1}x + ${b1}y = ${c1}\n` +
         `${a2}x + ${b2}y = ${c2}\n` +
         `Find the value of ${askForX ? "x" : "y"}.`;
+
+      const phrase = gradeStyle(
+        grade,
+        baseText,
+        baseText,
+        baseText
+      );
+      const text = phrase;
+
       const answer = askForX ? x : y;
       const concept = "Solving simultaneous linear equations";
       return createQuestionObject({
@@ -1481,13 +1678,27 @@
       const b = randomInt(-20, 20);
       const op = Math.random() < 0.5 ? "+" : "-";
       let text, answer;
+
       if (op === "+") {
-        text = `Compute: (${a}) + (${b})`;
+        const phrase = gradeStyle(
+          grade,
+          `What is (${a}) + (${b})?`,
+          `Find the value of (${a}) + (${b}).`,
+          `Evaluate (${a}) + (${b}).`
+        );
+        text = phrase;
         answer = a + b;
       } else {
-        text = `Compute: (${a}) - (${b})`;
+        const phrase = gradeStyle(
+          grade,
+          `What is (${a}) - (${b})?`,
+          `Find the value of (${a}) - (${b}).`,
+          `Evaluate (${a}) - (${b}).`
+        );
+        text = phrase;
         answer = a - b;
       }
+
       const concept = "Integer addition and subtraction";
       return createQuestionObject({
         text,
@@ -1500,19 +1711,32 @@
     }
 
     function generateTrigQuestion(grade, tier) {
-      // Simple right triangle, find opposite or adjacent or hyp
       const hyp = randomInt(5, 15);
       const opp = randomInt(3, hyp - 1);
       const mode = Math.random();
       let text, answer;
+
       if (mode < 0.5) {
-        text = `In a right triangle, the hypotenuse is ${hyp} and the side opposite angle A is ${opp}. Approximate sin A to 2 decimal places.`;
+        const phrase = gradeStyle(
+          grade,
+          `In a right triangle, the hypotenuse is ${hyp} and the side opposite angle A is ${opp}. About what is sin A? (Round to 2 decimal places)`,
+          `In a right triangle, the hypotenuse is ${hyp} units and the side opposite angle A is ${opp} units. Approximate sin A to 2 decimal places.`,
+          `In a right triangle, the hypotenuse is ${hyp} and the side opposite ∠A is ${opp}. Evaluate sin A, rounded to two decimal places.`
+        );
+        text = phrase;
         answer = parseFloat((opp / hyp).toFixed(2));
       } else {
         const adj = randomInt(3, hyp - 1);
-        text = `In a right triangle, the hypotenuse is ${hyp} and the side adjacent to angle B is ${adj}. Approximate cos B to 2 decimal places.`;
+        const phrase = gradeStyle(
+          grade,
+          `In a right triangle, the hypotenuse is ${hyp} and the side next to angle B is ${adj}. About what is cos B? (Round to 2 decimal places)`,
+          `In a right triangle, the hypotenuse is ${hyp} units and the side adjacent to angle B is ${adj} units. Approximate cos B to 2 decimal places.`,
+          `In a right triangle, the hypotenuse is ${hyp} and the side adjacent to ∠B is ${adj}. Evaluate cos B, rounded to two decimal places.`
+        );
+        text = phrase;
         answer = parseFloat((adj / hyp).toFixed(2));
       }
+
       const concept = "Trigonometric ratios in right triangles";
       return createQuestionObject({
         text,
@@ -1567,6 +1791,7 @@
     const numberInput = $("number-input");
     const homeError = $("home-error");
     const startQuizBtn = $("start-quiz-btn");
+    const homeTitleBtn = $("home-title-btn");
 
     const quizGradeTopic = $("quiz-grade-topic");
     const quizNumberLabel = $("quiz-number-label");
@@ -1631,6 +1856,11 @@
         opt.textContent = `${idx + 1} – ${p.topic}`;
         progSelect.appendChild(opt);
       });
+    });
+
+    // Click title to go home
+    homeTitleBtn.addEventListener("click", () => {
+      switchScreen("home");
     });
 
     startQuizBtn.addEventListener("click", () => {
@@ -1707,7 +1937,6 @@
     // -----------------------------
 
     function startNewQuiz(grade, progressiveIndex, number) {
-      // Clear timer
       if (STATE.timerInterval) {
         clearInterval(STATE.timerInterval);
         STATE.timerInterval = null;
@@ -1721,22 +1950,17 @@
       STATE.quizId = generateQuizId();
       STATE.questions = [];
 
-      // Build 25 questions: 20 main topic, 5 review
       const typeKey = prog.typeKey;
 
-      // Generate main questions
       for (let i = 0; i < 20; i++) {
         STATE.questions.push(generateQuestion(grade, progressiveIndex, number, typeKey));
       }
 
-      // Generate review questions
       const reviewQuestions = [];
       const possibleReview = [];
-      // earlier progressives same grade
       for (let p = 1; p < progressiveIndex; p++) {
         possibleReview.push({ grade, p });
       }
-      // maybe previous grade last progressive
       if (grade > 1) {
         possibleReview.push({ grade: grade - 1, p: 7 });
       }
@@ -1750,8 +1974,6 @@
         }
       }
       STATE.questions = STATE.questions.concat(reviewQuestions);
-
-      // shuffle questions slightly but keep order stable enough
       STATE.questions = shuffleArray(STATE.questions);
 
       STATE.currentIndex = 0;
@@ -1841,7 +2063,6 @@
       STATE.attempts[STATE.currentIndex]++;
 
       const correctAnswer = q.answer;
-      // For decimals, compare with tolerance
       let isCorrect;
       if (typeof correctAnswer === "number" && String(correctAnswer).includes(".")) {
         const diff = Math.abs(correctAnswer - parsed);
@@ -1925,7 +2146,6 @@
       stopTimer();
       STATE.endTime = new Date();
 
-      // Fill result screen
       resultGrade.textContent = `Grade ${STATE.grade}`;
       resultProgressive.textContent = `Progressive ${STATE.progressiveIndex}`;
       resultTopic.textContent = STATE.topic;
