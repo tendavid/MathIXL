@@ -1,0 +1,320 @@
+
+/* =========================================
+   Daily Math Training Lab - A1 Playful Theme
+   css/style.css (FULL FILE)
+   ========================================= */
+
+/* ---------- Global Theme Variables ---------- */
+:root {
+  --bg-gradient: linear-gradient(135deg, #ffe6ff, #e0f7ff, #fff3e0);
+  --card-bg: rgba(255, 255, 255, 0.85);
+  --primary: #7b5bff;
+  --secondary: #ff6fd8;
+  --accent: #48d6ff;
+  --text-dark: #333;
+  --text-light: #666;
+
+  --transition: 0.3s ease;
+}
+
+/* ---------- Global Reset ---------- */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+body {
+  background: var(--bg-gradient);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* font size classes controlled by settings */
+body.font-small {
+  font-size: 14px;
+}
+
+body.font-medium {
+  font-size: 16px;
+}
+
+body.font-large {
+  font-size: 18px;
+}
+
+body.font-xl {
+  font-size: 20px;
+}
+
+/* disable animations when class present */
+body.animations-off::before,
+body.animations-off::after {
+  animation: none !important;
+}
+
+body.animations-off .screen.active {
+  animation: none !important;
+}
+
+.hidden {
+  display: none !important;
+}
+
+/* ---------- Animated Blobs ---------- */
+body::before,
+body::after {
+  content: "";
+  position: fixed;
+  width: 400px;
+  height: 400px;
+  background: var(--secondary);
+  border-radius: 50%;
+  filter: blur(120px);
+  animation: floatBlob 12s infinite ease-in-out alternate;
+  z-index: -1;
+}
+
+body::before {
+  top: -80px;
+  left: -80px;
+  background: var(--primary);
+}
+
+body::after {
+  bottom: -80px;
+  right: -80px;
+  background: var(--accent);
+}
+
+@keyframes floatBlob {
+  0% { transform: translate(0, 0) scale(1); }
+  100% { transform: translate(40px, -40px) scale(1.3); }
+}
+
+/* ---------- App Container ---------- */
+#app {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+/* ---------- Top Bar ---------- */
+.top-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.site-title {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--primary);
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+}
+
+/* ---------- Settings Button ---------- */
+.settings-btn {
+  font-size: 1.6rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-dark);
+  transition: var(--transition);
+}
+
+.settings-btn:hover {
+  transform: rotate(20deg);
+  color: var(--primary);
+}
+
+/* ---------- Settings Panel ---------- */
+.settings-panel {
+  position: fixed;
+  top: 0;
+  right: -260px;
+  width: 260px;
+  height: 100vh;
+  background: var(--card-bg);
+  box-shadow: -4px 0 15px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  transition: right 0.4s ease;
+  backdrop-filter: blur(10px);
+  z-index: 5;
+}
+
+.settings-panel.active {
+  right: 0;
+}
+
+.settings-panel h2 {
+  margin-bottom: 16px;
+  color: var(--primary);
+}
+
+.settings-panel label {
+  margin-top: 12px;
+  display: block;
+  color: var(--text-dark);
+  font-weight: bold;
+}
+
+.settings-panel select {
+  width: 100%;
+  padding: 6px;
+  margin-top: 4px;
+  margin-bottom: 10px;
+}
+
+.settings-panel button {
+  margin-top: 16px;
+  width: 100%;
+}
+
+/* ---------- Screen Layout ---------- */
+.screen {
+  display: none;
+  padding: 0 20px 20px 20px;
+}
+
+.screen.active {
+  display: block;
+  animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ---------- Cards ---------- */
+.card {
+  background: var(--card-bg);
+  padding: 24px;
+  margin: 20px auto;
+  max-width: 520px;
+  border-radius: 20px;
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.12);
+  backdrop-filter: blur(10px);
+}
+
+.card h2 {
+  margin-bottom: 18px;
+  color: var(--primary);
+}
+
+/* ---------- Form Elements ---------- */
+label {
+  display: block;
+  margin-top: 10px;
+  margin-bottom: 4px;
+  color: var(--text-dark);
+}
+
+select,
+input[type="number"],
+input[type="text"] {
+  width: 100%;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+/* ---------- Buttons ---------- */
+.primary-btn,
+.secondary-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 12px;
+  border-radius: 12px;
+  border: none;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.primary-btn {
+  background: var(--primary);
+  color: #fff;
+}
+
+.primary-btn:hover {
+  background: #6a4ae0;
+}
+
+.secondary-btn {
+  background: var(--accent);
+  color: #fff;
+}
+
+.secondary-btn:hover {
+  background: #3bbedd;
+}
+
+/* ---------- Quiz Meta & Question ---------- */
+.quiz-meta {
+  font-size: 0.9rem;
+  color: var(--text-light);
+  margin-bottom: 10px;
+}
+
+.quiz-id {
+  font-weight: bold;
+  color: var(--secondary);
+}
+
+.question-text {
+  font-size: 1.1rem;
+  color: var(--text-dark);
+  margin-top: 8px;
+}
+
+.concept-tag {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: var(--primary);
+}
+
+/* ---------- Feedback ---------- */
+#feedback {
+  font-size: 1.6rem;
+  font-weight: bold;
+  margin-top: 10px;
+  min-height: 30px;
+}
+
+/* ---------- Help Content ---------- */
+#helpContent {
+  margin-top: 14px;
+  padding: 12px;
+  border-radius: 10px;
+  background: #eefaff;
+  color: var(--text-dark);
+}
+
+/* ---------- Result Screen ---------- */
+#resultDetails p {
+  margin-bottom: 6px;
+}
+
+/* ---------- Footer ---------- */
+.footer {
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--text-light);
+  padding: 20px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 600px) {
+  .site-title {
+    font-size: 1.7rem;
+  }
+
+  .card {
+    margin: 14px auto;
+    padding: 18px;
+  }
+}
