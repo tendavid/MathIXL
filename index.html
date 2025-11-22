@@ -5,24 +5,610 @@
   <title>Daily Math Training Lab</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Relative path so it works locally and on GitHub Pages -->
+  <!-- Existing external styles if you have them -->
   <link rel="stylesheet" href="css/style.css" />
+
+  <!-- Minimal built-in styling to make it look clean & modern -->
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at top left, #c4a5ff, #e0f7ff);
+      --card-bg: rgba(255, 255, 255, 0.92);
+      --accent: #4f46e5;
+      --accent-soft: #e0e7ff;
+      --danger: #dc2626;
+      --text-main: #111827;
+      --text-muted: #6b7280;
+      --radius-xl: 18px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.18);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+      min-height: 100vh;
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    /* Font size classes used by engine.js settings */
+    .font-small { font-size: 14px; }
+    .font-medium { font-size: 16px; }
+    .font-large { font-size: 18px; }
+    .font-xl { font-size: 20px; }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1080px;
+      margin: 16px;
+      background: transparent;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .app-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 18px;
+      border-radius: var(--radius-xl);
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: var(--shadow-soft);
+      backdrop-filter: blur(16px);
+    }
+
+    .site-title {
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      font-size: 20px;
+      color: #111827;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .site-title span {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .settings-btn {
+      border: none;
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 14px;
+      background: var(--accent-soft);
+      color: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .settings-btn:hover {
+      background: #c7d2fe;
+    }
+
+    .app-main {
+      flex: 1;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+    }
+
+    .screen {
+      width: 100%;
+      background: var(--card-bg);
+      border-radius: var(--radius-xl);
+      padding: 20px 18px;
+      box-shadow: var(--shadow-soft);
+      display: none;
+    }
+
+    .screen.active {
+      display: block;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    h1, h2, h3 {
+      margin: 0 0 10px;
+    }
+
+    .home-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.1fr);
+      gap: 20px;
+    }
+
+    @media (max-width: 720px) {
+      .home-layout {
+        grid-template-columns: minmax(0, 1fr);
+      }
+      .app-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+    }
+
+    .home-intro {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      padding: 4px 10px;
+      background: var(--accent-soft);
+      font-size: 12px;
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .home-intro p {
+      margin: 0;
+      color: var(--text-muted);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .home-form {
+      border-radius: 16px;
+      background: #f9fafb;
+      padding: 14px 14px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .field-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 14px;
+    }
+
+    .field-label {
+      font-weight: 600;
+      color: #374151;
+    }
+
+    select,
+    input[type="number"],
+    input[type="text"] {
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      padding: 7px 10px;
+      font-size: 14px;
+      outline: none;
+      width: 100%;
+    }
+
+    select:focus,
+    input[type="number"]:focus,
+    input[type="text"]:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px var(--accent-soft);
+    }
+
+    .start-btn {
+      margin-top: 4px;
+      width: 100%;
+      border-radius: 999px;
+      border: none;
+      padding: 10px 14px;
+      background: var(--accent);
+      color: white;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .start-btn:hover {
+      background: #4338ca;
+    }
+
+    .subtext {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Quiz screen */
+    .quiz-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .quiz-top-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .quiz-meta {
+      margin-bottom: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 4px 10px;
+    }
+
+    .quiz-card {
+      border-radius: 14px;
+      background: #f9fafb;
+      padding: 12px 14px;
+    }
+
+    .question-text {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+
+    .concept-tag {
+      display: inline-flex;
+      margin-top: 6px;
+      border-radius: 999px;
+      padding: 3px 9px;
+      background: #eef2ff;
+      color: #4338ca;
+      font-size: 12px;
+    }
+
+    .answer-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      margin-top: 6px;
+    }
+
+    #answerInput {
+      flex: 1 1 140px;
+    }
+
+    #submitAnswer {
+      border-radius: 999px;
+      border: none;
+      padding: 8px 14px;
+      background: var(--accent);
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    #submitAnswer:hover {
+      background: #4338ca;
+    }
+
+    #feedback {
+      margin-top: 6px;
+      min-height: 20px;
+      font-weight: 600;
+    }
+
+    .help-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 6px;
+    }
+
+    .secondary-btn {
+      border-radius: 999px;
+      border: 1px solid #d1d5db;
+      background: white;
+      padding: 6px 12px;
+      font-size: 13px;
+      cursor: pointer;
+      color: #374151;
+    }
+
+    .secondary-btn:hover {
+      background: #f3f4f6;
+    }
+
+    #helpContent {
+      margin-top: 6px;
+      font-size: 14px;
+      color: #374151;
+    }
+
+    /* Result screen */
+    .result-layout {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    #resultDetails p {
+      margin: 4px 0;
+      font-size: 14px;
+      color: #111827;
+    }
+
+    #backHome {
+      align-self: flex-start;
+      border-radius: 999px;
+      border: none;
+      padding: 9px 16px;
+      background: var(--accent);
+      color: white;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    #backHome:hover {
+      background: #4338ca;
+    }
+
+    .app-footer {
+      text-align: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      padding: 6px 0 2px;
+    }
+
+    /* Settings panel */
+    .settings-panel {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      width: 260px;
+      max-width: calc(100% - 32px);
+      border-radius: 16px;
+      background: rgba(15, 23, 42, 0.96);
+      color: white;
+      padding: 14px 14px 16px;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.55);
+      transform: translateY(120%);
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.2s ease-out;
+      z-index: 50;
+    }
+
+    .settings-panel.active {
+      transform: translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .settings-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+    }
+
+    .settings-header h3 {
+      font-size: 14px;
+      margin: 0;
+    }
+
+    #closeSettings {
+      border: none;
+      background: transparent;
+      color: #9ca3af;
+      cursor: pointer;
+      font-size: 18px;
+      line-height: 1;
+      padding: 0 4px;
+    }
+
+    .settings-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-top: 6px;
+      font-size: 13px;
+    }
+
+    .settings-group label {
+      color: #d1d5db;
+    }
+
+    .settings-panel select {
+      background: #111827;
+      border-color: #4b5563;
+      color: white;
+      font-size: 13px;
+    }
+  </style>
 </head>
 
-<body>
+<body class="font-medium">
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="site-title">
+        Daily Math Training Lab
+        <span>Adaptive practice by grade & topic</span>
+      </div>
+      <button id="settingsBtn" class="settings-btn" type="button">
+        ⚙️ Settings
+      </button>
+    </header>
 
-  <div id="app"></div>
+    <main class="app-main">
+      <!-- HOME SCREEN -->
+      <section id="homeScreen" class="screen active">
+        <div class="home-layout">
+          <div class="home-intro">
+            <div class="pill">🔥 Daily mastery trainer</div>
+            <h2>Choose a grade, pick a topic, and run a 25-question speed set.</h2>
+            <p>
+              Questions pull from a structured curriculum map (Grades 1–8) with
+              mixed review modes and built-in explanations. Track your
+              <strong>average time per question</strong> to measure fluency.
+            </p>
+            <p class="subtext">
+              Tip: Start with an easier number, then increase once average time
+              drops under ~10 seconds per question.
+            </p>
+          </div>
 
-  <!-- Core utilities -->
+          <div class="home-form">
+            <div class="field-row">
+              <span class="field-label">Grade</span>
+              <select id="gradeSelect">
+                <!-- Filled by engine.js populateGrades() -->
+                <option value="">Loading grades…</option>
+              </select>
+            </div>
+
+            <div class="field-row">
+              <span class="field-label">Topic (Progressive)</span>
+              <select id="progressiveSelect">
+                <option value="">Select Grade First</option>
+              </select>
+            </div>
+
+            <div class="field-row">
+              <span class="field-label">Number / Difficulty</span>
+              <input
+                id="numberSelect"
+                type="number"
+                min="1"
+                max="100"
+                value="1"
+              />
+              <span class="subtext">
+                Rough difficulty scaler (1 = easiest, 100 = hardest tuned by generator).
+              </span>
+            </div>
+
+            <button id="startBtn" class="start-btn" type="button">
+              Start 25-Question Set
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- QUIZ SCREEN -->
+      <section id="quizScreen" class="screen hidden">
+        <div class="quiz-layout">
+          <div class="quiz-top-row">
+            <div>Answer and press <strong>Enter</strong> or click Submit.</div>
+            <div>Elapsed: <span id="elapsedTime">0:00</span></div>
+          </div>
+
+          <div id="questionContainer" class="quiz-card">
+            <!-- engine.js will inject meta + question content here -->
+          </div>
+
+          <div class="quiz-card">
+            <div class="answer-row">
+              <input
+                id="answerInput"
+                type="text"
+                placeholder="Type your answer..."
+              />
+              <button id="submitAnswer" type="button">Submit</button>
+            </div>
+            <div id="feedback"></div>
+
+            <div class="help-row">
+              <button id="showHint" class="secondary-btn" type="button">
+                Show Hint
+              </button>
+              <button
+                id="showExplanation"
+                class="secondary-btn"
+                type="button"
+              >
+                Show Explanation
+              </button>
+            </div>
+
+            <div id="helpContent"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- RESULT SCREEN -->
+      <section id="resultScreen" class="screen hidden">
+        <div class="result-layout">
+          <div class="pill">Session summary</div>
+          <h2>Set finished – nice work.</h2>
+          <div id="resultDetails"></div>
+          <button id="backHome" type="button">Back to Home</button>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      Made for Skye Ten • MathIXL daily training
+    </footer>
+  </div>
+
+  <!-- SETTINGS PANEL -->
+  <div id="settingsPanel" class="settings-panel">
+    <div class="settings-header">
+      <h3>Session settings</h3>
+      <button id="closeSettings" type="button" aria-label="Close settings">
+        ✕
+      </button>
+    </div>
+
+    <div class="settings-group">
+      <label for="fontSizeSelect">Font size</label>
+      <select id="fontSizeSelect">
+        <option value="small">Small</option>
+        <option value="medium" selected>Medium</option>
+        <option value="large">Large</option>
+        <option value="xl">Extra large</option>
+      </select>
+    </div>
+
+    <div class="settings-group">
+      <label for="animationsSelect">Animations</label>
+      <select id="animationsSelect">
+        <option value="on" selected>On</option>
+        <option value="off">Off</option>
+      </select>
+    </div>
+
+    <div class="settings-group">
+      <label for="soundSelect">Sound effects</label>
+      <select id="soundSelect">
+        <option value="on" selected>On</option>
+        <option value="off">Off</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- JS: core utilities & curriculum -->
   <script src="js/utils.js"></script>
-
-  <!-- Curriculum mapping -->
   <script src="js/curriculum.js"></script>
 
-  <!-- Engine -->
+  <!-- JS: main engine -->
   <script src="js/engine.js"></script>
 
-  <!-- Generator modules -->
+  <!-- JS: generators -->
   <script src="js/generators/arithmetic.js"></script>
   <script src="js/generators/fractions.js"></script>
   <script src="js/generators/decimals.js"></script>
@@ -34,21 +620,5 @@
   <script src="js/generators/functions.js"></script>
   <script src="js/generators/stats.js"></script>
   <script src="js/generators/exponents.js"></script>
-
-  <!-- App bootstrap -->
-  <script>
-    window.onload = function () {
-      if (typeof window.startApp === "function") {
-        window.startApp();
-      } else {
-        document.getElementById("app").innerHTML = `
-          <div style="padding:20px;color:red;font-size:20px;">
-            Error: App could not start.<br>
-            Please check that all JS files loaded correctly.
-          </div>`;
-      }
-    };
-  </script>
-
 </body>
 </html>
