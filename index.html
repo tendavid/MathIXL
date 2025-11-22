@@ -5,40 +5,37 @@
   <title>Daily Math Training Lab</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- FIXED: Absolute path for GitHub Pages -->
-  <link rel="stylesheet" href="/MathIXL/css/style.css" />
+  <!-- Relative path so it works locally and on GitHub Pages -->
+  <link rel="stylesheet" href="css/style.css" />
 </head>
 
 <body>
 
   <div id="app"></div>
 
-  <!-- FIXED: Absolute paths for all JS files -->
-
   <!-- Core utilities -->
-  <script src="/MathIXL/js/utils.js"></script>
-  <script src="/MathIXL/js/core.js"></script>
+  <script src="js/utils.js"></script>
 
   <!-- Curriculum mapping -->
-  <script src="/MathIXL/js/curriculum.js"></script>
+  <script src="js/curriculum.js"></script>
 
   <!-- Engine -->
-  <script src="/MathIXL/js/engine.js"></script>
+  <script src="js/engine.js"></script>
 
   <!-- Generator modules -->
-  <script src="/MathIXL/js/generators/arithmetic.js"></script>
-  <script src="/MathIXL/js/generators/fractions.js"></script>
-  <script src="/MathIXL/js/generators/decimals.js"></script>
-  <script src="/MathIXL/js/generators/geometry.js"></script>
-  <script src="/MathIXL/js/generators/integers.js"></script>
-  <script src="/MathIXL/js/generators/equations.js"></script>
-  <script src="/MathIXL/js/generators/inequalities.js"></script>
-  <script src="/MathIXL/js/generators/ratios.js"></script>
-  <script src="/MathIXL/js/generators/functions.js"></script>
-  <script src="/MathIXL/js/generators/stats.js"></script>
-  <script src="/MathIXL/js/generators/exponents.js"></script>
+  <script src="js/generators/arithmetic.js"></script>
+  <script src="js/generators/fractions.js"></script>
+  <script src="js/generators/decimals.js"></script>
+  <script src="js/generators/geometry.js"></script>
+  <script src="js/generators/integers.js"></script>
+  <script src="js/generators/equations.js"></script>
+  <script src="js/generators/inequalities.js"></script>
+  <script src="js/generators/ratios.js"></script>
+  <script src="js/generators/functions.js"></script>
+  <script src="js/generators/stats.js"></script>
+  <script src="js/generators/exponents.js"></script>
 
-  <!-- Your app bootstrap -->
+  <!-- App bootstrap -->
   <script>
     window.onload = function () {
       if (typeof window.startApp === "function") {
