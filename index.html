@@ -3,83 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <title>Daily Math Training Lab</title>
-  <link rel="stylesheet" href="css/style.css" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- FIXED: Absolute path for GitHub Pages -->
+  <link rel="stylesheet" href="/MathIXL/css/style.css" />
 </head>
+
 <body>
-  <div id="app">
-    <header class="top-bar">
-      <h1 class="site-title">Daily Math Training Lab</h1>
-      <button id="settingsBtn" class="settings-btn">⚙</button>
-    </header>
 
-    <aside id="settingsPanel" class="settings-panel hidden">
-      <h2>Settings</h2>
-      <label>Font Size:</label>
-      <select id="fontSizeSelect">
-        <option value="small">Small</option>
-        <option value="medium" selected>Medium</option>
-        <option value="large">Large</option>
-        <option value="xl">XL</option>
-      </select>
+  <div id="app"></div>
 
-      <label>Animations:</label>
-      <select id="animationsSelect">
-        <option value="on" selected>On</option>
-        <option value="off">Off</option>
-      </select>
+  <!-- FIXED: Absolute paths for all JS files -->
 
-      <label>Sound:</label>
-      <select id="soundSelect">
-        <option value="on" selected>On</option>
-        <option value="off">Off</option>
-      </select>
+  <!-- Core utilities -->
+  <script src="/MathIXL/js/utils.js"></script>
+  <script src="/MathIXL/js/core.js"></script>
 
-      <button id="closeSettings">Close</button>
-    </aside>
+  <!-- Curriculum mapping -->
+  <script src="/MathIXL/js/curriculum.js"></script>
 
-    <main id="homeScreen" class="screen active">
-      <div class="card">
-        <h2>Start Your Training</h2>
-        <label>Grade:</label>
-        <select id="gradeSelect"></select>
+  <!-- Engine -->
+  <script src="/MathIXL/js/engine.js"></script>
 
-        <label>Progressive (Topic):</label>
-        <select id="progressiveSelect"></select>
+  <!-- Generator modules -->
+  <script src="/MathIXL/js/generators/arithmetic.js"></script>
+  <script src="/MathIXL/js/generators/fractions.js"></script>
+  <script src="/MathIXL/js/generators/decimals.js"></script>
+  <script src="/MathIXL/js/generators/geometry.js"></script>
+  <script src="/MathIXL/js/generators/integers.js"></script>
+  <script src="/MathIXL/js/generators/equations.js"></script>
+  <script src="/MathIXL/js/generators/inequalities.js"></script>
+  <script src="/MathIXL/js/generators/ratios.js"></script>
+  <script src="/MathIXL/js/generators/functions.js"></script>
+  <script src="/MathIXL/js/generators/stats.js"></script>
+  <script src="/MathIXL/js/generators/exponents.js"></script>
 
-        <label>Number (Difficulty 1–100):</label>
-        <input type="number" id="numberSelect" min="1" max="100" value="1" />
+  <!-- Your app bootstrap -->
+  <script>
+    window.onload = function () {
+      if (typeof window.startApp === "function") {
+        window.startApp();
+      } else {
+        document.getElementById("app").innerHTML = `
+          <div style="padding:20px;color:red;font-size:20px;">
+            Error: App could not start.<br>
+            Please check that all JS files loaded correctly.
+          </div>`;
+      }
+    };
+  </script>
 
-        <button id="startBtn" class="primary-btn">Start Quiz</button>
-      </div>
-    </main>
-
-    <main id="quizScreen" class="screen hidden">
-      <div class="card">
-        <div id="questionContainer"></div>
-        <input id="answerInput" type="text" placeholder="Your answer" />
-        <button id="submitAnswer" class="primary-btn">Submit</button>
-        <div id="feedback"></div>
-        <button id="showHint" class="secondary-btn">Show Hint</button>
-        <button id="showExplanation" class="secondary-btn">Show Explanation</button>
-        <div id="helpContent"></div>
-      </div>
-    </main>
-
-    <main id="resultScreen" class="screen hidden">
-      <div class="card">
-        <h2>Quiz Complete!</h2>
-        <div id="resultDetails"></div>
-        <button id="backHome" class="primary-btn">Back to Home</button>
-      </div>
-    </main>
-
-    <footer class="footer">Made by Ten Daddy</footer>
-  </div>
-
-  <script src="js/utils.js"></script>
-  <script src="js/engine.js"></script>
-  <script src="js/curriculum.js"></script>
-
-  <!-- Modular generators will be added later -->
 </body>
 </html>
