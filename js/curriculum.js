@@ -1,4 +1,4 @@
-// curriculum.js (Brand‑New Modular Version)
+// curriculum.js (Brand-New Modular Version)
 // Clean mapping for Daily Math Training Lab
 
 const CURRICULUM = {
@@ -33,10 +33,10 @@ const CURRICULUM = {
   ]},
 
   4:{name:"Grade 4",progressives:[
-    {index:1,code:"g4_multid",name:"Multi‑Digit Mult",generator:"buildMultiDigitMultiplicationQuestion"},
+    {index:1,code:"g4_multid",name:"Multi-Digit Mult",generator:"buildMultiDigitMultiplicationQuestion"},
     {index:2,code:"g4_div",name:"Long Division",generator:"buildLongDivisionQuestion"},
     {index:3,code:"g4_equiv",name:"Equivalent Fractions",generator:"buildEquivalentFractionsQuestion"},
-    {index:4,code:"g4_frac_like",name:"Like‑Den Fractions",generator:"buildFractionAddSubLikeDenQuestion"},
+    {index:4,code:"g4_frac_like",name:"Like-Den Fractions",generator:"buildFractionAddSubLikeDenQuestion"},
     {index:5,code:"g4_area_vol",name:"Area & Volume",generator:"buildAreaVolumeIntroQuestion"},
     {index:6,code:"g4_mix",name:"Mixed",generator:"buildG4MixedReviewQuestion"},
     {index:7,code:"g4_mix2",name:"Extra Mixed",generator:"buildG4MixedReviewQuestion"}
@@ -56,7 +56,7 @@ const CURRICULUM = {
     {index:1,code:"g6_ratio",name:"Ratios",generator:"buildRatiosUnitRatesQuestion"},
     {index:2,code:"g6_fdp",name:"Fraction/Decimal/Pct",generator:"buildFracDecPercentQuestion"},
     {index:3,code:"g6_int",name:"Integers",generator:"buildIntegersNumberLineQuestion"},
-    {index:4,code:"g6_eq",name:"One‑Step Equations",generator:"buildOneStepEquationQuestion"},
+    {index:4,code:"g6_eq",name:"One-Step Equations",generator:"buildOneStepEquationQuestion"},
     {index:5,code:"g6_sa",name:"Area/Surface Area",generator:"buildAreaSurfaceAreaQuestion"},
     {index:6,code:"g6_stats",name:"Statistics",generator:"buildStatsQuestion"},
     {index:7,code:"g6_mix",name:"Mixed",generator:"buildG6MixedReviewQuestion"}
@@ -80,6 +80,48 @@ const CURRICULUM = {
     {index:5,code:"g8_trans",name:"Transformations",generator:"buildTransformationsSimilarityQuestion"},
     {index:6,code:"g8_pyth",name:"Pythagorean",generator:"buildPythagoreanQuestion"},
     {index:7,code:"g8_stats",name:"Stats",generator:"buildTwoVariableStatsQuestion"}
+  ]},
+
+  // -------- HIGH SCHOOL: GRADES 9–12 --------
+
+  9:{name:"Grade 9 – Algebra I",progressives:[
+    {index:1,code:"g9_lin",name:"Linear Eq & Inequalities",generator:"buildHSLinearEqIneqQuestion"},
+    {index:2,code:"g9_sys",name:"Systems of Equations",generator:"buildHSSystemsLinearQuestion"},
+    {index:3,code:"g9_quad",name:"Quadratic Equations",generator:"buildHSQuadraticQuestion"},
+    {index:4,code:"g9_poly",name:"Exponents & Polynomials",generator:"buildHSPolynomialsQuestion"},
+    {index:5,code:"g9_func",name:"Functions & Graphs",generator:"buildHSFunctionsQuestion"},
+    {index:6,code:"g9_word",name:"Algebra Word Problems",generator:"buildHSAlgebraWordProblemQuestion"},
+    {index:7,code:"g9_mix",name:"Mixed Algebra I",generator:"buildHSAlgebra1MixedQuestion"}
+  ]},
+
+  10:{name:"Grade 10 – Geometry",progressives:[
+    {index:1,code:"g10_cong",name:"Congruence & Similarity",generator:"buildHSGeometryCongSimQuestion"},
+    {index:2,code:"g10_tri",name:"Triangles & Trig Basics",generator:"buildHSGeometryTrigQuestion"},
+    {index:3,code:"g10_circ",name:"Circles",generator:"buildHSGeometryCirclesQuestion"},
+    {index:4,code:"g10_coord",name:"Coordinate Geometry",generator:"buildHSCoordinateGeometryQuestion"},
+    {index:5,code:"g10_area",name:"Area/Surface Area/Volume",generator:"buildHSGeometryAreaVolumeQuestion"},
+    {index:6,code:"g10_proof",name:"Proof Ideas",generator:"buildHSGeometryProofIdeaQuestion"},
+    {index:7,code:"g10_mix",name:"Mixed Geometry",generator:"buildHSGeometryMixedQuestion"}
+  ]},
+
+  11:{name:"Grade 11 – Algebra II",progressives:[
+    {index:1,code:"g11_poly",name:"Polynomial Functions",generator:"buildHSAlgebra2PolynomialsQuestion"},
+    {index:2,code:"g11_rat",name:"Rational Expr & Equations",generator:"buildHSAlgebra2RationalQuestion"},
+    {index:3,code:"g11_explog",name:"Exponential & Logarithmic",generator:"buildHSExpLogQuestion"},
+    {index:4,code:"g11_seq",name:"Sequences & Series",generator:"buildHSSequencesSeriesQuestion"},
+    {index:5,code:"g11_trig",name:"Trig Functions",generator:"buildHSTrigFunctionsQuestion"},
+    {index:6,code:"g11_complex",name:"Complex Numbers",generator:"buildHSComplexNumberQuestion"},
+    {index:7,code:"g11_mix",name:"Mixed Algebra II",generator:"buildHSAlgebra2MixedQuestion"}
+  ]},
+
+  12:{name:"Grade 12 – Precalculus & Stats",progressives:[
+    {index:1,code:"g12_limits",name:"Limits (Conceptual)",generator:"buildHSPrecalcLimitsQuestion"},
+    {index:2,code:"g12_trigid",name:"Trig Identities",generator:"buildHSTrigIdentitiesQuestion"},
+    {index:3,code:"g12_matrix",name:"Matrices & Vectors",generator:"buildHSMatricesVectorsQuestion"},
+    {index:4,code:"g12_prob",name:"Probability & Stats",generator:"buildHSProbStatsQuestion"},
+    {index:5,code:"g12_reg",name:"Data & Regression",generator:"buildHSRegressionQuestion"},
+    {index:6,code:"g12_mix",name:"Mixed Precalculus",generator:"buildHSPrecalcMixedQuestion"},
+    {index:7,code:"g12_all",name:"HS Exam Mixed (9–12)",generator:"buildHSHSMixedQuestion"}
   ]}
 };
 
