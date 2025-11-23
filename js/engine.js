@@ -29,6 +29,7 @@
     currentQuestion: null,
     startTimestamp: null,
     endTimestamp: null,
+    questionStartTimestamp: null,
     timerInterval: null,
     attemptsOnCurrent: 0,
     totalAttempts: 0,
@@ -182,6 +183,7 @@
     state.totalQuestions = TOTAL_QUESTIONS;
     state.currentQuestion = null;
     state.startTimestamp = Date.now();
+    state.questionStartTimestamp = state.startTimestamp;
     state.endTimestamp = null;
     state.attemptsOnCurrent = 0;
     state.totalAttempts = 0;
@@ -210,6 +212,7 @@
       );
       state.currentQuestion = q;
       state.attemptsOnCurrent = 0;
+      state.questionStartTimestamp = Date.now();
 
       const topic = getTopicFor(state.grade, state.progressiveIndex);
       const gradeInfo = CURRICULUM[state.grade];
@@ -224,7 +227,7 @@
       }</div>
           <div>Quiz ID: <span class="quiz-id">${state.quizId}</span></div>
           <div>Started: ${state.startedAtDisplay}</div>
-          <div>Elapsed: <span id="elapsedTime">0:00</span></div>
+          <div>Elapsed (this question): <span id="elapsedTimeQuestion">0:00</span></div>
         </div>
       `;
 
@@ -437,10 +440,21 @@
   function updateElapsedTime() {
     if (!state.startTimestamp) return;
     const now = Date.now();
+
+    // total set time (header)
     const totalSec = (now - state.startTimestamp) / 1000;
-    const elapsedEl = document.getElementById("elapsedTime");
-    if (elapsedEl) {
-      elapsedEl.textContent = formatDuration(totalSec);
+    const totalEl = document.getElementById("elapsedTimeTotal");
+    if (totalEl) {
+      totalEl.textContent = formatDuration(totalSec);
+    }
+
+    // per-question time (meta)
+    if (state.questionStartTimestamp) {
+      const qSec = (now - state.questionStartTimestamp) / 1000;
+      const qEl = document.getElementById("elapsedTimeQuestion");
+      if (qEl) {
+        qEl.textContent = formatDuration(qSec);
+      }
     }
   }
 
