@@ -5,21 +5,21 @@
   <title>Daily Math Training Lab</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- Existing external styles if you have them -->
+  <!-- External styles (you can still use css/style.css for extra stuff) -->
   <link rel="stylesheet" href="css/style.css" />
 
-  <!-- Minimal built-in styling to make it look clean & modern -->
+  <!-- Main styling with glassmorphism -->
   <style>
     :root {
-      --bg-gradient: radial-gradient(circle at top left, #c4a5ff, #e0f7ff);
-      --card-bg: rgba(255, 255, 255, 0.92);
+      --bg-gradient: linear-gradient(135deg, #f4e5ff, #dff4ff, #ffe9f2);
+      --card-bg: rgba(255, 255, 255, 0.86);
       --accent: #4f46e5;
       --accent-soft: #e0e7ff;
       --danger: #dc2626;
       --text-main: #111827;
       --text-muted: #6b7280;
-      --radius-xl: 18px;
-      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.18);
+      --radius-xl: 24px;
+      --shadow-soft: 0 22px 60px rgba(15, 23, 42, 0.18);
     }
 
     * {
@@ -54,25 +54,33 @@
       gap: 12px;
     }
 
+    /* Header already looked nice – slight glass buff */
     .app-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 14px 18px;
       border-radius: var(--radius-xl);
-      background: rgba(255, 255, 255, 0.95);
-      box-shadow: var(--shadow-soft);
-      backdrop-filter: blur(16px);
+      background: radial-gradient(circle at top left,
+        rgba(255, 255, 255, 0.98),
+        rgba(240, 249, 255, 0.94)
+      );
+      box-shadow:
+        0 18px 50px rgba(15, 23, 42, 0.22),
+        0 0 0 1px rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
     }
 
     .site-title {
-      font-weight: 700;
+      font-weight: 800;
       letter-spacing: 0.02em;
       font-size: 20px;
       color: #111827;
       display: flex;
       align-items: center;
       gap: 8px;
+      text-shadow: 0 8px 18px rgba(15, 23, 42, 0.18);
     }
 
     .site-title span {
@@ -93,10 +101,14 @@
       gap: 6px;
       cursor: pointer;
       font-weight: 500;
+      box-shadow: 0 10px 25px rgba(79, 70, 229, 0.25);
+      transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, background 0.15s;
     }
 
     .settings-btn:hover {
       background: #c7d2fe;
+      transform: translateY(-1px);
+      box-shadow: 0 14px 30px rgba(79, 70, 229, 0.35);
     }
 
     .app-main {
@@ -106,13 +118,31 @@
       justify-content: center;
     }
 
+    /* MAIN BIG “WHITE” BLOCK → glassmorphism */
     .screen {
       width: 100%;
-      background: var(--card-bg);
+      background:
+        radial-gradient(circle at top left,
+          rgba(255, 255, 255, 0.98),
+          rgba(241, 248, 255, 0.9)
+        );
       border-radius: var(--radius-xl);
-      padding: 20px 18px;
-      box-shadow: var(--shadow-soft);
+      padding: 22px 20px;
+      box-shadow:
+        0 22px 60px rgba(15, 23, 42, 0.22),
+        0 0 0 1px rgba(255, 255, 255, 0.95);
       display: none;
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      transition: box-shadow 0.15s ease-out, transform 0.15s ease-out;
+    }
+
+    .screen:hover {
+      box-shadow:
+        0 28px 80px rgba(15, 23, 42, 0.26),
+        0 0 0 1px rgba(255, 255, 255, 1);
+      transform: translateY(-1px);
     }
 
     .screen.active {
@@ -156,10 +186,10 @@
       gap: 6px;
       border-radius: 999px;
       padding: 4px 10px;
-      background: var(--accent-soft);
+      background: rgba(79, 70, 229, 0.08);
       font-size: 12px;
       color: var(--accent);
-      font-weight: 500;
+      font-weight: 600;
     }
 
     .home-intro p {
@@ -169,13 +199,24 @@
       line-height: 1.5;
     }
 
+    /* Right side form – mini glass card inside */
     .home-form {
-      border-radius: 16px;
-      background: #f9fafb;
-      padding: 14px 14px 16px;
+      border-radius: 20px;
+      background:
+        linear-gradient(135deg,
+          rgba(248, 250, 252, 0.96),
+          rgba(239, 246, 255, 0.92)
+        );
+      padding: 16px 16px 18px;
       display: flex;
       flex-direction: column;
       gap: 10px;
+      box-shadow:
+        0 16px 42px rgba(15, 23, 42, 0.18),
+        0 0 0 1px rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(148, 163, 184, 0.24);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
     }
 
     .field-row {
@@ -193,12 +234,14 @@
     select,
     input[type="number"],
     input[type="text"] {
-      border-radius: 10px;
+      border-radius: 12px;
       border: 1px solid #d1d5db;
       padding: 7px 10px;
       font-size: 14px;
       outline: none;
       width: 100%;
+      background-color: rgba(248, 250, 252, 0.95);
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background 0.18s;
     }
 
     select:focus,
@@ -206,6 +249,7 @@
     input[type="text"]:focus {
       border-color: var(--accent);
       box-shadow: 0 0 0 1px var(--accent-soft);
+      background-color: #ffffff;
     }
 
     .start-btn {
@@ -213,16 +257,25 @@
       width: 100%;
       border-radius: 999px;
       border: none;
-      padding: 10px 14px;
-      background: var(--accent);
+      padding: 11px 14px;
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
       color: white;
       font-size: 15px;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
+      box-shadow: 0 18px 45px rgba(79, 70, 229, 0.45);
+      transition: transform 0.1s ease-out, box-shadow 0.1s ease-out, background 0.15s;
     }
 
     .start-btn:hover {
-      background: #4338ca;
+      background: linear-gradient(135deg, #4338ca, #6d28d9);
+      transform: translateY(-1px);
+      box-shadow: 0 24px 60px rgba(79, 70, 229, 0.55);
+    }
+
+    .start-btn:active {
+      transform: translateY(0);
+      box-shadow: 0 14px 35px rgba(79, 70, 229, 0.45);
     }
 
     .subtext {
@@ -255,10 +308,21 @@
       gap: 4px 10px;
     }
 
+    /* Quiz cards also get a soft glass treatment */
     .quiz-card {
-      border-radius: 14px;
-      background: #f9fafb;
+      border-radius: 18px;
+      background:
+        linear-gradient(145deg,
+          rgba(249, 250, 251, 0.98),
+          rgba(239, 246, 255, 0.92)
+        );
       padding: 12px 14px;
+      box-shadow:
+        0 14px 36px rgba(15, 23, 42, 0.16),
+        0 0 0 1px rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(203, 213, 225, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
     }
 
     .question-text {
@@ -275,6 +339,7 @@
       background: #eef2ff;
       color: #4338ca;
       font-size: 12px;
+      font-weight: 500;
     }
 
     .answer-row {
@@ -293,15 +358,19 @@
       border-radius: 999px;
       border: none;
       padding: 8px 14px;
-      background: var(--accent);
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
       color: white;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
+      box-shadow: 0 12px 32px rgba(79, 70, 229, 0.4);
+      transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, background 0.15s;
     }
 
     #submitAnswer:hover {
-      background: #4338ca;
+      background: linear-gradient(135deg, #4338ca, #6d28d9);
+      transform: translateY(-1px);
+      box-shadow: 0 16px 40px rgba(79, 70, 229, 0.5);
     }
 
     #feedback {
@@ -325,10 +394,14 @@
       font-size: 13px;
       cursor: pointer;
       color: #374151;
+      box-shadow: 0 8px 20px rgba(148, 163, 184, 0.25);
+      transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, background 0.15s;
     }
 
     .secondary-btn:hover {
       background: #f3f4f6;
+      transform: translateY(-1px);
+      box-shadow: 0 12px 26px rgba(148, 163, 184, 0.35);
     }
 
     #helpContent {
@@ -355,15 +428,19 @@
       border-radius: 999px;
       border: none;
       padding: 9px 16px;
-      background: var(--accent);
+      background: linear-gradient(135deg, #4f46e5, #7c3aed);
       color: white;
       font-size: 14px;
       font-weight: 600;
       cursor: pointer;
+      box-shadow: 0 14px 36px rgba(79, 70, 229, 0.45);
+      transition: transform 0.08s ease-out, box-shadow 0.08s ease-out, background 0.15s;
     }
 
     #backHome:hover {
-      background: #4338ca;
+      background: linear-gradient(135deg, #4338ca, #6d28d9);
+      transform: translateY(-1px);
+      box-shadow: 0 18px 46px rgba(79, 70, 229, 0.55);
     }
 
     .app-footer {
@@ -437,6 +514,8 @@
       border-color: #4b5563;
       color: white;
       font-size: 13px;
+      border-radius: 10px;
+      padding: 6px 8px;
     }
   </style>
 </head>
