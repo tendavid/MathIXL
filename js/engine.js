@@ -3,7 +3,7 @@
 // Handles UI, quiz flow, timer, settings, sounds, and calls curriculum generators.
 
 (function () {
-  const TOTAL_QUESTIONS = 25;
+  const TOTAL_QUESTIONS = 15;
   const NEXT_QUESTION_DELAY_MS = 1000;
 
   const POSITIVE_FEEDBACK = [
@@ -14,12 +14,20 @@
     "You got it!",
     "Excellent!",
     "Super!",
-    "Brilliant!",
+    "Nice thinking!",
     "Keep it up!",
-    "Fantastic!"
+    "Boom! Nailed it."
   ];
 
-  let state = {
+  const TRY_AGAIN_FEEDBACK = [
+    "Close! Try again.",
+    "Not yet—give it another shot.",
+    "Almost there, think it through.",
+    "Try once more.",
+    "Keep going, you’ve got this."
+  ];
+
+  const state = {
     grade: null,
     progressiveIndex: null,
     number: 1,
@@ -52,6 +60,7 @@
   let settingsBtn, settingsPanel, closeSettingsBtn;
   let fontSizeSelect, animationsSelect, soundSelect;
   let siteTitleEl;
+  let progressBarEl;
 
   document.addEventListener("DOMContentLoaded", init);
 
@@ -73,6 +82,7 @@
     showHintBtn = document.getElementById("showHint");
     showExplanationBtn = document.getElementById("showExplanation");
     helpContentEl = document.getElementById("helpContent");
+    progressBarEl = document.getElementById("quizProgressBar");
 
     resultDetailsEl = document.getElementById("resultDetails");
     backHomeBtn = document.getElementById("backHome");
@@ -121,26 +131,45 @@
   function populateGrades() {
     if (typeof getGradesList !== "function") {
       console.error("getGradesList() not defined. Check curriculum.js load order.");
+      gradeSelect.innerHTML =
+        '<option value="">Error loading grades. See console.</option>';
       return;
     }
+
     const grades = getGradesList();
     gradeSelect.innerHTML = '<option value="">Select Grade</option>';
     grades.forEach((g) => {
       const opt = document.createElement("option");
-      opt.value = g.grade;
-      opt.textContent = g.name;
+      opt.value = g.id;
+      opt.textContent = `Grade ${g.id} – ${g.name}`;
       gradeSelect.appendChild(opt);
     });
-    progressiveSelect.innerHTML = '<option value="">Select Grade First</option>';
   }
 
   function onGradeChange() {
     const grade = parseInt(gradeSelect.value, 10);
     if (Number.isNaN(grade)) {
-      progressiveSelect.innerHTML = '<option value="">Select Grade First</option>';
+      progressiveSelect.innerHTML =
+        '<option value="">Select Grade First</option>';
       return;
     }
-    const topics = getProgressivesForGrade(grade) || [];
+
+    if (typeof getTopicsForGrade !== "function") {
+      console.error(
+        "getTopicsForGrade() not defined. Check curriculum.js load order."
+      );
+      progressiveSelect.innerHTML =
+        '<option value="">Error loading topics. See console.</option>';
+      return;
+    }
+
+    const topics = getTopicsForGrade(grade);
+    if (!topics || !topics.length) {
+      progressiveSelect.innerHTML =
+        '<option value="">No topics found for this grade.</option>';
+      return;
+    }
+
     progressiveSelect.innerHTML = "";
     topics.forEach((t) => {
       const opt = document.createElement("option");
@@ -197,11 +226,23 @@
     helpContentEl.textContent = "";
     answerInput.value = "";
 
+    updateProgressBar();
+
     switchScreen("quizScreen");
     renderCurrentQuestion();
   }
 
   // ---- Question / Answer Flow ----
+
+  function updateProgressBar() {
+    if (!progressBarEl) return;
+    const total = state.totalQuestions || TOTAL_QUESTIONS;
+    let index = state.currentQuestionIndex;
+    if (index < 0) index = 0;
+    if (index > total) index = total;
+    const fraction = total > 0 ? index / total : 0;
+    progressBarEl.style.width = (fraction * 100) + "%";
+  }
 
   function renderCurrentQuestion() {
     try {
@@ -213,6 +254,8 @@
       state.currentQuestion = q;
       state.attemptsOnCurrent = 0;
       state.questionStartTimestamp = Date.now();
+
+      updateProgressBar();
 
       const topic = getTopicFor(state.grade, state.progressiveIndex);
       const gradeInfo = CURRICULUM[state.grade];
@@ -243,16 +286,10 @@
       questionContainer.innerHTML = metaHtml + questionHtml;
       feedbackEl.textContent = "";
       helpContentEl.textContent = "";
-
-      // focus answer box
-      setTimeout(() => {
-        answerInput.focus();
-      }, 50);
-
-      // update timer display immediately
-      updateElapsedTime();
+      answerInput.value = "";
+      answerInput.focus();
     } catch (err) {
-      console.error(err);
+      console.error("Error generating question:", err);
       alert(
         "There is a problem loading this question. Please check that all generator files are uploaded."
       );
@@ -274,6 +311,7 @@
         state.correctFirstTryCount++;
       }
       state.currentQuestionIndex++;
+      updateProgressBar();
       showPositiveFeedback();
       playCorrectSound();
       // clear help and input
@@ -294,6 +332,7 @@
   }
 
   function finishQuiz() {
+    updateProgressBar();
     state.endTimestamp = Date.now();
     if (state.timerInterval) {
       clearInterval(state.timerInterval);
@@ -318,7 +357,8 @@
     const endDisplay = formatDateTime(new Date(state.endTimestamp));
 
     const detailsHtml = `
-      <p><strong>Grade:</strong> ${state.grade} – ${
+      <p><strong>Grade:</strong> ${state.grade} – 
+${
       gradeInfo ? gradeInfo.name : ""
     }</p>
       <p><strong>Topic:</strong> ${topic ? topic.name : ""}</p>
@@ -340,29 +380,6 @@
     playResultMelody();
   }
 
-  // ---- Screens ----
-
-  function switchScreen(screenId) {
-    [homeScreen, quizScreen, resultScreen].forEach((s) => {
-      if (!s) return;
-      if (s.id === screenId) {
-        s.classList.add("active");
-        s.classList.remove("hidden");
-      } else {
-        s.classList.remove("active");
-        s.classList.add("hidden");
-      }
-    });
-  }
-
-  function goHome() {
-    if (state.timerInterval) {
-      clearInterval(state.timerInterval);
-      state.timerInterval = null;
-    }
-    switchScreen("homeScreen");
-  }
-
   // ---- Hint & Explanation ----
 
   function onShowHint() {
@@ -377,65 +394,40 @@
   function onShowExplanation() {
     if (!state.currentQuestion) return;
     const q = state.currentQuestion;
-    const exp = q.explanation || "This question practices the main concept.";
+    const explanation =
+      q.explanation || "Try to break the problem into simpler steps.";
     const example = q.example || "";
-    helpContentEl.innerHTML =
-      `<strong>Concept explanation:</strong><br>${escapeHtmlWithBreaks(
-        exp
-      )}` +
-      (example
-        ? `<br><br><strong>Example:</strong><br>${escapeHtmlWithBreaks(
-            example
-          )}`
-        : "");
-  }
-
-  // ---- Feedback visuals ----
-
-  function showPositiveFeedback() {
-    const text =
-      POSITIVE_FEEDBACK[Math.floor(Math.random() * POSITIVE_FEEDBACK.length)];
-    feedbackEl.textContent = text;
-    feedbackEl.style.color = randomBrightColor();
-    feedbackEl.style.transform = "scale(1.0)";
-    feedbackEl.style.opacity = "1";
-
-    // little pop animation
-    if (!document.body.classList.contains("animations-off")) {
-      feedbackEl.animate(
-        [
-          { transform: "scale(0.9)", opacity: 0.5 },
-          { transform: "scale(1.2)", opacity: 1 },
-          { transform: "scale(1.0)", opacity: 1 }
-        ],
-        {
-          duration: 500,
-          easing: "ease-out"
-        }
-      );
+    let html = `<strong>Explanation:</strong> ${escapeHtmlWithBreaks(
+      explanation
+    )}`;
+    if (example) {
+      html += `<br><br><strong>Example:</strong> ${escapeHtmlWithBreaks(
+        example
+      )}`;
     }
+    helpContentEl.innerHTML = html;
   }
 
-  function showTryAgainFeedback() {
-    feedbackEl.textContent = "Not yet, try again!";
-    feedbackEl.style.color = "#d32f2f";
-    if (!document.body.classList.contains("animations-off")) {
-      feedbackEl.animate(
-        [
-          { transform: "translateX(0)" },
-          { transform: "translateX(-4px)" },
-          { transform: "translateX(4px)" },
-          { transform: "translateX(0)" }
-        ],
-        {
-          duration: 300,
-          easing: "ease-in-out"
-        }
-      );
+  // ---- Navigation ----
+
+  function switchScreen(screenId) {
+    if (homeScreen) homeScreen.classList.remove("active");
+    if (quizScreen) quizScreen.classList.remove("active");
+    if (resultScreen) resultScreen.classList.remove("active");
+
+    const el = document.getElementById(screenId);
+    if (el) el.classList.add("active");
+  }
+
+  function goHome() {
+    if (state.timerInterval) {
+      clearInterval(state.timerInterval);
+      state.timerInterval = null;
     }
+    switchScreen("homeScreen");
   }
 
-  // ---- Timer ----
+  // ---- Timer / Elapsed ----
 
   function updateElapsedTime() {
     if (!state.startTimestamp) return;
@@ -458,30 +450,15 @@
     }
   }
 
-  function formatDuration(seconds) {
-    seconds = Math.max(0, Math.floor(seconds));
-    const m = Math.floor(seconds / 60);
-    const s = seconds % 60;
-    return `${m}:${s.toString().padStart(2, "0")}`;
-  }
-
-  function formatDateTime(d) {
-    const year = d.getFullYear();
-    const month = String(d.getMonth() + 1).padStart(2, "0");
-    const day = String(d.getDate()).padStart(2, "0");
-    const hours = String(d.getHours()).padStart(2, "0");
-    const minutes = String(d.getMinutes()).padStart(2, "0");
-    const seconds = String(d.getSeconds()).padStart(2, "0");
-    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  }
-
   // ---- Settings ----
 
   function toggleSettingsPanel() {
+    if (!settingsPanel) return;
     settingsPanel.classList.toggle("active");
   }
 
   function closeSettingsPanel() {
+    if (!settingsPanel) return;
     settingsPanel.classList.remove("active");
   }
 
@@ -501,12 +478,10 @@
 
   function applySettingsToDOM() {
     const body = document.body;
-    // font size via class
     body.classList.remove("font-small", "font-medium", "font-large", "font-xl");
-    const size = state.settings.fontSize || "medium";
-    body.classList.add("font-" + size);
+    const sizeClass = `font-${state.settings.fontSize}`;
+    body.classList.add(sizeClass);
 
-    // animations
     if (state.settings.animations === "off") {
       body.classList.add("animations-off");
     } else {
@@ -549,8 +524,11 @@
   }
 
   function playCorrectSound() {
-    // simple positive beep
-    playTone(880, 150, "triangle", 0.25);
+    // fun two-note positive chirp
+    playTone(880, 140, "triangle", 0.26);
+    setTimeout(function () {
+      playTone(1175, 160, "triangle", 0.22);
+    }, 120);
   }
 
   function playWrongSound() {
@@ -584,37 +562,61 @@
     });
   }
 
-  // ---- Helpers ----
+  // ---- Utility helpers ----
 
   function compareAnswers(userInput, correctAnswer) {
-    if (correctAnswer === null || correctAnswer === undefined) {
-      return false;
-    }
-    const correctStr = String(correctAnswer).trim();
+    // numeric comparison if both parse
+    const userNum = parseFloat(userInput);
+    const correctNum = parseFloat(correctAnswer);
 
-    // try numeric comparison first
-    const uNum = parseFloat(userInput);
-    const cNum = parseFloat(correctStr);
-    if (!Number.isNaN(uNum) && !Number.isNaN(cNum)) {
-      const diff = Math.abs(uNum - cNum);
-      return diff < 1e-6; // allow small rounding
+    if (!Number.isNaN(userNum) && !Number.isNaN(correctNum)) {
+      return Math.abs(userNum - correctNum) < 1e-9;
     }
-    // fallback string comparison (case-insensitive)
-    return userInput.toLowerCase() === correctStr.toLowerCase();
+
+    return String(userInput).trim().toLowerCase() ===
+      String(correctAnswer).trim().toLowerCase();
   }
 
-  function randomBrightColor() {
-    const colors = ["#ff4081", "#ff9800", "#4caf50", "#3f51b5", "#9c27b0"];
-    return colors[Math.floor(Math.random() * colors.length)];
+  function showPositiveFeedback() {
+    const msg =
+      POSITIVE_FEEDBACK[Math.floor(Math.random() * POSITIVE_FEEDBACK.length)];
+    feedbackEl.textContent = msg;
+    feedbackEl.style.color = "#16a34a";
+  }
+
+  function showTryAgainFeedback() {
+    const msg =
+      TRY_AGAIN_FEEDBACK[
+        Math.floor(Math.random() * TRY_AGAIN_FEEDBACK.length)
+      ];
+    feedbackEl.textContent = msg;
+    feedbackEl.style.color = "#dc2626";
+  }
+
+  function formatDuration(totalSec) {
+    totalSec = Math.max(0, Math.floor(totalSec));
+    const minutes = Math.floor(totalSec / 60);
+    const seconds = totalSec % 60;
+    return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+  }
+
+  function formatDateTime(d) {
+    const year = d.getFullYear();
+    const month = (d.getMonth() + 1).toString().padStart(2, "0");
+    const day = d.getDate().toString().padStart(2, "0");
+    const hours = d.getHours().toString().padStart(2, "0");
+    const minutes = d.getMinutes().toString().padStart(2, "0");
+    return `${year}-${month}-${day} ${hours}:${minutes}`;
   }
 
   function generateQuizId() {
-    const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-    let id = "";
-    for (let i = 0; i < 8; i++) {
-      id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return id;
+    const rand = Math.random().toString(36).substring(2, 8).toUpperCase();
+    const now = new Date();
+    const timePart = `${now.getHours().toString().padStart(2, "0")}${now
+      .getMinutes()
+      .toString()
+      .padStart(2, "0")}`;
+    return `${rand}-${timePart}`;
   }
 
   function escapeHtml(str) {
