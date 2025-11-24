@@ -5,10 +5,10 @@
   <title>Daily Math Training Lab</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- External styles (you can still use css/style.css for extra stuff) -->
+  <!-- External styles -->
   <link rel="stylesheet" href="css/style.css" />
 
-  <!-- Main styling with glassmorphism -->
+  <!-- Main styling with glassmorphism + updated home copy -->
   <style>
     :root {
       --bg-gradient: linear-gradient(135deg, #f4e5ff, #dff4ff, #ffe9f2);
@@ -54,7 +54,7 @@
       gap: 12px;
     }
 
-    /* Header already looked nice – slight glass buff */
+    /* Header */
     .app-header {
       display: flex;
       align-items: center;
@@ -118,7 +118,7 @@
       justify-content: center;
     }
 
-    /* MAIN BIG “WHITE” BLOCK → glassmorphism */
+    /* MAIN BIG BLOCK */
     .screen {
       width: 100%;
       background:
@@ -174,10 +174,13 @@
       }
     }
 
+    /* LEFT SIDE (RED BOX AREA) */
     .home-intro {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
+      justify-content: space-between;
+      min-height: 100%;
     }
 
     .pill {
@@ -192,14 +195,100 @@
       font-weight: 600;
     }
 
-    .home-intro p {
-      margin: 0;
-      color: var(--text-muted);
-      font-size: 14px;
-      line-height: 1.5;
+    .home-title {
+      font-size: 1.55rem;
+      line-height: 1.25;
+      font-weight: 800;
+      letter-spacing: 0.01em;
+      color: #111827;
     }
 
-    /* Right side form – mini glass card inside */
+    .home-lead {
+      margin: 0;
+      color: #4b5563;
+      font-size: 0.96rem;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+
+    .home-bullets {
+      list-style: none;
+      padding: 0;
+      margin: 6px 0 0;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .home-bullets li {
+      display: flex;
+      gap: 6px;
+      align-items: flex-start;
+    }
+
+    .home-bullets span.bullet-icon {
+      font-size: 1rem;
+      line-height: 1.2;
+    }
+
+    .home-bullets span.bullet-text strong {
+      color: #111827;
+    }
+
+    .subtext {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    /* GREEN BOX AREA: “Today’s training idea” card */
+    .home-extra-card {
+      margin-top: 16px;
+      border-radius: 18px;
+      padding: 10px 12px 11px;
+      background:
+        linear-gradient(135deg,
+          rgba(248, 250, 252, 0.98),
+          rgba(239, 246, 255, 0.94)
+        );
+      box-shadow:
+        0 14px 34px rgba(15, 23, 42, 0.16),
+        0 0 0 1px rgba(255, 255, 255, 0.9);
+      border: 1px solid rgba(203, 213, 225, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      font-size: 0.86rem;
+    }
+
+    .home-extra-icon {
+      font-size: 1.4rem;
+      margin-top: 1px;
+    }
+
+    .home-extra-body h3 {
+      margin: 0 0 4px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      color: #111827;
+    }
+
+    .home-extra-body p {
+      margin: 0;
+      color: #4b5563;
+      line-height: 1.4;
+    }
+
+    .home-extra-body p span.highlight {
+      font-weight: 600;
+      color: #4f46e5;
+    }
+
+    /* RIGHT SIDE FORM */
     .home-form {
       border-radius: 20px;
       background:
@@ -278,12 +367,12 @@
       box-shadow: 0 14px 35px rgba(79, 70, 229, 0.45);
     }
 
-    .subtext {
+    .subtext-right {
       font-size: 12px;
       color: var(--text-muted);
     }
 
-    /* Quiz screen */
+    /* QUIZ SCREEN */
     .quiz-layout {
       display: flex;
       flex-direction: column;
@@ -308,7 +397,6 @@
       gap: 4px 10px;
     }
 
-    /* Quiz cards also get a soft glass treatment */
     .quiz-card {
       border-radius: 18px;
       background:
@@ -410,7 +498,7 @@
       color: #374151;
     }
 
-    /* Result screen */
+    /* RESULT SCREEN */
     .result-layout {
       display: flex;
       flex-direction: column;
@@ -450,7 +538,7 @@
       padding: 6px 0 2px;
     }
 
-    /* Settings panel */
+    /* SETTINGS PANEL */
     .settings-panel {
       position: fixed;
       right: 16px;
@@ -536,20 +624,60 @@
       <!-- HOME SCREEN -->
       <section id="homeScreen" class="screen active">
         <div class="home-layout">
+          <!-- LEFT SIDE: intro + “green box” content -->
           <div class="home-intro">
-            <div class="pill">🔥 Daily mastery trainer</div>
-            <h2>Choose a grade, pick a topic, and run a 25-question speed set.</h2>
-            <p>
-              Questions pull from a structured curriculum map (Grades 1–12) with
-              mixed review modes and built-in explanations. Track your
-              <strong>average time per question</strong> to measure fluency.
-            </p>
-            <p class="subtext">
-              Tip: Start with an easier number, then increase once average time
-              drops under ~10 seconds per question.
-            </p>
+            <div>
+              <div class="pill">🔥 Daily mastery trainer</div>
+              <h2 class="home-title">
+                Pick a grade, lock in a topic, and crush a 25-question speed set.
+              </h2>
+              <p class="home-lead">
+                Short, focused practice that feels like a game, not homework.
+                Build <strong>fast, accurate math reflexes</strong> one set at a time.
+              </p>
+              <ul class="home-bullets">
+                <li>
+                  <span class="bullet-icon">🎯</span>
+                  <span class="bullet-text">
+                    <strong>Choose your lane.</strong> Grade & topic map from
+                    counting all the way to algebra & beyond.
+                  </span>
+                </li>
+                <li>
+                  <span class="bullet-icon">⚡</span>
+                  <span class="bullet-text">
+                    <strong>Race the clock.</strong> The app tracks your
+                    <strong>average time per question</strong> automatically.
+                  </span>
+                </li>
+                <li>
+                  <span class="bullet-icon">🔁</span>
+                  <span class="bullet-text">
+                    <strong>Level up slowly.</strong> Bump the difficulty once
+                    questions start feeling “too easy”.
+                  </span>
+                </li>
+              </ul>
+              <p class="subtext">
+                Tip: When average time drops under ~10 seconds, move up a difficulty or switch topics.
+              </p>
+            </div>
+
+            <!-- This fills the old green empty area -->
+            <div class="home-extra-card">
+              <div class="home-extra-icon">💡</div>
+              <div class="home-extra-body">
+                <h3>Today’s training idea</h3>
+                <p>
+                  Start with <span class="highlight">Grade 1 · Add/Sub 20</span> at difficulty 1.
+                  Once your average time drops, jump to a mixed review set
+                  and see how fast you can stay accurate.
+                </p>
+              </div>
+            </div>
           </div>
 
+          <!-- RIGHT SIDE: controls -->
           <div class="home-form">
             <div class="field-row">
               <span class="field-label">Grade</span>
@@ -575,7 +703,7 @@
                 max="100"
                 value="1"
               />
-              <span class="subtext">
+              <span class="subtext-right">
                 Rough difficulty scaler (1 = easiest, 100 = hardest tuned by generator).
               </span>
             </div>
