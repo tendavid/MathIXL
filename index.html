@@ -5,21 +5,21 @@
   <title>Daily Math Training Lab</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!-- External styles -->
+  <!-- Existing external styles if you have them -->
   <link rel="stylesheet" href="css/style.css" />
 
-  <!-- Main styling with glassmorphism + updated home copy -->
+  <!-- Minimal built-in styling to make it look clean & modern -->
   <style>
     :root {
-      --bg-gradient: linear-gradient(135deg, #f4e5ff, #dff4ff, #ffe9f2);
-      --card-bg: rgba(255, 255, 255, 0.86);
+      --bg-gradient: radial-gradient(circle at top left, #c4a5ff, #e0f7ff);
+      --card-bg: rgba(255, 255, 255, 0.92);
       --accent: #4f46e5;
       --accent-soft: #e0e7ff;
       --danger: #dc2626;
       --text-main: #111827;
       --text-muted: #6b7280;
-      --radius-xl: 24px;
-      --shadow-soft: 0 22px 60px rgba(15, 23, 42, 0.18);
+      --radius-xl: 18px;
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.18);
     }
 
     * {
@@ -174,7 +174,7 @@
       }
     }
 
-    /* LEFT SIDE (RED BOX AREA) */
+    /* LEFT SIDE (intro) */
     .home-intro {
       display: flex;
       flex-direction: column;
@@ -195,15 +195,16 @@
       font-weight: 600;
     }
 
-    .home-title {
+    .home-intro h2 {
       font-size: 1.55rem;
       line-height: 1.25;
       font-weight: 800;
       letter-spacing: 0.01em;
       color: #111827;
+      margin: 4px 0;
     }
 
-    .home-lead {
+    .home-intro p {
       margin: 0;
       color: #4b5563;
       font-size: 0.96rem;
@@ -243,7 +244,7 @@
       margin-top: 4px;
     }
 
-    /* GREEN BOX AREA: “Today’s training idea” card */
+    /* “Today’s training idea” card */
     .home-extra-card {
       margin-top: 16px;
       border-radius: 18px;
@@ -367,16 +368,44 @@
       box-shadow: 0 14px 35px rgba(79, 70, 229, 0.45);
     }
 
-    .subtext-right {
+    .subtext-right,
+    .subtext {
       font-size: 12px;
       color: var(--text-muted);
     }
 
-    /* QUIZ SCREEN */
+    /* QUIZ SCREEN LAYOUT */
     .quiz-layout {
       display: flex;
       flex-direction: column;
       gap: 14px;
+    }
+
+    .quiz-progress-wrapper {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .quiz-progress-bg {
+      width: 100%;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.7);
+      box-shadow:
+        0 8px 20px rgba(15, 23, 42, 0.18),
+        0 0 0 1px rgba(255, 255, 255, 0.9);
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .quiz-progress-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #4f46e5, #7c3aed, #f97316);
+      box-shadow: 0 10px 25px rgba(79, 70, 229, 0.55);
+      transition: width 0.2s ease-out;
     }
 
     .quiz-top-row {
@@ -398,19 +427,9 @@
     }
 
     .quiz-card {
-      border-radius: 18px;
-      background:
-        linear-gradient(145deg,
-          rgba(249, 250, 251, 0.98),
-          rgba(239, 246, 255, 0.92)
-        );
+      border-radius: 14px;
+      background: #f9fafb;
       padding: 12px 14px;
-      box-shadow:
-        0 14px 36px rgba(15, 23, 42, 0.16),
-        0 0 0 1px rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(203, 213, 225, 0.7);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
     }
 
     .question-text {
@@ -602,8 +621,6 @@
       border-color: #4b5563;
       color: white;
       font-size: 13px;
-      border-radius: 10px;
-      padding: 6px 8px;
     }
   </style>
 </head>
@@ -628,12 +645,9 @@
           <div class="home-intro">
             <div>
               <div class="pill">🔥 Daily mastery trainer</div>
-              <h2 class="home-title">
-                Pick a grade, lock in a topic, and crush a 25-question speed set.
-              </h2>
-              <p class="home-lead">
-                Short, focused practice that feels like a game, not homework.
-                Build <strong>fast, accurate math reflexes</strong> one set at a time.
+              <h2>Choose a grade, pick a topic, and run a 15-question speed set.</h2>
+              <p>
+                Questions pull from a structured curriculum, but feel like a quick challenge, not a long test.
               </p>
               <ul class="home-bullets">
                 <li>
@@ -663,7 +677,6 @@
               </p>
             </div>
 
-            <!-- This fills the old green empty area -->
             <div class="home-extra-card">
               <div class="home-extra-icon">💡</div>
               <div class="home-extra-body">
@@ -703,13 +716,13 @@
                 max="100"
                 value="1"
               />
-              <span class="subtext-right">
+              <span class="subtext">
                 Rough difficulty scaler (1 = easiest, 100 = hardest tuned by generator).
               </span>
             </div>
 
             <button id="startBtn" class="start-btn" type="button">
-              Start 25-Question Set
+              Start 15-Question Set
             </button>
           </div>
         </div>
@@ -718,6 +731,11 @@
       <!-- QUIZ SCREEN -->
       <section id="quizScreen" class="screen hidden">
         <div class="quiz-layout">
+          <div class="quiz-progress-wrapper">
+            <div class="quiz-progress-bg">
+              <div id="quizProgressBar" class="quiz-progress-fill"></div>
+            </div>
+          </div>
           <div class="quiz-top-row">
             <div>Answer and press <strong>Enter</strong> or click Submit.</div>
             <div>Elapsed (set): <span id="elapsedTimeTotal">0:00</span></div>
@@ -768,7 +786,7 @@
     </main>
 
     <footer class="app-footer">
-      Made by Daddy Ten • MathIXL daily training
+      Made for Skye Ten • MathIXL daily training
     </footer>
   </div>
 
