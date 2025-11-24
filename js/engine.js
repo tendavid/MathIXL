@@ -140,8 +140,9 @@
     gradeSelect.innerHTML = '<option value="">Select Grade</option>';
     grades.forEach((g) => {
       const opt = document.createElement("option");
-      opt.value = g.id;
-      opt.textContent = `Grade ${g.id} – ${g.name}`;
+      // FIX: use g.grade (as defined in curriculum.js), not g.id
+      opt.value = g.grade;
+      opt.textContent = `Grade ${g.grade} – ${g.name}`;
       gradeSelect.appendChild(opt);
     });
   }
@@ -154,16 +155,17 @@
       return;
     }
 
-    if (typeof getTopicsForGrade !== "function") {
+    // FIX: curriculum.js defines getProgressivesForGrade, not getTopicsForGrade
+    if (typeof getProgressivesForGrade !== "function") {
       console.error(
-        "getTopicsForGrade() not defined. Check curriculum.js load order."
+        "getProgressivesForGrade() not defined. Check curriculum.js load order."
       );
       progressiveSelect.innerHTML =
         '<option value="">Error loading topics. See console.</option>';
       return;
     }
 
-    const topics = getTopicsForGrade(grade);
+    const topics = getProgressivesForGrade(grade);
     if (!topics || !topics.length) {
       progressiveSelect.innerHTML =
         '<option value="">No topics found for this grade.</option>';
