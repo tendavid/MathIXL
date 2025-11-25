@@ -47,12 +47,7 @@ const CURRICULUM = {
     "progressives": [
       { "index": 1, "code": "g4_numbers100k", "name": "Numbers to 100,000", "generator": "buildGenericMixedQuestion" },
       { "index": 2, "code": "g4_factors_multiples", "name": "Factors & Multiples", "generator": "buildGenericMixedQuestion" },
-      {
-        "index": 3,
-        "code": "g4_frac_dec",
-        "name": "Fractions & Decimals",
-        "generator": "buildG4FractionsDecimalsQuestion"
-      },
+      { "index": 3, "code": "g4_frac_dec", "name": "Fractions & Decimals", "generator": "buildG4FractionsDecimalsQuestion" },
       { "index": 4, "code": "g4_multidigit_mult", "name": "Multi-Digit Multiplication", "generator": "buildGenericMixedQuestion" },
       { "index": 5, "code": "g4_long_div", "name": "Long Division", "generator": "buildGenericMixedQuestion" },
       { "index": 6, "code": "g4_geometry", "name": "Angles & Symmetry", "generator": "buildGenericMixedQuestion" },
@@ -108,7 +103,7 @@ const CURRICULUM = {
     "progressives": [
       { "index": 1, "code": "g8_linear_func", "name": "Linear Functions & Slope", "generator": "buildGenericMixedQuestion" },
       { "index": 2, "code": "g8_systems", "name": "Systems of Linear Equations", "generator": "buildGenericMixedQuestion" },
-      { "index": 3, "code": "g8_transform", "name": "Transformations & Similarity", "generator": "buildGenericMixedQuestion" },
+      { "index": 3, "name": "Transformations & Similarity", "code": "g8_transform", "generator": "buildGenericMixedQuestion" },
       { "index": 4, "code": "g8_pythagoras", "name": "Pythagorean Theorem (Applications)", "generator": "buildGenericMixedQuestion" },
       { "index": 5, "code": "g8_exponents", "name": "Exponents & Scientific Notation", "generator": "buildGenericMixedQuestion" },
       { "index": 6, "code": "g8_stats_prob", "name": "Statistics & Probability", "generator": "buildGenericMixedQuestion" },
