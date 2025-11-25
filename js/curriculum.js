@@ -98,7 +98,7 @@ const CURRICULUM = {
       { "index": 4, "code": "g7_geom", "name": "Geometry (Angles, Triangles, Area)", "generator": "buildGenericMixedQuestion" },
       { "index": 5, "code": "g7_pythagoras", "name": "Pythagorean Theorem (Intro)", "generator": "buildGenericMixedQuestion" },
       { "index": 6, "code": "g7_graphs_functions", "name": "Graphs & Functions (Intro)", "generator": "buildGenericMixedQuestion" },
-      { "index": 7", "code": "g7_stats", "name": "Statistics (Mean/Median/Mode)", "generator": "buildGenericMixedQuestion" }
+      { "index": 7, "code": "g7_stats", "name": "Statistics (Mean/Median/Mode)", "generator": "buildGenericMixedQuestion" }
     ]
   },
 
