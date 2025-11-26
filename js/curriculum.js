@@ -19,11 +19,11 @@ const CURRICULUM = {
     "progressives": [
       { "index": 1, "code": "g2_numbers1000", "name": "Numbers to 1,000", "generator": "buildG2NumbersTo1000Question" },
       { "index": 2, "code": "g2_addsub1000", "name": "Addition & Subtraction Within 1,000", "generator": "buildG2AddSub1000Question" },
-      { "index": 3, "code": "g2_mult", "name": "Multiplication (Arrays / Repeated Addition)", "generator": "buildG2MultiplicationQuestion" },
+      { "index": 3, "code": "g2_mult", "name": "Multiplication (Repeated Addition)", "generator": "buildG2MultiplicationQuestion" },
       { "index": 4, "code": "g2_div", "name": "Division (Sharing / Grouping)", "generator": "buildG2DivisionQuestion" },
       { "index": 5, "code": "g2_money", "name": "Money (Coins & Notes)", "generator": "buildG2MoneyQuestion" },
-      { "index": 6, "code": "g2_measure", "name": "Measurement (Length, Mass, Volume, Time, Money)", "generator": "buildG2MeasurementQuestion" },
-      { "index": 7, "code": "g2_word", "name": "Word Problems (2-Step, Bar Models Intro)", "generator": "buildG2WordProblemQuestion" }
+      { "index": 6, "code": "g2_measure", "name": "Measurement (Volume, Time, Money)", "generator": "buildG2MeasurementQuestion" },
+      { "index": 7, "code": "g2_word", "name": "Word Problems (2-Step / Bar Models Intro)", "generator": "buildG2WordProblemQuestion" }
     ]
   },
 
@@ -35,7 +35,7 @@ const CURRICULUM = {
       { "index": 2, "code": "g3_muldiv", "name": "Multiplication & Division", "generator": "buildG3MulDivQuestion" },
       { "index": 3, "code": "g3_frac_basic", "name": "Fractions (Basic)", "generator": "buildG3FractionsBasicQuestion" },
       { "index": 4, "code": "g3_area_perim", "name": "Area & Perimeter", "generator": "buildG3AreaPerimeterQuestion" },
-      { "index": 5, "code": "g3_bar_models", "name": "Bar Models (Whole-Part / Comparison)", "generator": "buildG3BarModelQuestion" },
+      { "index": 5, "code": "g3_bar_models", "name": "Bar Models (Part–Whole / Comparison)", "generator": "buildG3BarModelQuestion" },
       { "index": 6, "code": "g3_graphs", "name": "Graphs (Bar / Line Intro)", "generator": "buildG3GraphQuestion" },
       { "index": 7, "code": "g3_word", "name": "Word Problems (2-Step)", "generator": "buildG3WordProblemQuestion" }
     ]
@@ -45,13 +45,13 @@ const CURRICULUM = {
     "name": "Grade 4 – Primary 4",
     "levels": 100,
     "progressives": [
-      { "index": 1, "code": "g4_numbers100k", "name": "Numbers to 100,000", "generator": "buildGenericMixedQuestion" },
-      { "index": 2, "code": "g4_factors_multiples", "name": "Factors & Multiples", "generator": "buildGenericMixedQuestion" },
+      { "index": 1, "code": "g4_numbers100k", "name": "Numbers to 100,000", "generator": "buildG4NumbersTo100kQuestion" },
+      { "index": 2, "code": "g4_factors_multiples", "name": "Factors & Multiples", "generator": "buildG4FactorsMultiplesQuestion" },
       { "index": 3, "code": "g4_frac_dec", "name": "Fractions & Decimals", "generator": "buildG4FractionsDecimalsQuestion" },
-      { "index": 4, "code": "g4_multidigit_mult", "name": "Multi-Digit Multiplication", "generator": "buildGenericMixedQuestion" },
-      { "index": 5, "code": "g4_long_div", "name": "Long Division", "generator": "buildGenericMixedQuestion" },
-      { "index": 6, "code": "g4_geometry", "name": "Angles & Symmetry", "generator": "buildGenericMixedQuestion" },
-      { "index": 7, "code": "g4_word", "name": "Word Problems (Whole Numbers / Fractions)", "generator": "buildGenericMixedQuestion" }
+      { "index": 4, "code": "g4_multidigit_mult", "name": "Multi-digit Multiplication", "generator": "buildG4MultiDigitMultiplicationQuestion" },
+      { "index": 5, "code": "g4_long_div", "name": "Long Division", "generator": "buildG4LongDivisionQuestion" },
+      { "index": 6, "code": "g4_geometry", "name": "Angles & Symmetry", "generator": "buildG4GeometryAnglesSymmetryQuestion" },
+      { "index": 7, "code": "g4_word", "name": "Word Problems (Whole Numbers / Fractions)", "generator": "buildG4WordProblemsMixedQuestion" }
     ]
   },
 
@@ -65,7 +65,7 @@ const CURRICULUM = {
       { "index": 4, "code": "g5_ratio", "name": "Ratio", "generator": "buildGenericMixedQuestion" },
       { "index": 5, "code": "g5_volume", "name": "Volume of Rectangular Prisms", "generator": "buildGenericMixedQuestion" },
       { "index": 6, "code": "g5_average", "name": "Average", "generator": "buildGenericMixedQuestion" },
-      { "index": 7, "code": "g5_word", "name": "Word Problems (Ratio / Percent / Volume)", "generator": "buildGenericMixedQuestion" }
+      { "index": 7, "code": "g5_word", "name": "Word Problems (Rate / Percent / Volume)", "generator": "buildGenericMixedQuestion" }
     ]
   },
 
@@ -74,125 +74,96 @@ const CURRICULUM = {
     "levels": 100,
     "progressives": [
       { "index": 1, "code": "g6_algebra_expr", "name": "Algebraic Expressions", "generator": "buildGenericMixedQuestion" },
-      { "index": 2, "code": "g6_eq_one_step", "name": "Equations (One-Step & Two-Step)", "generator": "buildGenericMixedQuestion" },
-      { "index": 3, "code": "g6_ratio_rate_speed", "name": "Ratio, Rate & Speed", "generator": "buildGenericMixedQuestion" },
-      { "index": 4, "code": "g6_percent_adv", "name": "Percentage (Advanced)", "generator": "buildGenericMixedQuestion" },
-      { "index": 5, "code": "g6_area_volume", "name": "Area & Volume (Advanced)", "generator": "buildGenericMixedQuestion" },
-      { "index": 6, "code": "g6_geometry", "name": "Geometry (Angles, Triangles, Nets)", "generator": "buildGenericMixedQuestion" },
-      { "index": 7, "code": "g6_data_prob", "name": "Data Handling & Probability", "generator": "buildGenericMixedQuestion" }
+      { "index": 2, "code": "g6_equations", "name": "Simple Linear Equations", "generator": "buildGenericMixedQuestion" },
+      { "index": 3, "code": "g6_ratio_rate", "name": "Ratio & Rate", "generator": "buildGenericMixedQuestion" },
+      { "index": 4, "code": "g6_percent", "name": "Percentage (Increase / Decrease)", "generator": "buildGenericMixedQuestion" },
+      { "index": 5, "code": "g6_area", "name": "Area of Composite Figures", "generator": "buildGenericMixedQuestion" },
+      { "index": 6, "code": "g6_volume", "name": "Volume of Solids", "generator": "buildGenericMixedQuestion" },
+      { "index": 7, "code": "g6_word", "name": "Word Problems (Algebra / Ratio)", "generator": "buildGenericMixedQuestion" }
     ]
   },
 
   "7": {
-    "name": "Grade 7 – Sec 1 / US Grade 7 Blend",
+    "name": "Grade 7 – Secondary 1",
     "levels": 100,
     "progressives": [
-      { "index": 1, "code": "g7_integers", "name": "Integers & Rational Numbers", "generator": "buildGenericMixedQuestion" },
-      { "index": 2, "code": "g7_lin_eq", "name": "Linear Equations", "generator": "buildGenericMixedQuestion" },
-      { "index": 3, "code": "g7_ratio_percent", "name": "Ratio, Rate & Percent", "generator": "buildGenericMixedQuestion" },
-      { "index": 4, "code": "g7_geom", "name": "Geometry (Angles, Triangles, Area)", "generator": "buildGenericMixedQuestion" },
-      { "index": 5, "code": "g7_pythagoras", "name": "Pythagorean Theorem (Intro)", "generator": "buildGenericMixedQuestion" },
-      { "index": 6, "code": "g7_graphs_functions", "name": "Graphs & Functions (Intro)", "generator": "buildGenericMixedQuestion" },
-      { "index": 7, "code": "g7_stats", "name": "Statistics (Mean/Median/Mode)", "generator": "buildGenericMixedQuestion" }
+      { "index": 1, "code": "g7_integers", "name": "Integers & Number Line", "generator": "buildGenericMixedQuestion" },
+      { "index": 2, "code": "g7_algebra", "name": "Algebraic Manipulation", "generator": "buildGenericMixedQuestion" },
+      { "index": 3, "code": "g7_linear_eq", "name": "Linear Equations", "generator": "buildGenericMixedQuestion" },
+      { "index": 4, "code": "g7_inequalities", "name": "Inequalities", "generator": "buildGenericMixedQuestion" },
+      { "index": 5, "code": "g7_graphs", "name": "Graphs of Linear Functions", "generator": "buildGenericMixedQuestion" },
+      { "index": 6, "code": "g7_geometry", "name": "Angles & Triangles", "generator": "buildGenericMixedQuestion" },
+      { "index": 7, "code": "g7_stats", "name": "Statistics (Mean / Median / Mode)", "generator": "buildGenericMixedQuestion" }
     ]
   },
 
   "8": {
-    "name": "Grade 8 – Sec 2 / US Grade 8 Blend",
+    "name": "Grade 8 – Secondary 2",
     "levels": 100,
     "progressives": [
-      { "index": 1, "code": "g8_linear_func", "name": "Linear Functions & Slope", "generator": "buildGenericMixedQuestion" },
-      { "index": 2, "code": "g8_systems", "name": "Systems of Linear Equations", "generator": "buildGenericMixedQuestion" },
-      { "index": 3, "name": "Transformations & Similarity", "code": "g8_transform", "generator": "buildGenericMixedQuestion" },
-      { "index": 4, "code": "g8_pythagoras", "name": "Pythagorean Theorem (Applications)", "generator": "buildGenericMixedQuestion" },
-      { "index": 5, "code": "g8_exponents", "name": "Exponents & Scientific Notation", "generator": "buildGenericMixedQuestion" },
-      { "index": 6, "code": "g8_stats_prob", "name": "Statistics & Probability", "generator": "buildGenericMixedQuestion" },
-      { "index": 7, "code": "g8_word", "name": "Word Problems (Functions / Geometry)", "generator": "buildGenericMixedQuestion" }
+      { "index": 1, "code": "g8_real_numbers", "name": "Real Numbers & Surds", "generator": "buildGenericMixedQuestion" },
+      { "index": 2, "code": "g8_quadratics", "name": "Quadratic Equations", "generator": "buildGenericMixedQuestion" },
+      { "index": 3, "code": "g8_simultaneous", "name": "Simultaneous Equations", "generator": "buildGenericMixedQuestion" },
+      { "index": 4, "code": "g8_similarity", "name": "Similarity & Congruency", "generator": "buildGenericMixedQuestion" },
+      { "index": 5, "code": "g8_trig", "name": "Trigonometry (Right Triangles)", "generator": "buildGenericMixedQuestion" },
+      { "index": 6, "code": "g8_stats", "name": "Statistics (Grouped Data)", "generator": "buildGenericMixedQuestion" },
+      { "index": 7, "code": "g8_word", "name": "Applications in Real-World Problems", "generator": "buildGenericMixedQuestion" }
     ]
   },
 
   "9": {
-    "name": "Grade 9 – Algebra I",
-    "levels": 50,
+    "name": "Grade 9 – Secondary 3",
+    "levels": 100,
     "progressives": [
-      { "index": 1, "code": "g9_lin_eq", "name": "Linear Equations & Inequalities", "generator": "buildGenericMixedQuestion" },
-      { "index": 2, "code": "g9_lin_graphs", "name": "Linear Graphs & Slope-Intercept Form", "generator": "buildGenericMixedQuestion" },
-      { "index": 3, "code": "g9_sys", "name": "Systems of Linear Equations", "generator": "buildGenericMixedQuestion" },
-      { "index": 4, "code": "g9_poly", "name": "Polynomials (Add/Sub/Multiply)", "generator": "buildGenericMixedQuestion" },
-      { "index": 5, "code": "g9_factoring", "name": "Factoring (Trinomials & Special)", "generator": "buildGenericMixedQuestion" },
-      { "index": 6, "code": "g9_quad_eq", "name": "Quadratic Equations", "generator": "buildGenericMixedQuestion" },
-      { "index": 7, "code": "g9_quad_graph", "name": "Quadratic Functions & Graphs", "generator": "buildGenericMixedQuestion" },
-      { "index": 8, "code": "g9_word", "name": "Algebra I Word Problems", "generator": "buildGenericMixedQuestion" }
+      { "index": 1, "code": "g9_algebra", "name": "Advanced Algebra", "generator": "buildGenericMixedQuestion" },
+      { "index": 2, "code": "g9_functions", "name": "Functions & Graphs", "generator": "buildGenericMixedQuestion" },
+      { "index": 3, "code": "g9_circle", "name": "Circle Theorems", "generator": "buildGenericMixedQuestion" },
+      { "index": 4, "code": "g9_vectors", "name": "Vectors", "generator": "buildGenericMixedQuestion" },
+      { "index": 5, "code": "g9_stats", "name": "Statistics & Probability", "generator": "buildGenericMixedQuestion" },
+      { "index": 6, "code": "g9_trig", "name": "Trigonometry (Non-Right Triangles)", "generator": "buildGenericMixedQuestion" },
+      { "index": 7, "code": "g9_word", "name": "Challenging Word Problems", "generator": "buildGenericMixedQuestion" }
     ]
   },
 
   "10": {
-    "name": "Grade 10 – Geometry",
-    "levels": 50,
+    "name": "Grade 10 – Secondary 4",
+    "levels": 100,
     "progressives": [
-      { "index": 1, "code": "g10_cong_sim", "name": "Congruence & Similarity", "generator": "buildGenericMixedQuestion" },
-      { "index": 2, "code": "g10_triangles", "name": "Triangles (Angle Sum / Properties)", "generator": "buildGenericMixedQuestion" },
-      { "index": 3, "code": "g10_circles", "name": "Circles (Arcs / Angles)", "generator": "buildGenericMixedQuestion" },
-      { "index": 4, "code": "g10_coord_geom", "name": "Coordinate Geometry", "generator": "buildGenericMixedQuestion" },
-      { "index": 5, "code": "g10_area_volume", "name": "Area, Surface Area & Volume", "generator": "buildGenericMixedQuestion" },
-      { "index": 6, "code": "g10_transform", "name": "Transformations (Rigid & Dilations)", "generator": "buildGenericMixedQuestion" },
-      { "index": 7, "code": "g10_trig", "name": "Right Triangle Trigonometry", "generator": "buildGenericMixedQuestion" },
-      { "index": 8, "code": "g10_word", "name": "Geometry Word Problems", "generator": "buildGenericMixedQuestion" }
+      { "index": 1, "code": "g10_algebra", "name": "Algebra & Functions", "generator": "buildGenericMixedQuestion" },
+      { "index": 2, "code": "g10_calculus_intro", "name": "Intro to Calculus", "generator": "buildGenericMixedQuestion" },
+      { "index": 3, "code": "g10_trig", "name": "Trigonometry (Graphs & Identities)", "generator": "buildGenericMixedQuestion" },
+      { "index": 4, "code": "g10_stats", "name": "Statistics & Probability", "generator": "buildGenericMixedQuestion" },
+      { "index": 5, "code": "g10_vectors", "name": "Vectors & Applications", "generator": "buildGenericMixedQuestion" },
+      { "index": 6, "code": "g10_geometry", "name": "Coordinate Geometry", "generator": "buildGenericMixedQuestion" },
+      { "index": 7, "code": "g10_word", "name": "Comprehensive Applications", "generator": "buildGenericMixedQuestion" }
     ]
   },
 
   "11": {
-    "name": "Grade 11 – Algebra II",
-    "levels": 50,
+    "name": "Grade 11 – Pre-University 1",
+    "levels": 100,
     "progressives": [
-      { "index": 1, "code": "g11_poly_funcs", "name": "Polynomial Functions", "generator": "buildGenericMixedQuestion" },
-      { "index": 2, "code": "g11_rational", "name": "Rational Expressions & Equations", "generator": "buildGenericMixedQuestion" },
-      { "index": 3, "code": "g11_exp_log", "name": "Exponential & Logarithmic Functions", "generator": "buildGenericMixedQuestion" },
-      { "index": 4, "code": "g11_seq_series", "name": "Sequences & Series", "generator": "buildGenericMixedQuestion" },
-      { "index": 5, "code": "g11_trig_funcs", "name": "Trigonometric Functions", "generator": "buildGenericMixedQuestion" },
-      { "index": 6, "code": "g11_complex", "name": "Complex Numbers", "generator": "buildGenericMixedQuestion" },
-      { "index": 7, "code": "g11_conics", "name": "Conic Sections", "generator": "buildGenericMixedQuestion" },
-      { "index": 8, "code": "g11_word", "name": "Algebra II Word Problems", "generator": "buildGenericMixedQuestion" }
+      { "index": 1, "code": "g11_prealgebra", "name": "Pre-Calculus & Algebra", "generator": "buildGenericMixedQuestion" },
+      { "index": 2, "code": "g11_calculus", "name": "Calculus I", "generator": "buildGenericMixedQuestion" },
+      { "index": 3, "code": "g11_stats", "name": "Statistics", "generator": "buildGenericMixedQuestion" },
+      { "index": 4, "code": "g11_vectors", "name": "Vectors & Matrices", "generator": "buildGenericMixedQuestion" },
+      { "index": 5, "code": "g11_complex", "name": "Complex Numbers", "generator": "buildGenericMixedQuestion" },
+      { "index": 6, "code": "g11_diff_eq", "name": "Differential Equations", "generator": "buildGenericMixedQuestion" },
+      { "index": 7, "code": "g11_word", "name": "Advanced Applications", "generator": "buildGenericMixedQuestion" }
     ]
   },
 
   "12": {
-    "name": "Grade 12 – Precalculus & Statistics",
-    "levels": 50,
+    "name": "Grade 12 – Pre-University 2",
+    "levels": 100,
     "progressives": [
-      { "index": 1, "code": "g12_limits", "name": "Limits (Conceptual)", "generator": "buildGenericMixedQuestion" },
-      { "index": 2, "code": "g12_trig_id", "name": "Trigonometric Identities", "generator": "buildGenericMixedQuestion" },
-      { "index": 3, "code": "g12_trig_graphs", "name": "Trig Graphs & Transformations", "generator": "buildGenericMixedQuestion" },
-      { "index": 4, "code": "g12_matrix_vector", "name": "Matrices & Vectors", "generator": "buildGenericMixedQuestion" },
-      { "index": 5, "code": "g12_prob_stats", "name": "Probability & Statistics", "generator": "buildGenericMixedQuestion" },
-      { "index": 6, "code": "g12_regression", "name": "Data Analysis & Regression", "generator": "buildGenericMixedQuestion" },
-      { "index": 7, "code": "g12_precalc_mix", "name": "Mixed Precalculus Review", "generator": "buildGenericMixedQuestion" },
-      { "index": 8, "code": "g12_hs_mix", "name": "High School Mixed Review (9–12)", "generator": "buildGenericMixedQuestion" }
+      { "index": 1, "code": "g12_calculus", "name": "Calculus II", "generator": "buildGenericMixedQuestion" },
+      { "index": 2, "code": "g12_linear_alg", "name": "Linear Algebra", "generator": "buildGenericMixedQuestion" },
+      { "index": 3, "code": "g12_prob", "name": "Probability Theory", "generator": "buildGenericMixedQuestion" },
+      { "index": 4, "code": "g12_stats", "name": "Statistics & Inference", "generator": "buildGenericMixedQuestion" },
+      { "index": 5, "code": "g12_optimization", "name": "Optimization", "generator": "buildGenericMixedQuestion" },
+      { "index": 6, "code": "g12_discrete", "name": "Discrete Mathematics", "generator": "buildGenericMixedQuestion" },
+      { "index": 7, "code": "g12_word", "name": "Mathematical Modeling", "generator": "buildGenericMixedQuestion" }
     ]
   }
 };
-
-function getGradesList() {
-  return Object.keys(CURRICULUM).map(g => ({
-    grade: +g,
-    name: CURRICULUM[g].name
-  }));
-}
-
-function getProgressivesForGrade(g) {
-  return CURRICULUM[g]?.progressives || [];
-}
-
-function getTopicFor(g, i) {
-  return (CURRICULUM[g]?.progressives || []).find(p => p.index === i) || null;
-}
-
-function generateQuestionFor(g, i, n) {
-  const topic = getTopicFor(g, i);
-  if (!topic) throw Error("Topic not found");
-  const fn = window[topic.generator];
-  if (typeof fn !== "function") {
-    throw Error("Missing generator: " + topic.generator);
-  }
-  return fn({ grade: g, progressiveIndex: i, number: n, topic });
-}
