@@ -167,3 +167,30 @@ const CURRICULUM = {
     ]
   }
 };
+
+// ---- Helper functions expected by engine.js ----
+
+function getGradesList() {
+  return Object.keys(CURRICULUM).map(g => ({
+    grade: +g,
+    name: CURRICULUM[g].name
+  }));
+}
+
+function getProgressivesForGrade(g) {
+  return CURRICULUM[g]?.progressives || [];
+}
+
+function getTopicFor(g, i) {
+  return (CURRICULUM[g]?.progressives || []).find(p => p.index === i) || null;
+}
+
+function generateQuestionFor(g, i, n) {
+  const topic = getTopicFor(g, i);
+  if (!topic) throw Error("Topic not found");
+  const fn = window[topic.generator];
+  if (typeof fn !== "function") {
+    throw Error("Missing generator: " + topic.generator);
+  }
+  return fn({ grade: g, progressiveIndex: i, number: n, topic });
+}
