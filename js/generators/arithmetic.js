@@ -1,5 +1,5 @@
 // js/generators/arithmetic.js
-// Core arithmetic & basic topics generators for Grades 1–3 plus a generic mixed placeholder.
+// Core arithmetic & basic topics generators for Grades 1–4 plus a generic mixed placeholder.
 
 (function () {
   // ---------- Helper utilities ----------
@@ -173,12 +173,11 @@
   window.buildG1PictureGraphQuestion = function (opts) {
     const fruits = ["apples", "oranges", "bananas"];
     const counts = fruits.map(() => randInt(1, 5));
-    const total = counts.reduce((a, b) => a + b, 0);
     const targetIndex = randInt(0, fruits.length - 1);
     const target = fruits[targetIndex];
     const count = counts[targetIndex];
     return {
-      text: `In a picture graph, each picture stands for 1 fruit. There are ${counts[0]} apples, ${counts[1]} oranges and ${counts[2]} bananas.\nHow many ${target} are there?`,
+      text: `In a picture graph, each picture stands for 1 fruit.\nThere are ${counts[0]} apples, ${counts[1]} oranges and ${counts[2]} bananas.\nHow many ${target} are there?`,
       answer: count,
       concept: "Read simple picture graphs",
     };
@@ -488,19 +487,152 @@
     }
   };
 
+  // 🔧 FIXED: Grade 3 – Graphs (progressive 6) now randomized & difficulty-based
   window.buildG3GraphQuestion = function (opts) {
+    const level = Math.max(1, Math.min(100, Number(opts.number) || 1));
+
+    const baseMin = level <= 40 ? 5 : 10;
+    const baseMax = level <= 40 ? 20 : 40;
+
+    const classes = ["Class A", "Class B", "Class C"];
+    const values = classes.map(() => randInt(baseMin, baseMax));
+
+    // pick what to ask
+    let mode;
+    if (level <= 40) {
+      mode = choice(["total_two", "largest"]);
+    } else if (level <= 75) {
+      mode = choice(["difference", "total_all"]);
+    } else {
+      mode = choice(["difference", "total_all", "largest"]);
+    }
+
+    const desc =
+      `${classes[0]}: ${values[0]} students\n` +
+      `${classes[1]}: ${values[1]} students\n` +
+      `${classes[2]}: ${values[2]} students\n`;
+
+    if (mode === "total_two") {
+      const idx1 = 0;
+      const idx2 = 1;
+      return {
+        text:
+          `A bar graph shows the number of students in three classes:\n` +
+          desc +
+          `How many students are there in ${classes[idx1]} and ${classes[idx2]} altogether?`,
+        answer: values[idx1] + values[idx2],
+        concept: "Read and add data from a bar graph",
+      };
+    }
+
+    if (mode === "total_all") {
+      const total = values[0] + values[1] + values[2];
+      return {
+        text:
+          `A bar graph shows the number of students in three classes:\n` +
+          desc +
+          `How many students are there in all three classes altogether?`,
+        answer: total,
+        concept: "Total from bar graph",
+      };
+    }
+
+    if (mode === "difference") {
+      // choose two different classes
+      const idxs = shuffle([0, 1, 2]).slice(0, 2);
+      const a = idxs[0];
+      const b = idxs[1];
+      const diff = Math.abs(values[a] - values[b]);
+      return {
+        text:
+          `A bar graph shows the number of students in three classes:\n` +
+          desc +
+          `How many more students are in ${classes[a]} than in ${classes[b]}?`,
+        answer: diff,
+        concept: "Find difference from bar graph",
+      };
+    }
+
+    // largest
+    let maxVal = values[0];
+    let maxIdx = 0;
+    for (let i = 1; i < values.length; i++) {
+      if (values[i] > maxVal) {
+        maxVal = values[i];
+        maxIdx = i;
+      }
+    }
     return {
-      text: "Class A has 18 students and Class B has 15 students. How many students in total?",
-      answer: 33,
-      concept: "Graphs (bar graphs)",
+      text:
+        `A bar graph shows the number of students in three classes:\n` +
+        desc +
+        `Which class has the greatest number of students? (answer like "Class A")`,
+      answer: classes[maxIdx],
+      concept: "Identify largest value in bar graph",
     };
   };
 
+  // 🔧 FIXED: Grade 3 – Word Problems (progressive 7) now randomized & difficulty-based
   window.buildG3WordProblemQuestion = function (opts) {
+    const level = Math.max(1, Math.min(100, Number(opts.number) || 1));
+
+    // Level bands:
+    //  1–35: simple add/sub, 1-step
+    // 36–70: mult/div, 1-step
+    // 71–100: 2-step combos
+    let mode;
+    if (level <= 35) mode = "addsub";
+    else if (level <= 70) mode = "multdiv";
+    else mode = "twostep";
+
+    if (mode === "addsub") {
+      const a = randInt(20, 90);
+      const b = randInt(10, 50);
+      if (Math.random() < 0.5) {
+        return {
+          text: `There are ${a} children in a hall. ${b} more children come in. How many children are in the hall now?`,
+          answer: a + b,
+          concept: "Addition in word problems",
+        };
+      } else {
+        const total = a + b;
+        return {
+          text: `There are ${total} apples in a basket. ${a} apples are red and the rest are green. How many apples are green?`,
+          answer: total - a,
+          concept: "Subtraction in word problems",
+        };
+      }
+    }
+
+    if (mode === "multdiv") {
+      const groups = randInt(3, 9);
+      const each = randInt(4, 12);
+      if (Math.random() < 0.5) {
+        return {
+          text: `There are ${groups} boxes. Each box contains ${each} toy cars. How many toy cars are there altogether?`,
+          answer: groups * each,
+          concept: "Multiplication in word problems",
+        };
+      } else {
+        const total = groups * each;
+        return {
+          text: `There are ${total} stickers shared equally among ${groups} children. How many stickers does each child receive?`,
+          answer: each,
+          concept: "Division in word problems",
+        };
+      }
+    }
+
+    // twostep
+    const price = randInt(3, 12);
+    const qty1 = randInt(2, 6);
+    const qty2 = randInt(2, 6);
+    const cost1 = price * qty1;
+    const cost2 = price * qty2;
     return {
-      text: "Skye walks 3 km in the morning and 4 km in the evening. How many km does she walk in total?",
-      answer: 7,
-      concept: "2-step word problems",
+      text: `A notebook costs $${price}. Skye buys ${qty1} notebooks and her friend buys ${qty2} notebooks.\nHow much do they spend altogether?`,
+      answer: cost1 + cost2,
+      concept: "2-step word problems (multiplication + addition)",
     };
   };
 
@@ -565,7 +697,7 @@
     };
   };
 
-  // Factors & multiples – factors, common multiples, LCM (simple)
+  // Factors & multiples – factors, common multiples, LCM (simple), GCF
   window.buildG4FactorsMultiplesQuestion = function (opts) {
     const level = Math.max(1, Math.min(100, Number(opts.number) || 1));
 
@@ -642,7 +774,7 @@
     };
   };
 
-  // Long division – exact quotients only (no remainder for now)
+  // Long division – exact quotients only (no remainder)
   window.buildG4LongDivisionQuestion = function (opts) {
     const level = Math.max(1, Math.min(100, Number(opts.number) || 1));
 
@@ -662,8 +794,8 @@
     const dividend = divisor * quotient;
     return {
       text: `${dividend} ÷ ${divisor} = ?`,
-      answer: quotient,
-      concept: "Long division by 2-digit divisors (exact)",
+        answer: quotient,
+        concept: "Long division by 2-digit divisors (exact)",
     };
   };
 
