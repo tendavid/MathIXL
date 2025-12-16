@@ -28,7 +28,7 @@ const Home = () => {
   return (
     <main className="page">
       <div className="page-banner">
-        <h1 className="page-banner__title">MathIXL is running</h1>
+        <h1 className="page-banner__title">MathIXL is running (GitHub Pages)</h1>
       </div>
       <section className="card">
         <h1 className="title">MathIXL Quiz Builder</h1>
