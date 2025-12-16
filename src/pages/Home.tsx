@@ -27,6 +27,9 @@ const Home = () => {
 
   return (
     <main className="page">
+      <div className="page-banner">
+        <h1 className="page-banner__title">MathIXL is running</h1>
+      </div>
       <section className="card">
         <h1 className="title">MathIXL Quiz Builder</h1>
         <p className="subtitle">Choose your settings to start a 15-question practice session.</p>
