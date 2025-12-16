@@ -1,0 +1,6 @@
+node_modules
+.DS_Store
+dist
+vite.config.ts.timestamp-* 
+*.log
+npm-debug.log*
