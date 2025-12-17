@@ -1,10 +1,23 @@
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { buildSession, saveSession } from '../utils/session';
+import pacingData from '../data/pacing.json';
 
 const grades = Array.from({ length: 12 }, (_, index) => index + 1);
-const points = Array.from({ length: 5 }, (_, index) => index + 1);
 const numberRange = Array.from({ length: 50 }, (_, index) => index + 1);
+
+type PacingPoint = {
+  title: string;
+  ccssCodes: string[];
+  masteryText: string;
+  quizGuidanceText: string;
+  sampleItems?: string[];
+};
+
+type PacingData = Record<string, Record<string, PacingPoint>>;
+
+const pacing = pacingData as PacingData;
+const points = Array.from({ length: 5 }, (_, index) => index + 1);
 
 const Home = () => {
   const [grade, setGrade] = useState<number | ''>('');
@@ -16,6 +29,20 @@ const Home = () => {
     () => grade !== '' && point !== '' && numberLimit !== '',
     [grade, numberLimit, point],
   );
+
+  useEffect(() => {
+    setPoint('');
+  }, [grade]);
+
+  const pointOptions = useMemo(() => {
+    if (grade === '') return [];
+    const gradeData = pacing[String(grade)];
+    return points.map((value) => {
+      const pointData = gradeData?.[String(value)];
+      const title = pointData ? `Point ${value} — ${pointData.title}` : `Point ${value}`;
+      return { value, label: title };
+    });
+  }, [grade]);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -51,13 +78,18 @@ const Home = () => {
 
           <label className="field">
             <span className="label">Point</span>
-            <select value={point} onChange={(e) => setPoint(Number(e.target.value))} required>
+            <select
+              value={point}
+              onChange={(e) => setPoint(Number(e.target.value))}
+              required
+              disabled={grade === ''}
+            >
               <option value="" disabled>
                 Select point level
               </option>
-              {points.map((value) => (
-                <option key={value} value={value}>
-                  Point {value}
+              {pointOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
                 </option>
               ))}
             </select>
