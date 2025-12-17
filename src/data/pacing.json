@@ -1,0 +1,857 @@
+{
+  "1": {
+    "1": {
+      "title": "Counting and number meaning",
+      "ccssCodes": [
+        "1.NBT.1",
+        "1.OA.1"
+      ],
+      "masteryText": "Count, read, and write numbers to at least 40; match numbers to quantities; solve very simple addition stories using objects or drawings.",
+      "quizGuidanceText": "Visual and oral-friendly items; minimal symbols.",
+      "sampleItems": [
+        "Circle the group that shows 12.",
+        "What number comes after 19?",
+        "There are 5 apples. Add 2 more. How many now? Draw it."
+      ]
+    },
+    "2": {
+      "title": "Addition and subtraction within 10",
+      "ccssCodes": [
+        "1.OA.1–6"
+      ],
+      "masteryText": "Add and subtract within 10 using drawings and equations; understand addition as putting together and subtraction as taking apart.",
+      "quizGuidanceText": "Story problems and picture models; no fluency timing.",
+      "sampleItems": [
+        "7 birds are on a tree. 3 fly away. How many left?",
+        "Draw a picture for 4 + 5.",
+        "Which shows subtraction: 6-2 or 2+6?"
+      ]
+    },
+    "3": {
+      "title": "Place value and numbers to 100",
+      "ccssCodes": [
+        "1.NBT.2–4"
+      ],
+      "masteryText": "Understand tens and ones; compare two-digit numbers; add within 100 using place-value strategies (no standard algorithm).",
+      "quizGuidanceText": "Base-ten blocks; explanation over speed.",
+      "sampleItems": [
+        "Show 34 using tens and ones.",
+        "Which is bigger: 58 or 85? Why?",
+        "Solve 20 + 30 without counting by ones."
+      ]
+    },
+    "4": {
+      "title": "Measurement, time, and data",
+      "ccssCodes": [
+        "1.MD.1–4"
+      ],
+      "masteryText": "Compare lengths; measure using nonstandard units; tell time to hour and half-hour; organize simple data.",
+      "quizGuidanceText": "Hands-on and visual comparisons.",
+      "sampleItems": [
+        "Which pencil is longer?",
+        "Measure the book with paper clips.",
+        "What time is shown on the clock?"
+      ]
+    },
+    "5": {
+      "title": "Geometry and equations",
+      "ccssCodes": [
+        "1.G.1–3",
+        "1.OA.7–8"
+      ],
+      "masteryText": "Identify 2D/3D shapes; partition shapes into halves and quarters; understand the equal sign; find unknowns in equations.",
+      "quizGuidanceText": "Manipulatives and reasoning prompts.",
+      "sampleItems": [
+        "Circle all rectangles.",
+        "Split the shape into 4 equal parts.",
+        "Fill in the blank: 6 + n = 10.",
+        "Grades 2–12",
+        "Grades 2–12 pacing, CCSS codes, mastery descriptions, quiz guidance, and sample items continue in the",
+        "following sections, structured identically to Grade 1.",
+        "California CCSS Mathematics — 5-Point Pacing &",
+        "Quiz-Writing Guide (Grades 2–12)",
+        "Teacher handout. Each grade/course is divided into 5 pacing points (≈2 months each). Each point lists exact",
+        "CCSS codes, mastery targets, quiz-writing guidance, and sample items. High school is organized by",
+        "California\\222s typical pathway: Algebra I, Geometry, Algebra II, and Grade 12 advanced options."
+      ]
+    }
+  },
+  "2": {
+    "1": {
+      "title": "Place value to 100; addition/subtraction foundations",
+      "ccssCodes": [
+        "2.NBT.1–4",
+        "2.OA.1"
+      ],
+      "masteryText": "Read/write/compare numbers to 100; understand tens/ones; solve 1-step add/sub word problems within 100 using drawings/equations.",
+      "quizGuidanceText": "Use base-ten blocks, number lines, and short word problems. Require place-value explanation in 1–2 items.",
+      "sampleItems": [
+        "Write 58 in expanded form (50 + 8).",
+        "Which is greater: 73 or 37? Explain using tens/ones.",
+        "Sam has 28 stickers and gets 15 more. How many now? Show a strategy."
+      ]
+    },
+    "2": {
+      "title": "Fluency within 20; add/sub within 100",
+      "ccssCodes": [
+        "2.OA.2",
+        "2.NBT.5"
+      ],
+      "masteryText": "Fluently add/sub within 20; add/sub within 100 using strategies (compose/decompose tens).",
+      "quizGuidanceText": "Mix light fluency + strategy items. Include one regrouping-in-thinking item.",
+      "sampleItems": [
+        "Compute: 9+7, 13-6, 8+8.",
+        "Solve 46 + 27 using tens/ones (show steps).",
+        "Solve 72 - 48 and explain your method."
+      ]
+    },
+    "3": {
+      "title": "Place value to 1,000; add/sub within 1,000",
+      "ccssCodes": [
+        "2.NBT.1–3",
+        "2.NBT.6–9"
+      ],
+      "masteryText": "Read/write/compare to 1,000; add/sub within 1,000 using place value and properties; explain reasoning.",
+      "quizGuidanceText": "Use expanded form and place-value charts; include one multi-step story problem.",
+      "sampleItems": [
+        "Write 704 in expanded form.",
+        "Which is larger: 609 or 690? Explain.",
+        "A class has 235 books. They get 178 more. How many total?"
+      ]
+    },
+    "4": {
+      "title": "Measurement, time, money, and data",
+      "ccssCodes": [
+        "2.MD.1–8",
+        "2.MD.9–10"
+      ],
+      "masteryText": "Measure length with standard units; estimate/compare; tell time to nearest 5 minutes; solve money problems; create/read bar graphs (grade-appropriate).",
+      "quizGuidanceText": "Use practical contexts: ruler, clocks, coins, simple graphs; include one interpretation question.",
+      "sampleItems": [
+        "Choose which object is about 12 inches long.",
+        "What time is 3:25? Draw the clock hands.",
+        "A toy costs 45\\242 and a sticker costs 30\\242. How much in all?"
+      ]
+    },
+    "5": {
+      "title": "Geometry + arrays + even/odd",
+      "ccssCodes": [
+        "2.G.1–3",
+        "2.OA.3–4"
+      ],
+      "masteryText": "Identify/classify shapes; partition into equal shares; recognize even/odd; model equal groups/arrays.",
+      "quizGuidanceText": "Use visuals and brief explanations.",
+      "sampleItems": [
+        "Is 14 even or odd? Explain.",
+        "Draw an array for 3 rows of 4.",
+        "How many faces does a cube have?"
+      ]
+    }
+  },
+  "3": {
+    "1": {
+      "title": "Multiplication meanings + word problems; unknowns",
+      "ccssCodes": [
+        "3.OA.1–4",
+        "3.OA.8"
+      ],
+      "masteryText": "Interpret products/quotients; solve multiplication/division stories; represent with arrays/number lines; find unknowns.",
+      "quizGuidanceText": "Use pictures + equations. Include one unknown-factor item.",
+      "sampleItems": [
+        "Write an equation for 5 groups of 3.",
+        "Solve: 24 \\367 6. Show with a drawing.",
+        "Fill in: 7 \\327 n = 35."
+      ]
+    },
+    "2": {
+      "title": "Fluency and properties",
+      "ccssCodes": [
+        "3.OA.5–7"
+      ],
+      "masteryText": "Use properties to compute; fluency within 100; connect multiplication and division facts.",
+      "quizGuidanceText": "Include one distributive strategy item; small fluency set.",
+      "sampleItems": [
+        "Use distributive property: 6\\3277 = 6\\327(5+2). Compute.",
+        "Compute: 8\\3276, 54\\3679, 7\\3277.",
+        "If 4\\3279=36, what is 36\\3674?"
+      ]
+    },
+    "3": {
+      "title": "Fractions as numbers",
+      "ccssCodes": [
+        "3.NF.1–2"
+      ],
+      "masteryText": "Understand unit fractions and fractions on number lines; explain fraction meaning.",
+      "quizGuidanceText": "Use shaded models + number lines; avoid fraction operations.",
+      "sampleItems": [
+        "Shade 3/4 of a rectangle.",
+        "Place 2/3 on a number line from 0 to 1.",
+        "Explain what 1/5 means in words."
+      ]
+    },
+    "4": {
+      "title": "Measurement & data: time, mass, volume; graphs",
+      "ccssCodes": [
+        "3.MD.1–4"
+      ],
+      "masteryText": "Tell time to nearest minute; measure/estimate mass and volume; make and interpret scaled graphs.",
+      "quizGuidanceText": "Graph reading includes scale (2s/5s).",
+      "sampleItems": [
+        "A graph uses scale 2. If a bar is at 8, how many items?",
+        "How many minutes from 2:15 to 2:45?",
+        "Is 1 liter more or less than 500 mL?"
+      ]
+    },
+    "5": {
+      "title": "Area, perimeter, geometry; fraction compare intro",
+      "ccssCodes": [
+        "3.MD.5–7",
+        "3.G.1–2",
+        "3.NF.3"
+      ],
+      "masteryText": "Find area as equal squares; distinguish area vs perimeter; classify shapes; partition shapes; compare fractions with same numerator/denominator.",
+      "quizGuidanceText": "Use grid paper; include one area vs perimeter item.",
+      "sampleItems": [
+        "Find area of a 4 by 6 rectangle.",
+        "A shape has perimeter 12 units. Give one possible rectangle.",
+        "Which is larger: 2/6 or 2/3? Explain."
+      ]
+    }
+  },
+  "4": {
+    "1": {
+      "title": "Place value, rounding, add/sub; multi-step problems",
+      "ccssCodes": [
+        "4.NBT.1–3",
+        "4.OA.3"
+      ],
+      "masteryText": "Read/write/compare multi-digit numbers; round; add/sub multi-digit; solve multi-step whole-number problems.",
+      "quizGuidanceText": "Include rounding reasoning and one multi-step word problem.",
+      "sampleItems": [
+        "Round 746,219 to nearest thousand.",
+        "Compute 38,406 - 9,875.",
+        "A store sold 1,248 Mon and 2,035 Tue. Total?"
+      ]
+    },
+    "2": {
+      "title": "Multiplication/division; factors; primes",
+      "ccssCodes": [
+        "4.NBT.4–6",
+        "4.OA.1–2",
+        "4.OA.4"
+      ],
+      "masteryText": "Multiply and divide multi-digit; identify factors/multiples; prime/composite.",
+      "quizGuidanceText": "Use area model + standard algorithm; include factor pairs.",
+      "sampleItems": [
+        "Compute 347\\3276 (show method).",
+        "List all factor pairs of 36.",
+        "Is 29 prime? Why?"
+      ]
+    },
+    "3": {
+      "title": "Fraction equivalence and comparison",
+      "ccssCodes": [
+        "4.NF.1–2"
+      ],
+      "masteryText": "Generate equivalent fractions; compare with reasoning; use models/number lines.",
+      "quizGuidanceText": "Focus on equivalence and ordering.",
+      "sampleItems": [
+        "Fill in: 3/4 = n/8.",
+        "Which is larger: 5/6 or 5/8? Explain.",
+        "Place 1/2, 2/4, 3/6 on number line."
+      ]
+    },
+    "4": {
+      "title": "Fraction operations; decimals",
+      "ccssCodes": [
+        "4.NF.3–7"
+      ],
+      "masteryText": "Add/sub like denominators; multiply fraction\\327whole; decimals tenths/hundredths; compare decimals.",
+      "quizGuidanceText": "Include story problem + decimal-fraction connection.",
+      "sampleItems": [
+        "Compute: 5/8 + 1/8.",
+        "3 ribbons of length 3/4 yard. Total length?",
+        "Which is greater: 0.3 or 0.27? Explain."
+      ]
+    },
+    "5": {
+      "title": "Measurement, line plots, angles; geometry symmetry",
+      "ccssCodes": [
+        "4.MD.1–7",
+        "4.G.1–3"
+      ],
+      "masteryText": "Convert units; interpret line plots (incl fractions); measure angles; identify/draw lines/angles; symmetry.",
+      "quizGuidanceText": "Use protractor item; include conversion and line plot.",
+      "sampleItems": [
+        "Convert 5 feet to inches.",
+        "Create a line plot for 1/2, 1/2, 3/4, 1.",
+        "Measure the angle (diagram)."
+      ]
+    }
+  },
+  "5": {
+    "1": {
+      "title": "Expressions + decimal place value",
+      "ccssCodes": [
+        "5.OA.1–2",
+        "5.NBT.1–4"
+      ],
+      "masteryText": "Write/interpret expressions; analyze patterns; understand decimals to thousandths; compare/round decimals.",
+      "quizGuidanceText": "One expression item + one decimal rounding.",
+      "sampleItems": [
+        "Evaluate: 3 \\327 (4 + 6).",
+        "Round 12.468 to nearest hundredth.",
+        "Write a rule for 2\\2565, 4\\2569, 6\\25613."
+      ]
+    },
+    "2": {
+      "title": "Whole-number & decimal operations",
+      "ccssCodes": [
+        "5.NBT.5–7"
+      ],
+      "masteryText": "Multiply multi-digit; divide with 2-digit divisors (grade-level); operate with decimals.",
+      "quizGuidanceText": "Include estimation to check reasonableness.",
+      "sampleItems": [
+        "Compute: 4,238 \\327 27.",
+        "Compute: 9.6 \\367 0.3.",
+        "Estimate then compute: 31.4 + 7.89."
+      ]
+    },
+    "3": {
+      "title": "Add/sub fractions (unlike denominators)",
+      "ccssCodes": [
+        "5.NF.1–2"
+      ],
+      "masteryText": "Add/sub unlike denominators using equivalence; solve word problems.",
+      "quizGuidanceText": "Model-based item + word problem.",
+      "sampleItems": [
+        "Compute: 2/3 + 1/6.",
+        "Sara ran 3/4 then 2/3 mile. Total?",
+        "Explain why 3/5 and 6/10 are equal."
+      ]
+    },
+    "4": {
+      "title": "Multiply/divide fractions",
+      "ccssCodes": [
+        "5.NF.3–7"
+      ],
+      "masteryText": "Multiply fractions/mixed; divide unit fractions by whole numbers and vice versa; apply to problems.",
+      "quizGuidanceText": "Include visual model for fraction division.",
+      "sampleItems": [
+        "Compute: 3/4 \\327 2/3.",
+        "How many 1/4-cups are in 2 cups?",
+        "Divide: 5/6 \\367 2."
+      ]
+    },
+    "5": {
+      "title": "Measurement/volume + coordinate plane + classify shapes",
+      "ccssCodes": [
+        "5.MD.1–5",
+        "5.G.1–4"
+      ],
+      "masteryText": "Convert units; compute volume; graph points; classify 2D figures.",
+      "quizGuidanceText": "Include volume reasoning and coordinate graph.",
+      "sampleItems": [
+        "Find volume: 5\\3274\\3273 cm.",
+        "Plot (2,5) and (6,1). Which is higher?",
+        "Is every square a rectangle? Explain."
+      ]
+    }
+  },
+  "6": {
+    "1": {
+      "title": "Ratios, rates, percent",
+      "ccssCodes": [
+        "6.RP.1–3"
+      ],
+      "masteryText": "Use ratio language; compute unit rates; solve ratio/rate/percent problems using tables/diagrams.",
+      "quizGuidanceText": "Tables + double number lines; one percent-of item.",
+      "sampleItems": [
+        "Unit rate: 3 cups for 2 batches.",
+        "If 12 is 30% of a number, find the number.",
+        "180 miles in 3 hours: speed?"
+      ]
+    },
+    "2": {
+      "title": "Fraction/decimal operations; GCF/LCM",
+      "ccssCodes": [
+        "6.NS.1–4"
+      ],
+      "masteryText": "Divide fractions; divide multi-digit; operate with decimals; apply GCF/LCM.",
+      "quizGuidanceText": "One fraction-division model + one LCM context.",
+      "sampleItems": [
+        "3/4 \\367 1/8 = ?",
+        "Find GCF(24,36).",
+        "Bell every 6 min and 8 min: together when?"
+      ]
+    },
+    "3": {
+      "title": "Integers + coordinate plane",
+      "ccssCodes": [
+        "6.NS.5–8"
+      ],
+      "masteryText": "Compare/order integers; opposites and absolute value; plot points; interpret coordinates in context.",
+      "quizGuidanceText": "Real contexts; one absolute value/distance item.",
+      "sampleItems": [
+        "Order -3, 2, -7, 0.",
+        "Change from -2\\260C to 5\\260C?",
+        "Plot (-4,3) and name quadrant."
+      ]
+    },
+    "4": {
+      "title": "Expressions/equations/inequalities",
+      "ccssCodes": [
+        "6.EE.1–9"
+      ],
+      "masteryText": "Write/evaluate expressions; use variables; solve equations; solve inequalities and graph solutions.",
+      "quizGuidanceText": "Translate words to algebra + inequality graph.",
+      "sampleItems": [
+        "Expression: 5 more than 3x.",
+        "Solve 4x=28.",
+        "Graph y>-2."
+      ]
+    },
+    "5": {
+      "title": "Geometry + statistics",
+      "ccssCodes": [
+        "6.G.1–4",
+        "6.SP.1–5"
+      ],
+      "masteryText": "Area of polygons; surface area/volume; summarize data with center/spread; interpret distributions.",
+      "quizGuidanceText": "Nets/dot plots; interpretation emphasis.",
+      "sampleItems": [
+        "Area of triangle base10 height6.",
+        "Surface area of 4\\3273\\3275 prism.",
+        "From dot plot, find mean and describe spread."
+      ]
+    }
+  },
+  "7": {
+    "1": {
+      "title": "Proportional relationships",
+      "ccssCodes": [
+        "7.RP.1–2"
+      ],
+      "masteryText": "Determine proportional relationships; represent with tables/graphs/equations; compute unit rates.",
+      "quizGuidanceText": "Include a non-proportional example.",
+      "sampleItems": [
+        "Is y=3x proportional? Why?",
+        "Graph through (0,0) and (4,10): unit rate?",
+        "Complete table for y=2.5x when x=6."
+      ]
+    },
+    "2": {
+      "title": "Percent applications",
+      "ccssCodes": [
+        "7.RP.3"
+      ],
+      "masteryText": "Discounts, tax, tip, percent change, simple interest; solve real-world percent problems.",
+      "quizGuidanceText": "Real contexts; require estimation.",
+      "sampleItems": [
+        "$40 item 25% off: sale price?",
+        "Add 8.25% tax to $18.",
+        "Simple interest on $300 at 4% for 2 years."
+      ]
+    },
+    "3": {
+      "title": "Rational numbers + expressions",
+      "ccssCodes": [
+        "7.NS.1–3",
+        "7.EE.1–2"
+      ],
+      "masteryText": "Operate with rational numbers; simplify expressions; combine like terms.",
+      "quizGuidanceText": "Sign rules + simplification.",
+      "sampleItems": [
+        "(-3)+8-12 = ?",
+        "(-2.5)(4)= ?",
+        "Simplify 3x+5-2x+7."
+      ]
+    },
+    "4": {
+      "title": "Equations and inequalities",
+      "ccssCodes": [
+        "7.EE.3–4"
+      ],
+      "masteryText": "Solve multi-step equations/inequalities; model problems with equations.",
+      "quizGuidanceText": "Write equation from story; graph inequality.",
+      "sampleItems": [
+        "Solve 5(2x-1)=35.",
+        "Solve 2x+3\\24315 and graph.",
+        "Gym $10 + $3/visit: visits for $40?"
+      ]
+    },
+    "5": {
+      "title": "Geometry + probability + sampling",
+      "ccssCodes": [
+        "7.G.1–6",
+        "7.SP.1–8"
+      ],
+      "masteryText": "Scale drawings; angle relationships; circles; volume; sampling; probability of compound events.",
+      "quizGuidanceText": "Tree diagrams/organized lists.",
+      "sampleItems": [
+        "Scale 1in:5ft; 12ft -> inches?",
+        "Circumference with r=7.",
+        "Two coins: probability of 1 head."
+      ]
+    }
+  },
+  "8": {
+    "1": {
+      "title": "Irrational numbers; exponents; scientific notation",
+      "ccssCodes": [
+        "8.NS.1–2",
+        "8.EE.1–4"
+      ],
+      "masteryText": "Understand irrational numbers; exponent rules; scientific notation operations.",
+      "quizGuidanceText": "One irrational classification + one sci-notation op.",
+      "sampleItems": [
+        "Is \\3262 irrational? Why?",
+        "(2^3)(2^4)= ?",
+        "0.00056 in scientific notation."
+      ]
+    },
+    "2": {
+      "title": "Linear equations and systems",
+      "ccssCodes": [
+        "8.EE.5–8"
+      ],
+      "masteryText": "Slope and linear models; solve linear equations; solve systems and interpret intersections.",
+      "quizGuidanceText": "Slope from tables/graphs; one system context.",
+      "sampleItems": [
+        "Slope between (2,3) and (6,11).",
+        "Solve 3(2x-5)=21.",
+        "Solve y=2x+1 and y=-x+7."
+      ]
+    },
+    "3": {
+      "title": "Functions",
+      "ccssCodes": [
+        "8.F.1–5"
+      ],
+      "masteryText": "Define/evaluate functions; compare functions; interpret linear functions as models.",
+      "quizGuidanceText": "Include function/non-function relation.",
+      "sampleItems": [
+        "Is {1\\2563,1\\2564,2\\2565} a function?",
+        "For f(x)=3x-2, find f(5).",
+        "Compare y=2x vs table y:0,3,6."
+      ]
+    },
+    "4": {
+      "title": "Transformations; congruence; similarity",
+      "ccssCodes": [
+        "8.G.1–5"
+      ],
+      "masteryText": "Rigid motions and dilations; congruence/similarity via transformations.",
+      "quizGuidanceText": "Coordinate tasks; dilation scale factor.",
+      "sampleItems": [
+        "Reflect (3,-2) over x-axis.",
+        "Dilate by 1.5: side 8 -> ?",
+        "Describe a sequence of transformations (given)."
+      ]
+    },
+    "5": {
+      "title": "Pythagorean theorem; bivariate data",
+      "ccssCodes": [
+        "8.G.6–9",
+        "8.SP.1–4",
+        "8.NS.3"
+      ],
+      "masteryText": "Use Pythagorean theorem and distance; analyze scatter plots and linear models; interpret association/outliers.",
+      "quizGuidanceText": "Right-triangle + scatter plot interpretation.",
+      "sampleItems": [
+        "Hypotenuse of 6 and 8.",
+        "Distance between (-1,2) and (3,5).",
+        "Scatter plot: association and outlier."
+      ]
+    }
+  },
+  "9": {
+    "1": {
+      "title": "Linear relationships",
+      "ccssCodes": [
+        "A-SSE.1a–1b",
+        "A-CED.1–2",
+        "A-REI.1–3",
+        "F-IF.1–6"
+      ],
+      "masteryText": "Interpret expressions; create and solve linear equations; interpret graphs (intercepts, rate of change).",
+      "quizGuidanceText": "Context + solve + interpret.",
+      "sampleItems": [
+        "Write equation for $25 + $0.10/text and graph.",
+        "Solve 4(2x-3)=28; justify steps.",
+        "From graph, identify slope and intercept meaning."
+      ]
+    },
+    "2": {
+      "title": "Systems and inequalities",
+      "ccssCodes": [
+        "A-CED.3–4",
+        "A-REI.5–6",
+        "A-REI.10–12"
+      ],
+      "masteryText": "Solve systems; solve and graph inequalities; interpret solution regions.",
+      "quizGuidanceText": "System word problem + region description.",
+      "sampleItems": [
+        "Solve system 2x+y=11 and x-y=1.",
+        "Graph y\\263-2x+4 and y<x-1; describe overlap.",
+        "Ticket system: 120 tickets, $960 total."
+      ]
+    },
+    "3": {
+      "title": "Exponential models",
+      "ccssCodes": [
+        "F-LE.1–3",
+        "F-IF.7e",
+        "A-SSE.3c"
+      ],
+      "masteryText": "Distinguish linear vs exponential; build exponential functions; interpret parameters.",
+      "quizGuidanceText": "Tables + stories.",
+      "sampleItems": [
+        "Model doubling every 5 years.",
+        "Interpret 1.08 in 3(1.08)^x.",
+        "Identify which table is exponential."
+      ]
+    },
+    "4": {
+      "title": "Quadratics",
+      "ccssCodes": [
+        "F-IF.7a",
+        "F-IF.8a",
+        "F-IF.9",
+        "A-REI.4",
+        "A-SSE.3a–3b"
+      ],
+      "masteryText": "Graph/interpret quadratics; solve by factoring/completing square/quadratic formula; connect roots to intercepts.",
+      "quizGuidanceText": "Mix algebra + graph features.",
+      "sampleItems": [
+        "Solve x^2-5x+6=0.",
+        "Vertex of y=(x-2)^2-3.",
+        "When does h(t)=-16t^2+32t+5 hit ground?"
+      ]
+    },
+    "5": {
+      "title": "Polynomials operations",
+      "ccssCodes": [
+        "A-APR.1",
+        "A-SSE.2",
+        "F-BF.1a",
+        "F-IF.4–6"
+      ],
+      "masteryText": "Add/subtract/multiply polynomials; evaluate functions; connect structure to behavior (intro).",
+      "quizGuidanceText": "Short computations + interpretation.",
+      "sampleItems": [
+        "Multiply (x+3)(x-5).",
+        "Simplify (2x^2-3x+1) - (x^2+4x-6).",
+        "If f(x)=x^2-1, find f(-3)."
+      ]
+    }
+  },
+  "10": {
+    "1": {
+      "title": "Transformations & congruence",
+      "ccssCodes": [
+        "G-CO.1–5",
+        "G-CO.6–8"
+      ],
+      "masteryText": "Use rigid motions to define congruence; apply triangle congruence criteria.",
+      "quizGuidanceText": "Coordinate transform + congruence reasoning.",
+      "sampleItems": [
+        "Congruent by SSS/SAS/ASA?",
+        "Describe transformation mapping A to A'.",
+        "Rotate a point 90\\260 about origin."
+      ]
+    },
+    "2": {
+      "title": "Proof & triangle theorems",
+      "ccssCodes": [
+        "G-CO.9–13"
+      ],
+      "masteryText": "Prove theorems; use reasoning chains; parallelogram properties.",
+      "quizGuidanceText": "Proof scaffolds + one full proof prompt.",
+      "sampleItems": [
+        "Outline proof: base angles in isosceles triangle.",
+        "Find angle using parallel lines.",
+        "Parallelogram angle 70\\260: find others."
+      ]
+    },
+    "3": {
+      "title": "Similarity & trig",
+      "ccssCodes": [
+        "G-SRT.1–5",
+        "G-SRT.6–8"
+      ],
+      "masteryText": "Similarity; proportions; trig ratios; solve right triangles.",
+      "quizGuidanceText": "One similarity + one trig application.",
+      "sampleItems": [
+        "Similar triangles scale factor -> missing side.",
+        "Tree height with angle 35\\260 and distance 20m.",
+        "Verify right triangle with Pythagorean."
+      ]
+    },
+    "4": {
+      "title": "Circles",
+      "ccssCodes": [
+        "G-C.1–5"
+      ],
+      "masteryText": "Circle theorems, tangents, inscribed angles; circle equations.",
+      "quizGuidanceText": "Diagram-based reasoning.",
+      "sampleItems": [
+        "Inscribed angle intercepting 120\\260 arc -> ?",
+        "Tangent-radius angle property.",
+        "Circle center (2,-1), r=5: equation."
+      ]
+    },
+    "5": {
+      "title": "Coordinate geometry + volume + modeling",
+      "ccssCodes": [
+        "G-GPE.4–7",
+        "G-GMD.1–3",
+        "G-MG.1–3"
+      ],
+      "masteryText": "Coordinate proofs; volume; geometric modeling.",
+      "quizGuidanceText": "Coordinate proof + volume modeling.",
+      "sampleItems": [
+        "Slopes 2 and -1/2: perpendicular?",
+        "Volume of cone r=3 h=10.",
+        "Model a constraint problem and explain."
+      ]
+    }
+  },
+  "11": {
+    "1": {
+      "title": "Polynomials & rational expressions",
+      "ccssCodes": [
+        "A-APR.2–7",
+        "A-SSE.1–3"
+      ],
+      "masteryText": "Polynomial identities and division; rational expressions with restrictions.",
+      "quizGuidanceText": "Division + restriction.",
+      "sampleItems": [
+        "Divide (2x^3+3x^2-5) by (x-2).",
+        "Simplify (x^2-9)/(x-3); restrictions?",
+        "Expand (x+2)^3."
+      ]
+    },
+    "2": {
+      "title": "Functions: transforms, composition, inverses",
+      "ccssCodes": [
+        "F-IF.4–9",
+        "F-BF.1–4"
+      ],
+      "masteryText": "Analyze function features; build/compose/invert; transformations.",
+      "quizGuidanceText": "Graph interpretation + function writing.",
+      "sampleItems": [
+        "Write g(x)=f(x-3)+2 for f(x)=x^2.",
+        "Inverse of 3x-7.",
+        "Intervals increasing/decreasing from graph."
+      ]
+    },
+    "3": {
+      "title": "Exponential & logarithmic",
+      "ccssCodes": [
+        "F-LE.1–4"
+      ],
+      "masteryText": "Growth/decay; logs; solve exponential/log equations; interpret parameters.",
+      "quizGuidanceText": "Model + log solve.",
+      "sampleItems": [
+        "Solve 5(1.2)^t=20.",
+        "Solve log_3(x)=4.",
+        "15% per hour model; interpret."
+      ]
+    },
+    "4": {
+      "title": "Trigonometry",
+      "ccssCodes": [
+        "F-TF.1–9"
+      ],
+      "masteryText": "Unit circle; graphs; identities; trig equations; periodic models.",
+      "quizGuidanceText": "Unit circle + identity + modeling.",
+      "sampleItems": [
+        "sin(150\\260)= ?",
+        "Graph y=2sin(x).",
+        "Simplify 1-cos^2(x)."
+      ]
+    },
+    "5": {
+      "title": "Statistics & regression",
+      "ccssCodes": [
+        "S-ID.1–9"
+      ],
+      "masteryText": "Correlation, regression, residuals, model fit, interpretation.",
+      "quizGuidanceText": "Interpretation-heavy.",
+      "sampleItems": [
+        "Interpret slope in y=1.8x+4.",
+        "Residual plot: linear appropriate?",
+        "Correlation -0.9 means what?"
+      ]
+    }
+  },
+  "12": {
+    "1": {
+      "title": "Functions, composition, inverses",
+      "ccssCodes": [
+        "F-BF.3–5",
+        "F-IF.7–9"
+      ],
+      "masteryText": "Composition/inverses; function families; end behavior and transformations.",
+      "quizGuidanceText": "Composition + inverse + behavior.",
+      "sampleItems": [
+        "(fng)(3) with f(x)=2x+1, g(x)=x^2.",
+        "Inverse of (x-4)/3.",
+        "End behavior of -x^3+2x."
+      ]
+    },
+    "2": {
+      "title": "Advanced trig modeling",
+      "ccssCodes": [
+        "F-TF.7–9 (and supporting F-TF.1–6)"
+      ],
+      "masteryText": "Sinusoidal modeling; identities; trig equations on intervals.",
+      "quizGuidanceText": "One sinusoid parameter task.",
+      "sampleItems": [
+        "Tide 2–8m every 12h: model.",
+        "Solve 2sin(x)=1 on [0,2p].",
+        "Rewrite sin(2x) using sin x and cos x."
+      ]
+    },
+    "3": {
+      "title": "Conditional probability",
+      "ccssCodes": [
+        "S-CP.1–9"
+      ],
+      "masteryText": "Conditional probability and independence; tables/trees; reasoning.",
+      "quizGuidanceText": "Independence check + conditional from table.",
+      "sampleItems": [
+        "Given P(A)=0.4, P(B)=0.5, P(A\\307B)=0.2: independent?",
+        "Two draws without replacement: prob both red (3R,2B).",
+        "From a two-way table compute P(A|B)."
+      ]
+    },
+    "4": {
+      "title": "Expected value & decisions",
+      "ccssCodes": [
+        "S-MD.1–7"
+      ],
+      "masteryText": "Expected value; compare strategies; risk/reward modeling.",
+      "quizGuidanceText": "Require explanation.",
+      "sampleItems": [
+        "EV of game: win $10 (0.2) else 0; cost $3.",
+        "Compare two plans using expected monthly cost.",
+        "Raffle EV: ticket $2; prizes $50 (1/40), $5 (1/10)."
+      ]
+    },
+    "5": {
+      "title": "Inference & study design",
+      "ccssCodes": [
+        "S-IC.1–6"
+      ],
+      "masteryText": "Sampling, experiments, confidence intervals, significance (interpretation).",
+      "quizGuidanceText": "Interpretation over computation.",
+      "sampleItems": [
+        "Interpret 95% CI (12,18).",
+        "Explain bias in convenience sample.",
+        "p=0.03: what does it suggest?"
+      ]
+    }
+  }
+}
