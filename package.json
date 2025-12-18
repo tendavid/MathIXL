@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "build:data": "node scripts/buildPacing.mjs"
+    "build:data": "node scripts/buildPacing.mjs",
+    "build:tests": "tsc -p tsconfig.build.json",
+    "test": "npm run build:tests && node scripts/patchBuild.mjs && node --experimental-specifier-resolution=node --test \"./tests/**/*.js\""
   },
   "dependencies": {
     "react": "^18.3.1",

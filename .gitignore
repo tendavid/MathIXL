@@ -4,3 +4,4 @@ dist
 vite.config.ts.timestamp-* 
 *.log
 npm-debug.log*
+build
