@@ -1,7 +1,28 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { clearSession, loadSession, saveSession } from '../utils/session';
-import { QuizQuestion, QuizSession } from '../types/quiz';
+import { QuestionStatus, QuizQuestion, QuizSession } from '../types/quiz';
+
+export const evaluateStatus = (question: QuizQuestion, value?: string): QuestionStatus => {
+  if (question.type === 'mcq') {
+    if (question.selectedIndex === null) return 'unanswered';
+    const selectedOption = question.options[question.selectedIndex];
+    return selectedOption === question.answer ? 'correct' : 'incorrect';
+  }
+
+  const response = (value ?? question.response ?? '').trim();
+  if (!response) return 'unanswered';
+
+  if (question.type === 'numeric') {
+    const expected = Number(question.answer.trim());
+    const provided = Number(response);
+    if (Number.isNaN(expected) || Number.isNaN(provided)) return 'incorrect';
+    return expected === provided ? 'correct' : 'incorrect';
+  }
+
+  const normalizedAnswer = question.answer.trim().toLowerCase();
+  return response.toLowerCase() === normalizedAnswer ? 'correct' : 'incorrect';
+};
 
 const Quiz = () => {
   const navigate = useNavigate();
@@ -22,11 +43,6 @@ const Quiz = () => {
     return session.questions[session.currentIndex] ?? null;
   }, [session]);
 
-  const isQuestionAnswered = (question: QuizQuestion) =>
-    question.type === 'mcq'
-      ? question.selectedIndex !== null
-      : (question.response ?? '').trim().length > 0;
-
   useEffect(() => {
     if (!session || !currentQuestion) return;
     if (currentQuestion.type === 'mcq') {
@@ -36,16 +52,17 @@ const Quiz = () => {
     setResponseDraft(currentQuestion.response ?? '');
   }, [currentQuestion, session]);
 
-  const answeredCount = useMemo(() => {
+  const correctCount = useMemo(() => {
     if (!session) return 0;
-    return session.questions.filter((question) => isQuestionAnswered(question)).length;
+    return session.questions.filter((question) => question.status === 'correct').length;
   }, [session]);
 
   const handleAnswer = (optionIndex: number) => {
     if (!session || !currentQuestion || currentQuestion.type !== 'mcq') return;
+    const nextStatus = evaluateStatus({ ...currentQuestion, selectedIndex: optionIndex });
     const updatedQuestions = session.questions.map((question) =>
       question.id === currentQuestion.id
-        ? ({ ...question, selectedIndex: optionIndex } as QuizQuestion)
+        ? ({ ...question, selectedIndex: optionIndex, status: nextStatus } as QuizQuestion)
         : question,
     );
     const updatedSession = { ...session, questions: updatedQuestions };
@@ -56,8 +73,11 @@ const Quiz = () => {
   const handleResponseChange = (value: string) => {
     if (!session || !currentQuestion || currentQuestion.type === 'mcq') return;
     setResponseDraft(value);
+    const nextStatus = evaluateStatus({ ...currentQuestion, response: value }, value);
     const updatedQuestions = session.questions.map((question) =>
-      question.id === currentQuestion.id ? ({ ...question, response: value } as QuizQuestion) : question,
+      question.id === currentQuestion.id
+        ? ({ ...question, response: value, status: nextStatus } as QuizQuestion)
+        : question,
     );
     const updatedSession = { ...session, questions: updatedQuestions };
     setSession(updatedSession);
@@ -66,8 +86,7 @@ const Quiz = () => {
 
   const handleNext = () => {
     if (!session || !currentQuestion) return;
-    const hasSelection = isQuestionAnswered(currentQuestion);
-    if (!hasSelection) return;
+    if (currentQuestion.status !== 'correct') return;
     const nextIndex = Math.min(session.questions.length - 1, session.currentIndex + 1);
     if (nextIndex === session.currentIndex) return;
     const updatedSession = { ...session, currentIndex: nextIndex };
@@ -91,14 +110,19 @@ const Quiz = () => {
     );
   }
 
-  const progressPercent = Math.round((answeredCount / session.questions.length) * 100);
+  const progressPercent = Math.round((correctCount / session.questions.length) * 100);
   const atLastQuestion = session.currentIndex === session.questions.length - 1;
-  const nextDisabled = !isQuestionAnswered(currentQuestion) || atLastQuestion;
+  const nextDisabled = currentQuestion.status !== 'correct' || atLastQuestion;
   const allowedCodes = session.allowedCcssCodes ?? [];
   const typeLabelMap: Record<QuizQuestion['type'], string> = {
     mcq: 'Multiple choice',
     numeric: 'Numeric response',
     text: 'Short explanation',
+  };
+  const statusLabels: Record<QuestionStatus, string> = {
+    correct: 'Correct',
+    incorrect: 'Try again',
+    unanswered: 'Pending',
   };
 
   return (
@@ -130,7 +154,7 @@ const Quiz = () => {
               Question {session.currentIndex + 1} / {session.questions.length}
             </span>
             <span>
-              {answeredCount}/{session.questions.length} answered
+              {correctCount}/{session.questions.length} correct
             </span>
           </div>
         </div>
@@ -138,7 +162,14 @@ const Quiz = () => {
         <article className="question">
           <div className="question-header">
             <p className="prompt">{currentQuestion.prompt}</p>
-            <span className="type-pill">{typeLabelMap[currentQuestion.type]}</span>
+            <div className="question-meta">
+              {currentQuestion.status !== 'unanswered' && (
+                <span className={`status-pill ${currentQuestion.status}`}>
+                  {statusLabels[currentQuestion.status]}
+                </span>
+              )}
+              <span className="type-pill">{typeLabelMap[currentQuestion.type]}</span>
+            </div>
           </div>
 
           {currentQuestion.type === 'mcq' && (
@@ -178,6 +209,19 @@ const Quiz = () => {
             </div>
           )}
 
+          {currentQuestion.status !== 'unanswered' && (
+            <p
+              className={`feedback ${
+                currentQuestion.status === 'correct' ? 'success' : 'error'
+              }`}
+              role="status"
+            >
+              {currentQuestion.status === 'correct'
+                ? 'Correct! You can move to the next question.'
+                : 'Try again'}
+            </p>
+          )}
+
           <p className="ccss">CCSS: {currentQuestion.ccssCode}</p>
           <p className="ccss">Template: {currentQuestion.templateId ?? 'unknown'}</p>
         </article>
@@ -191,7 +235,7 @@ const Quiz = () => {
           </button>
         </footer>
 
-        {atLastQuestion && currentQuestion.selectedIndex !== null && (
+        {atLastQuestion && currentQuestion.status === 'correct' && (
           <p className="notice">You have reached the end of this quiz session.</p>
         )}
       </section>

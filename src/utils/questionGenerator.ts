@@ -1,5 +1,5 @@
 import pacingData from '../data/pacing.json' with { type: 'json' };
-import { QuestionType, QuizQuestion } from '../types/quiz';
+import { QuestionStatus, QuestionType, QuizQuestion } from '../types/quiz';
 
 type PacingPoint = {
   ccssCodes: string[];
@@ -883,6 +883,7 @@ export const generateQuestions = (
       options,
       selectedIndex: null,
       response: null,
+      status: 'unanswered' as QuestionStatus,
     };
   });
 

@@ -1,5 +1,7 @@
 export type QuestionType = 'mcq' | 'numeric' | 'text';
 
+export type QuestionStatus = 'unanswered' | 'correct' | 'incorrect';
+
 export type QuizQuestion = {
   id: number;
   prompt: string;
@@ -11,6 +13,7 @@ export type QuizQuestion = {
   options: string[];
   selectedIndex: number | null;
   response: string | null;
+  status: QuestionStatus;
 };
 
 export type QuizSession = {
