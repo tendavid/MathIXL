@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { clearSession, loadSession, saveSession, QuizQuestion, QuizSession } from '../utils/session';
+import { clearSession, loadSession, saveSession } from '../utils/session';
+import { QuizQuestion, QuizSession } from '../types/quiz';
 
 const Quiz = () => {
   const navigate = useNavigate();
   const [session, setSession] = useState<QuizSession | null>(null);
+  const [responseDraft, setResponseDraft] = useState<string>('');
 
   useEffect(() => {
     const storedSession = loadSession();
@@ -20,13 +22,27 @@ const Quiz = () => {
     return session.questions[session.currentIndex] ?? null;
   }, [session]);
 
-  const answeredCount = useMemo(
-    () => session?.questions.filter((question) => question.selectedIndex !== null).length ?? 0,
-    [session],
-  );
+  const isQuestionAnswered = (question: QuizQuestion) =>
+    question.type === 'mcq'
+      ? question.selectedIndex !== null
+      : (question.response ?? '').trim().length > 0;
+
+  useEffect(() => {
+    if (!session || !currentQuestion) return;
+    if (currentQuestion.type === 'mcq') {
+      setResponseDraft('');
+      return;
+    }
+    setResponseDraft(currentQuestion.response ?? '');
+  }, [currentQuestion, session]);
+
+  const answeredCount = useMemo(() => {
+    if (!session) return 0;
+    return session.questions.filter((question) => isQuestionAnswered(question)).length;
+  }, [session]);
 
   const handleAnswer = (optionIndex: number) => {
-    if (!session || !currentQuestion) return;
+    if (!session || !currentQuestion || currentQuestion.type !== 'mcq') return;
     const updatedQuestions = session.questions.map((question) =>
       question.id === currentQuestion.id
         ? ({ ...question, selectedIndex: optionIndex } as QuizQuestion)
@@ -37,9 +53,20 @@ const Quiz = () => {
     saveSession(updatedSession);
   };
 
+  const handleResponseChange = (value: string) => {
+    if (!session || !currentQuestion || currentQuestion.type === 'mcq') return;
+    setResponseDraft(value);
+    const updatedQuestions = session.questions.map((question) =>
+      question.id === currentQuestion.id ? ({ ...question, response: value } as QuizQuestion) : question,
+    );
+    const updatedSession = { ...session, questions: updatedQuestions };
+    setSession(updatedSession);
+    saveSession(updatedSession);
+  };
+
   const handleNext = () => {
     if (!session || !currentQuestion) return;
-    const hasSelection = currentQuestion.selectedIndex !== null;
+    const hasSelection = isQuestionAnswered(currentQuestion);
     if (!hasSelection) return;
     const nextIndex = Math.min(session.questions.length - 1, session.currentIndex + 1);
     if (nextIndex === session.currentIndex) return;
@@ -66,7 +93,12 @@ const Quiz = () => {
 
   const progressPercent = Math.round((answeredCount / session.questions.length) * 100);
   const atLastQuestion = session.currentIndex === session.questions.length - 1;
-  const nextDisabled = currentQuestion.selectedIndex === null || atLastQuestion;
+  const nextDisabled = !isQuestionAnswered(currentQuestion) || atLastQuestion;
+  const typeLabelMap: Record<QuizQuestion['type'], string> = {
+    mcq: 'Multiple choice',
+    numeric: 'Numeric response',
+    text: 'Short explanation',
+  };
 
   return (
     <main className="page">
@@ -98,22 +130,49 @@ const Quiz = () => {
         </div>
 
         <article className="question">
-          <p className="prompt">{currentQuestion.prompt}</p>
-          <div className="options">
-            {currentQuestion.options.map((option, index) => {
-              const isSelected = currentQuestion.selectedIndex === index;
-              return (
-                <button
-                  key={option}
-                  type="button"
-                  className={`option ${isSelected ? 'selected' : ''}`}
-                  onClick={() => handleAnswer(index)}
-                >
-                  {option}
-                </button>
-              );
-            })}
+          <div className="question-header">
+            <p className="prompt">{currentQuestion.prompt}</p>
+            <span className="type-pill">{typeLabelMap[currentQuestion.type]}</span>
           </div>
+
+          {currentQuestion.type === 'mcq' && (
+            <div className="options">
+              {currentQuestion.options.map((option, index) => {
+                const isSelected = currentQuestion.selectedIndex === index;
+                return (
+                  <button
+                    key={option}
+                    type="button"
+                    className={`option ${isSelected ? 'selected' : ''}`}
+                    onClick={() => handleAnswer(index)}
+                  >
+                    {option}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+
+          {currentQuestion.type !== 'mcq' && (
+            <div className="response">
+              <label className="label" htmlFor={`response-${currentQuestion.id}`}>
+                Your response
+              </label>
+              <input
+                id={`response-${currentQuestion.id}`}
+                type="text"
+                value={responseDraft}
+                onChange={(event) => handleResponseChange(event.target.value)}
+                placeholder={
+                  currentQuestion.type === 'numeric'
+                    ? 'Enter a number or expression'
+                    : 'Explain your reasoning briefly'
+                }
+              />
+            </div>
+          )}
+
+          <p className="ccss">CCSS: {currentQuestion.ccssCode}</p>
         </article>
 
         <footer className="actions">
