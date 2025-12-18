@@ -48,6 +48,7 @@ export const loadSession = (): QuizSession | null => {
         templateId: question.templateId ?? 'unknown-template',
         selectedIndex: question.selectedIndex ?? null,
         response: question.response ?? null,
+        status: question.status ?? 'unanswered',
         id: question.id ?? index + 1,
       })),
     };
