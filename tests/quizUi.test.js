@@ -4,26 +4,12 @@ import { evaluateStatus } from '../build/pages/Quiz.js';
 import { buildSession } from '../build/utils/session.js';
 
 const answerQuestion = (question, correct) => {
-  if (question.type === 'mcq') {
-    const targetIndex = question.options.findIndex((option) =>
-      correct ? option === question.answer : option !== question.answer,
-    );
-    const selectedIndex = targetIndex === -1 ? 0 : targetIndex;
-    const status = evaluateStatus({ ...question, selectedIndex });
-    return { ...question, selectedIndex, status };
-  }
-
-  if (question.type === 'numeric') {
-    const provided = correct
-      ? question.answer.trim()
-      : (Number(question.answer) + 1 || 1).toString();
-    const status = evaluateStatus({ ...question, response: provided }, provided);
-    return { ...question, response: provided, status };
-  }
-
-  const provided = correct ? question.answer.toUpperCase() : `${question.answer} extra`;
-  const status = evaluateStatus({ ...question, response: provided }, provided);
-  return { ...question, response: provided, status };
+  const targetIndex = question.options.findIndex((option) =>
+    correct ? option === question.answer : option !== question.answer,
+  );
+  const selectedIndex = targetIndex === -1 ? 0 : targetIndex;
+  const status = evaluateStatus({ ...question, selectedIndex });
+  return { ...question, selectedIndex, status };
 };
 
 const attemptAdvance = (session) => {
@@ -54,6 +40,22 @@ describe('quiz UI progression', () => {
     const updatedSession = {
       ...session,
       questions: [updatedQuestion, ...session.questions.slice(1)],
+    };
+
+    const nextIndex = attemptAdvance(updatedSession);
+    const correctCount = updatedSession.questions.filter((question) => question.status === 'correct').length;
+
+    assert.equal(nextIndex, 1);
+    assert.equal(correctCount, 1);
+  });
+
+  it('allows retrying an incorrect answer before advancing', () => {
+    const session = buildSession(4, 1, 12, 'RETRY-FLOW');
+    const firstAttempt = answerQuestion(session.questions[0], false);
+    const retry = answerQuestion(firstAttempt, true);
+    const updatedSession = {
+      ...session,
+      questions: [retry, ...session.questions.slice(1)],
     };
 
     const nextIndex = attemptAdvance(updatedSession);

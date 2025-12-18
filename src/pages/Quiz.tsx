@@ -3,31 +3,15 @@ import { useNavigate } from 'react-router-dom';
 import { clearSession, loadSession, saveSession } from '../utils/session';
 import { QuestionStatus, QuizQuestion, QuizSession } from '../types/quiz';
 
-export const evaluateStatus = (question: QuizQuestion, value?: string): QuestionStatus => {
-  if (question.type === 'mcq') {
-    if (question.selectedIndex === null) return 'unanswered';
-    const selectedOption = question.options[question.selectedIndex];
-    return selectedOption === question.answer ? 'correct' : 'incorrect';
-  }
-
-  const response = (value ?? question.response ?? '').trim();
-  if (!response) return 'unanswered';
-
-  if (question.type === 'numeric') {
-    const expected = Number(question.answer.trim());
-    const provided = Number(response);
-    if (Number.isNaN(expected) || Number.isNaN(provided)) return 'incorrect';
-    return expected === provided ? 'correct' : 'incorrect';
-  }
-
-  const normalizedAnswer = question.answer.trim().toLowerCase();
-  return response.toLowerCase() === normalizedAnswer ? 'correct' : 'incorrect';
+export const evaluateStatus = (question: QuizQuestion): QuestionStatus => {
+  if (question.selectedIndex === null) return 'unanswered';
+  const selectedOption = question.options[question.selectedIndex];
+  return selectedOption === question.answer ? 'correct' : 'incorrect';
 };
 
 const Quiz = () => {
   const navigate = useNavigate();
   const [session, setSession] = useState<QuizSession | null>(null);
-  const [responseDraft, setResponseDraft] = useState<string>('');
 
   useEffect(() => {
     const storedSession = loadSession();
@@ -43,40 +27,18 @@ const Quiz = () => {
     return session.questions[session.currentIndex] ?? null;
   }, [session]);
 
-  useEffect(() => {
-    if (!session || !currentQuestion) return;
-    if (currentQuestion.type === 'mcq') {
-      setResponseDraft('');
-      return;
-    }
-    setResponseDraft(currentQuestion.response ?? '');
-  }, [currentQuestion, session]);
-
   const correctCount = useMemo(() => {
     if (!session) return 0;
     return session.questions.filter((question) => question.status === 'correct').length;
   }, [session]);
 
   const handleAnswer = (optionIndex: number) => {
-    if (!session || !currentQuestion || currentQuestion.type !== 'mcq') return;
+    if (!session || !currentQuestion) return;
+    if (currentQuestion.status === 'correct') return;
     const nextStatus = evaluateStatus({ ...currentQuestion, selectedIndex: optionIndex });
     const updatedQuestions = session.questions.map((question) =>
       question.id === currentQuestion.id
         ? ({ ...question, selectedIndex: optionIndex, status: nextStatus } as QuizQuestion)
-        : question,
-    );
-    const updatedSession = { ...session, questions: updatedQuestions };
-    setSession(updatedSession);
-    saveSession(updatedSession);
-  };
-
-  const handleResponseChange = (value: string) => {
-    if (!session || !currentQuestion || currentQuestion.type === 'mcq') return;
-    setResponseDraft(value);
-    const nextStatus = evaluateStatus({ ...currentQuestion, response: value }, value);
-    const updatedQuestions = session.questions.map((question) =>
-      question.id === currentQuestion.id
-        ? ({ ...question, response: value, status: nextStatus } as QuizQuestion)
         : question,
     );
     const updatedSession = { ...session, questions: updatedQuestions };
@@ -116,8 +78,6 @@ const Quiz = () => {
   const allowedCodes = session.allowedCcssCodes ?? [];
   const typeLabelMap: Record<QuizQuestion['type'], string> = {
     mcq: 'Multiple choice',
-    numeric: 'Numeric response',
-    text: 'Short explanation',
   };
   const statusLabels: Record<QuestionStatus, string> = {
     correct: 'Correct',
@@ -172,42 +132,36 @@ const Quiz = () => {
             </div>
           </div>
 
-          {currentQuestion.type === 'mcq' && (
-            <div className="options">
-              {currentQuestion.options.map((option, index) => {
-                const isSelected = currentQuestion.selectedIndex === index;
-                return (
-                  <button
-                    key={option}
-                    type="button"
-                    className={`option ${isSelected ? 'selected' : ''}`}
-                    onClick={() => handleAnswer(index)}
-                  >
-                    {option}
-                  </button>
-                );
-              })}
-            </div>
-          )}
-
-          {currentQuestion.type !== 'mcq' && (
-            <div className="response">
-              <label className="label" htmlFor={`response-${currentQuestion.id}`}>
-                Your response
-              </label>
-              <input
-                id={`response-${currentQuestion.id}`}
-                type="text"
-                value={responseDraft}
-                onChange={(event) => handleResponseChange(event.target.value)}
-                placeholder={
-                  currentQuestion.type === 'numeric'
-                    ? 'Enter a number or expression'
-                    : 'Explain your reasoning briefly'
-                }
-              />
-            </div>
-          )}
+          <div className="options">
+            {currentQuestion.options.map((option, index) => {
+              const isSelected = currentQuestion.selectedIndex === index;
+              const isCorrectChoice = option === currentQuestion.answer;
+              const showCorrectHighlight = currentQuestion.status === 'incorrect' && isCorrectChoice;
+              const isWrongSelection = currentQuestion.status === 'incorrect' && isSelected && !isCorrectChoice;
+              const optionLetter = String.fromCharCode(65 + index);
+              const classes = [
+                'option',
+                isSelected ? 'selected' : '',
+                showCorrectHighlight || (currentQuestion.status === 'correct' && isSelected)
+                  ? 'correct'
+                  : '',
+                isWrongSelection ? 'incorrect' : '',
+              ]
+                .filter(Boolean)
+                .join(' ');
+              return (
+                <button
+                  key={`${option}-${index}`}
+                  type="button"
+                  className={classes}
+                  onClick={() => handleAnswer(index)}
+                >
+                  <span className="option-letter">{optionLetter}.</span>
+                  <span>{option}</span>
+                </button>
+              );
+            })}
+          </div>
 
           {currentQuestion.status !== 'unanswered' && (
             <p
@@ -218,7 +172,7 @@ const Quiz = () => {
             >
               {currentQuestion.status === 'correct'
                 ? 'Correct! You can move to the next question.'
-                : 'Try again'}
+                : `Incorrect. The correct answer is: ${currentQuestion.answer}`}
             </p>
           )}
 

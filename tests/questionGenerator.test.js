@@ -20,6 +20,20 @@ describe('question generation', () => {
     assert.equal(questions.length, 15);
   });
 
+  it('creates mcq-only questions with four options and one correct choice', () => {
+    const { questions } = generateQuestions(3, 1, 12, 'MCQ-ONLY');
+    questions.forEach((question) => {
+      assert.equal(question.type, 'mcq');
+      assert.equal(question.options.length, 4);
+      const correctOccurrences = question.options.filter((option) => option === question.answer).length;
+      assert.equal(
+        correctOccurrences,
+        1,
+        `Expected exactly one correct option for question ${question.id}`,
+      );
+    });
+  });
+
   it('uses valid CCSS codes for the selected grade and point', () => {
     const grade = 5;
     const point = 3;

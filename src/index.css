@@ -213,12 +213,31 @@ button:disabled {
   border: 1px solid #cbd5e1;
   text-align: left;
   padding: 12px 14px;
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
 }
 
 .option.selected {
   border-color: #2563eb;
   background: #e0ecff;
   box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
+}
+
+.option.correct {
+  border-color: #22c55e;
+  background: #ecfdf3;
+  box-shadow: 0 6px 16px rgba(34, 197, 94, 0.2);
+}
+
+.option.incorrect {
+  border-color: #f97316;
+  background: #fff7ed;
+}
+
+.option-letter {
+  font-weight: 700;
+  color: #0f172a;
 }
 
 .type-pill {
