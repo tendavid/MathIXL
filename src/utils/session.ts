@@ -1,5 +1,5 @@
 import { describeAllowedCcssCodes, generateQuestions } from './questionGenerator';
-import { createFriendlyExplanation } from './explanation';
+import { createFriendlyExplanation, normalizeExplanationSteps } from './explanation';
 import { QuizSession } from '../types/quiz';
 
 const SESSION_STORAGE_KEY = 'mathixl-quiz-session';
@@ -55,6 +55,11 @@ export const loadSession = (): QuizSession | null => {
         const legacySelectedIndex = (question as unknown as { selectedIndex?: number | null }).selectedIndex;
         const legacyChoice =
           typeof legacySelectedIndex === 'number' ? String.fromCharCode(65 + legacySelectedIndex) : null;
+        const explanationSteps = normalizeExplanationSteps(
+          (question as unknown as { explanationSteps?: string[] }).explanationSteps,
+          question.explanation,
+        );
+        const explanation = createFriendlyExplanation(parsed.grade, explanationSteps, question.answer);
 
         return {
           ...question,
@@ -64,7 +69,8 @@ export const loadSession = (): QuizSession | null => {
           isCorrect: question.isCorrect ?? fallbackIsCorrect ?? null,
           id: question.id ?? index + 1,
           options: question.options ?? [],
-          explanation: createFriendlyExplanation(parsed.grade, question.explanation, question.answer),
+          explanationSteps,
+          explanation,
         };
       }),
       completedQuestions: completed,

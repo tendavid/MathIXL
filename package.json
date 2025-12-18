@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "build:data": "node scripts/buildPacing.mjs",
     "build:tests": "tsc -p tsconfig.build.json",
-    "test": "npm run build:tests && node scripts/patchBuild.mjs && node --experimental-specifier-resolution=node --test \"./tests/**/*.js\""
+    "test": "npm run build:tests && node scripts/patchBuild.mjs && node --experimental-specifier-resolution=node --test \"./tests/**/*.js\" && vitest run"
   },
   "dependencies": {
     "react": "^18.3.1",
@@ -17,15 +17,20 @@
     "react-router-dom": "^6.26.2"
   },
   "devDependencies": {
+    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/react": "^16.2.0",
+    "@testing-library/user-event": "^14.6.1",
     "@types/react": "^18.3.10",
     "@types/react-dom": "^18.3.0",
     "@typescript-eslint/eslint-plugin": "^8.15.0",
     "@typescript-eslint/parser": "^8.15.0",
+    "jsdom": "^25.0.1",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.13.0",
     "eslint-plugin-react-hooks": "^5.1.0-rc.0",
     "eslint-plugin-react-refresh": "^0.4.14",
     "typescript": "~5.6.2",
-    "vite": "^5.4.10"
+    "vite": "^5.4.10",
+    "vitest": "^2.1.4"
   }
 }

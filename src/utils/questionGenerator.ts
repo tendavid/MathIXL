@@ -1,6 +1,6 @@
 import pacingData from '../data/pacing.json' with { type: 'json' };
 import { QuestionType, QuizQuestion } from '../types/quiz';
-import { createFriendlyExplanation } from './explanation';
+import { buildExplanationFromSteps, createFriendlyExplanation, normalizeExplanationSteps } from './explanation';
 
 type PacingPoint = {
   ccssCodes: string[];
@@ -25,6 +25,7 @@ type TemplateBuildResult = {
   prompt: string;
   answer: string;
   explanation: string;
+  explanationSteps: string[];
   options?: string[];
 };
 
@@ -88,6 +89,14 @@ const buildTextFallbackOptions = (rand: SeededRandom, answer: string) =>
     `${answer} after rounding too early`,
   ]);
 
+const withExplanation = (steps: string[]): Pick<TemplateBuildResult, 'explanation' | 'explanationSteps'> => {
+  const normalizedSteps = normalizeExplanationSteps(steps);
+  return {
+    explanationSteps: normalizedSteps,
+    explanation: buildExplanationFromSteps(normalizedSteps),
+  };
+};
+
 const scaleWithDifficulty = (difficulty: number, min: number, max: number) => {
   const normalized = clampNumberLimit(difficulty) / 50;
   return Math.round(min + normalized * (max - min));
@@ -148,7 +157,10 @@ const buildArithmeticQuestion = (
     return {
       prompt: `What is (${a} × ${b}) ÷ ${divisor}?`,
       answer: quotient.toString(),
-      explanation: `Multiply to get ${product} and then divide by ${divisor} for ${quotient}.`,
+      ...withExplanation([
+        `Multiply ${a} by ${b} to get ${product}.`,
+        `Divide ${product} by ${divisor} to reach ${quotient}.`,
+      ]),
       options: buildMcqOptions(rand, quotient, difficulty),
     };
   }
@@ -158,7 +170,11 @@ const buildArithmeticQuestion = (
   return {
     prompt: `Question ${args.index + 1}: What is ${choiceA} ${useMultiplication ? '+' : '+'} ${c}?`,
     answer: answer.toString(),
-    explanation: `Follow the operation order to find ${answer}.`,
+    ...withExplanation(
+      useMultiplication
+        ? [`Multiply ${a} by ${b} to get ${a * b}.`, `Add ${c} to get ${answer}.`]
+        : [`Add ${a} and ${b} to make ${a + b}.`, `Add ${c} more to reach ${answer}.`],
+    ),
     options: buildMcqOptions(rand, answer, difficulty),
   };
 };
@@ -183,10 +199,17 @@ const expandedCompare = (rand: SeededRandom, hundreds: number, tens: number, one
     otherNumber.toString(),
     (greater + 10).toString(),
   ]);
+  const reasoning =
+    firstNumber > otherNumber
+      ? `${firstNumber} has the larger hundreds place compared to ${otherNumber}.`
+      : `${otherNumber} has the larger hundreds place compared to ${firstNumber}.`;
   return {
     prompt: `Which number is greater: ${firstNumber} or ${otherNumber}?`,
     answer: greater.toString(),
-    explanation: `Compare the hundreds place first (${hundreds} vs ${otherHundreds}) to see ${greater} is larger.`,
+    ...withExplanation([
+      `Compare the hundreds digits: ${hundreds} vs ${otherHundreds}.`,
+      reasoning,
+    ]),
     options,
   };
 };
@@ -205,7 +228,10 @@ const buildMeasurementQuestion = (args: TemplateBuilderArgs): TemplateBuildResul
   return {
     prompt: 'Select the total duration if a lesson runs and then pauses as described.',
     answer: `${totalMinutes} minutes`,
-    explanation: `The activity lasts ${minutes} minutes and the pause adds ${extra} more for ${totalMinutes}.`,
+    ...withExplanation([
+      `Start with ${minutes} minutes of activity.`,
+      `Add the ${extra}-minute pause for ${totalMinutes} minutes total.`,
+    ]),
     options,
   };
 };
@@ -219,7 +245,10 @@ const buildGeometryQuestion = (args: TemplateBuilderArgs): TemplateBuildResult =
   return {
     prompt: `What is the area of a triangle with base ${base} units and height ${height} units?`,
     answer: area.toString(),
-    explanation: 'Use A = 1/2 × base × height to multiply the base and height, then divide by 2.',
+    ...withExplanation([
+      `Multiply base ${base} by height ${height} to get ${base * height}.`,
+      `Divide by 2 to find the area ${area}.`,
+    ]),
     options: buildMcqOptions(rand, area, difficulty),
   };
 };
@@ -238,7 +267,11 @@ const buildFractionQuestion = (args: TemplateBuilderArgs): TemplateBuildResult =
   return {
     prompt: `Which is greater: ${numerator}/${denominator} or ${compareNumerator}/${denominator}?`,
     answer: correct,
-    explanation: 'With a common denominator, the fraction with the larger numerator is greater.',
+    ...withExplanation([
+      `Both fractions have the same denominator ${denominator}.`,
+      `Compare numerators: ${compareNumerator} is larger than ${numerator}.`,
+      `${compareNumerator}/${denominator} is the greater fraction.`,
+    ]),
     options,
   };
 };
@@ -254,7 +287,11 @@ const buildRatioQuestion = (args: TemplateBuilderArgs): TemplateBuildResult => {
   return {
     prompt: `If ${missing} units represent the first part of a ${partA}:${partB} ratio, how many units represent the second part?`,
     answer: answer.toString(),
-    explanation: `Use the same scale factor ${scale} on the second part (${partB} × ${scale}).`,
+    ...withExplanation([
+      `The ratio starts as ${partA}:${partB}.`,
+      `${missing} matches ${partA} scaled by ${scale}.`,
+      `Multiply ${partB} by ${scale} to get ${answer} for the second part.`,
+    ]),
     options: buildMcqOptions(rand, answer, difficulty),
   };
 };
@@ -268,7 +305,10 @@ const buildNumberSystemQuestion = (args: TemplateBuilderArgs): TemplateBuildResu
   return {
     prompt: `Compute ${multiplier} × (${a} + ${b}).`,
     answer: total.toString(),
-    explanation: `Add inside the parentheses first (${a + b}) then multiply by ${multiplier}.`,
+    ...withExplanation([
+      `Add the numbers inside parentheses: ${a} + ${b} = ${a + b}.`,
+      `Multiply the sum by ${multiplier} to get ${total}.`,
+    ]),
     options: buildMcqOptions(rand, total, difficulty),
   };
 };
@@ -283,7 +323,10 @@ const buildExpressionsQuestion = (args: TemplateBuilderArgs): TemplateBuildResul
   return {
     prompt: `Solve for x: ${coefficient}x + ${constant} = ${rhs}.`,
     answer: solution.toString(),
-    explanation: `Subtract ${constant} from both sides to get ${coefficient}x = ${rhs - constant}, then divide by ${coefficient}.`,
+    ...withExplanation([
+      `Subtract ${constant} from both sides to get ${coefficient}x = ${rhs - constant}.`,
+      `Divide by ${coefficient} to find x = ${solution}.`,
+    ]),
     options: buildMcqOptions(rand, solution, difficulty),
   };
 };
@@ -300,7 +343,10 @@ const buildFunctionQuestion = (args: TemplateBuilderArgs, flavor: 'linear' | 'ex
     return {
       prompt: `Evaluate g(x) = ${baseGrowth}^x for x = ${input}.`,
       answer: value.toString(),
-      explanation: `Raise ${baseGrowth} to the ${input} power to get ${value}.`,
+      ...withExplanation([
+        `Use the base ${baseGrowth} and exponent ${input}.`,
+        `Compute ${baseGrowth}^${input} to get ${value}.`,
+      ]),
       options: buildMcqOptions(rand, value, difficulty),
     };
   }
@@ -309,7 +355,10 @@ const buildFunctionQuestion = (args: TemplateBuilderArgs, flavor: 'linear' | 'ex
   return {
     prompt: `For f(x) = ${slope}x + ${intercept}, what is f(${input})?`,
     answer: value.toString(),
-    explanation: `Multiply ${input} by ${slope} and add ${intercept} to get ${value}.`,
+    ...withExplanation([
+      `Multiply ${input} by ${slope} to get ${slope * input}.`,
+      `Add ${intercept} to reach ${value}.`,
+    ]),
     options: buildMcqOptions(rand, value, difficulty),
   };
 };
@@ -323,7 +372,10 @@ const buildTrigonometryQuestion = (args: TemplateBuilderArgs): TemplateBuildResu
   return {
     prompt: `Compute sin(θ) for a right triangle with opposite ${opposite} and hypotenuse ${hypotenuse}. Round to the nearest thousandth.`,
     answer: ratio.toString(),
-    explanation: `Sine is opposite over hypotenuse: ${opposite}/${hypotenuse} ≈ ${ratio}.`,
+    ...withExplanation([
+      `Sine is opposite over hypotenuse: ${opposite}/${hypotenuse}.`,
+      `Divide to get approximately ${ratio}.`,
+    ]),
     options: buildMcqOptions(rand, ratio, difficulty),
   };
 };
@@ -341,7 +393,10 @@ const buildStatisticsQuestion = (args: TemplateBuilderArgs, level: 'middle' | 'h
         ? `A survey of ${samples} students found a mean score of ${mean}. If ${margin} more students reach the target, what is the probability of success as a decimal?`
         : `If an event occurs ${margin} times out of ${mean}, what is its probability as a decimal?`,
     answer: probability.toString(),
-    explanation: `Divide the number of successes (${margin}) by the total (${mean}) to estimate probability.`,
+    ...withExplanation([
+      `Use ${margin} successes out of ${mean} total cases.`,
+      `Divide ${margin} by ${mean} to estimate the probability ${probability}.`,
+    ]),
     options: buildMcqOptions(rand, probability, difficulty),
   };
 };
@@ -351,11 +406,16 @@ const buildGeometryHighQuestion = (args: TemplateBuilderArgs): TemplateBuildResu
   const radius = randomInt(rand, 3, Math.max(8, Math.round(difficulty / 4) + 3));
   const angle = randomInt(rand, 30, 120);
   const arcLength = Math.round(((angle / 360) * 2 * Math.PI * radius) * 100) / 100;
+  const circumference = Math.round(2 * Math.PI * radius * 100) / 100;
+  const circlePortion = Math.round((angle / 360) * 1000) / 1000;
 
   return {
     prompt: `Find the arc length for a central angle of ${angle}° in a circle with radius ${radius} (use π ≈ 3.14).`,
     answer: arcLength.toString(),
-    explanation: `Arc length is (angle/360) × 2πr, giving approximately ${arcLength}.`,
+    ...withExplanation([
+      `Circumference is 2πr ≈ ${circumference} when r = ${radius}.`,
+      `Multiply ${circlePortion} of the circle by ${circumference} to get ${arcLength}.`,
+    ]),
     options: buildMcqOptions(rand, arcLength, difficulty),
   };
 };
@@ -588,7 +648,8 @@ export const generateQuestions = (
     const template = templates[Math.floor(rand() * templates.length)];
     const content = selectQuestionContent(rand, index, grade, point, difficulty, ccssCode, template);
     const options = buildOptionsForContent(rand, content, difficulty);
-    const explanation = createFriendlyExplanation(grade, content.explanation, content.answer);
+    const explanationSteps = normalizeExplanationSteps(content.explanationSteps, content.explanation);
+    const explanation = createFriendlyExplanation(grade, explanationSteps, content.answer);
 
     return {
       id: index + 1,
@@ -596,6 +657,7 @@ export const generateQuestions = (
       type: 'mcq' as QuestionType,
       answer: content.answer,
       explanation,
+      explanationSteps,
       ccssCode,
       templateId: template.id,
       options,

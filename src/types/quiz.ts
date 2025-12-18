@@ -8,6 +8,7 @@ export type QuizQuestion = {
   type: QuestionType;
   answer: string;
   explanation: string;
+  explanationSteps: string[];
   ccssCode: string;
   templateId: string;
   options: string[];
