@@ -1,4 +1,4 @@
-import { generateQuestions } from './questionGenerator';
+import { describeAllowedCcssCodes, generateQuestions } from './questionGenerator';
 import { QuizSession } from '../types/quiz';
 
 const SESSION_STORAGE_KEY = 'mathixl-quiz-session';
@@ -16,7 +16,7 @@ export const buildSession = (
   numberLimit: number,
   code = generateCode(5),
 ): QuizSession => {
-  const questions = generateQuestions(
+  const questionSet = generateQuestions(
     grade,
     point,
     numberLimit,
@@ -28,7 +28,8 @@ export const buildSession = (
     grade,
     point,
     numberLimit,
-    questions,
+    allowedCcssCodes: questionSet.allowedCcssCodes,
+    questions: questionSet.questions,
     currentIndex: 0,
   };
 };
@@ -37,7 +38,19 @@ export const loadSession = (): QuizSession | null => {
   const data = localStorage.getItem(SESSION_STORAGE_KEY);
   if (!data) return null;
   try {
-    return JSON.parse(data) as QuizSession;
+    const parsed = JSON.parse(data) as QuizSession;
+    return {
+      ...parsed,
+      allowedCcssCodes:
+        parsed.allowedCcssCodes ?? describeAllowedCcssCodes(parsed.grade, parsed.point),
+      questions: parsed.questions.map((question, index) => ({
+        ...question,
+        templateId: question.templateId ?? 'unknown-template',
+        selectedIndex: question.selectedIndex ?? null,
+        response: question.response ?? null,
+        id: question.id ?? index + 1,
+      })),
+    };
   } catch (error) {
     console.error('Failed to parse saved session', error);
     return null;

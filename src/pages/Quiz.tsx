@@ -94,6 +94,7 @@ const Quiz = () => {
   const progressPercent = Math.round((answeredCount / session.questions.length) * 100);
   const atLastQuestion = session.currentIndex === session.questions.length - 1;
   const nextDisabled = !isQuestionAnswered(currentQuestion) || atLastQuestion;
+  const allowedCodes = session.allowedCcssCodes ?? [];
   const typeLabelMap: Record<QuizQuestion['type'], string> = {
     mcq: 'Multiple choice',
     numeric: 'Numeric response',
@@ -113,6 +114,11 @@ const Quiz = () => {
             <span>Point {session.point}</span>
             <span>Up to {session.numberLimit}</span>
           </div>
+
+          <details className="ccss-allowed">
+            <summary>Allowed CCSS codes for this selection</summary>
+            <p>{allowedCodes.length ? allowedCodes.join(', ') : 'No allowed CCSS codes available.'}</p>
+          </details>
         </header>
 
         <div className="progress">
@@ -173,6 +179,7 @@ const Quiz = () => {
           )}
 
           <p className="ccss">CCSS: {currentQuestion.ccssCode}</p>
+          <p className="ccss">Template: {currentQuestion.templateId ?? 'unknown'}</p>
         </article>
 
         <footer className="actions">
