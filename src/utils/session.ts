@@ -46,10 +46,12 @@ export const loadSession = (): QuizSession | null => {
       questions: parsed.questions.map((question, index) => ({
         ...question,
         templateId: question.templateId ?? 'unknown-template',
+        type: 'mcq',
         selectedIndex: question.selectedIndex ?? null,
         response: question.response ?? null,
         status: question.status ?? 'unanswered',
         id: question.id ?? index + 1,
+        options: question.options ?? [],
       })),
     };
   } catch (error) {

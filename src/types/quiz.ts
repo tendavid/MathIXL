@@ -1,4 +1,4 @@
-export type QuestionType = 'mcq' | 'numeric' | 'text';
+export type QuestionType = 'mcq';
 
 export type QuestionStatus = 'unanswered' | 'correct' | 'incorrect';
 
