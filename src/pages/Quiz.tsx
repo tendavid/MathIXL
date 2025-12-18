@@ -2,12 +2,15 @@ import { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { clearSession, loadSession, saveSession } from '../utils/session';
 import { QuestionStatus, QuizQuestion, QuizSession } from '../types/quiz';
+import { createFriendlyExplanation, toChoiceLetter } from '../utils/explanation';
 
 export const evaluateStatus = (question: QuizQuestion): QuestionStatus => {
-  if (question.selectedIndex === null) return 'unanswered';
-  const selectedOption = question.options[question.selectedIndex];
-  return selectedOption === question.answer ? 'correct' : 'incorrect';
+  if (question.isCorrect === null) return 'unanswered';
+  return question.isCorrect ? 'correct' : 'incorrect';
 };
+
+export const calculateProgressPercent = (completedQuestions: Set<number>, totalQuestions: number) =>
+  Math.round((completedQuestions.size / Math.max(1, totalQuestions)) * 100);
 
 const Quiz = () => {
   const navigate = useNavigate();
@@ -29,26 +32,38 @@ const Quiz = () => {
 
   const correctCount = useMemo(() => {
     if (!session) return 0;
-    return session.questions.filter((question) => question.status === 'correct').length;
+    return session.completedQuestions.size;
   }, [session]);
 
   const handleAnswer = (optionIndex: number) => {
     if (!session || !currentQuestion) return;
-    if (currentQuestion.status === 'correct') return;
-    const nextStatus = evaluateStatus({ ...currentQuestion, selectedIndex: optionIndex });
+    if (evaluateStatus(currentQuestion) === 'correct') return;
+
+    const selectedChoice = toChoiceLetter(optionIndex);
+    const selectedOption = currentQuestion.options[optionIndex];
+    const isCorrect = selectedOption === currentQuestion.answer;
+
     const updatedQuestions = session.questions.map((question) =>
       question.id === currentQuestion.id
-        ? ({ ...question, selectedIndex: optionIndex, status: nextStatus } as QuizQuestion)
+        ? ({ ...question, selectedChoice, isCorrect } as QuizQuestion)
         : question,
     );
-    const updatedSession = { ...session, questions: updatedQuestions };
+
+    const completedQuestions = new Set(session.completedQuestions);
+    if (isCorrect) {
+      completedQuestions.add(session.currentIndex);
+    } else {
+      completedQuestions.delete(session.currentIndex);
+    }
+
+    const updatedSession = { ...session, questions: updatedQuestions, completedQuestions };
     setSession(updatedSession);
     saveSession(updatedSession);
   };
 
   const handleNext = () => {
     if (!session || !currentQuestion) return;
-    if (currentQuestion.status !== 'correct') return;
+    if (!session.completedQuestions.has(session.currentIndex)) return;
     const nextIndex = Math.min(session.questions.length - 1, session.currentIndex + 1);
     if (nextIndex === session.currentIndex) return;
     const updatedSession = { ...session, currentIndex: nextIndex };
@@ -72,9 +87,9 @@ const Quiz = () => {
     );
   }
 
-  const progressPercent = Math.round((correctCount / session.questions.length) * 100);
+  const progressPercent = calculateProgressPercent(session.completedQuestions, session.questions.length);
   const atLastQuestion = session.currentIndex === session.questions.length - 1;
-  const nextDisabled = currentQuestion.status !== 'correct' || atLastQuestion;
+  const nextDisabled = !session.completedQuestions.has(session.currentIndex) || atLastQuestion;
   const allowedCodes = session.allowedCcssCodes ?? [];
   const typeLabelMap: Record<QuizQuestion['type'], string> = {
     mcq: 'Multiple choice',
@@ -84,6 +99,12 @@ const Quiz = () => {
     incorrect: 'Try again',
     unanswered: 'Pending',
   };
+  const currentStatus = evaluateStatus(currentQuestion);
+  const friendlyExplanation = createFriendlyExplanation(
+    session.grade,
+    currentQuestion.explanation,
+    currentQuestion.answer,
+  );
 
   return (
     <main className="page">
@@ -123,9 +144,9 @@ const Quiz = () => {
           <div className="question-header">
             <p className="prompt">{currentQuestion.prompt}</p>
             <div className="question-meta">
-              {currentQuestion.status !== 'unanswered' && (
-                <span className={`status-pill ${currentQuestion.status}`}>
-                  {statusLabels[currentQuestion.status]}
+              {currentStatus !== 'unanswered' && (
+                <span className={`status-pill ${currentStatus}`}>
+                  {statusLabels[currentStatus]}
                 </span>
               )}
               <span className="type-pill">{typeLabelMap[currentQuestion.type]}</span>
@@ -134,15 +155,15 @@ const Quiz = () => {
 
           <div className="options">
             {currentQuestion.options.map((option, index) => {
-              const isSelected = currentQuestion.selectedIndex === index;
+              const optionLetter = toChoiceLetter(index);
+              const isSelected = currentQuestion.selectedChoice === optionLetter;
               const isCorrectChoice = option === currentQuestion.answer;
-              const showCorrectHighlight = currentQuestion.status === 'incorrect' && isCorrectChoice;
-              const isWrongSelection = currentQuestion.status === 'incorrect' && isSelected && !isCorrectChoice;
-              const optionLetter = String.fromCharCode(65 + index);
+              const showCorrectHighlight = currentStatus === 'incorrect' && isCorrectChoice;
+              const isWrongSelection = currentStatus === 'incorrect' && isSelected && !isCorrectChoice;
               const classes = [
                 'option',
                 isSelected ? 'selected' : '',
-                showCorrectHighlight || (currentQuestion.status === 'correct' && isSelected)
+                showCorrectHighlight || (currentStatus === 'correct' && isSelected)
                   ? 'correct'
                   : '',
                 isWrongSelection ? 'incorrect' : '',
@@ -163,17 +184,20 @@ const Quiz = () => {
             })}
           </div>
 
-          {currentQuestion.status !== 'unanswered' && (
-            <p
-              className={`feedback ${
-                currentQuestion.status === 'correct' ? 'success' : 'error'
-              }`}
+          {currentQuestion.selectedChoice && (
+            <div
+              className={`feedback ${currentStatus === 'correct' ? 'success' : 'error'}`}
               role="status"
             >
-              {currentQuestion.status === 'correct'
-                ? 'Correct! You can move to the next question.'
-                : `Incorrect. The correct answer is: ${currentQuestion.answer}`}
-            </p>
+              <p>{currentStatus === 'correct' ? 'Correct! You can move to the next question.' : 'Incorrect.'}</p>
+              {currentStatus === 'incorrect' && (
+                <>
+                  <p>Correct answer: {currentQuestion.answer}</p>
+                  <p>Explanation: {friendlyExplanation}</p>
+                </>
+              )}
+              {currentStatus === 'correct' && <p>Explanation: {friendlyExplanation}</p>}
+            </div>
           )}
 
           <p className="ccss">CCSS: {currentQuestion.ccssCode}</p>
@@ -189,7 +213,7 @@ const Quiz = () => {
           </button>
         </footer>
 
-        {atLastQuestion && currentQuestion.status === 'correct' && (
+        {atLastQuestion && session.completedQuestions.has(session.currentIndex) && (
           <p className="notice">You have reached the end of this quiz session.</p>
         )}
       </section>
