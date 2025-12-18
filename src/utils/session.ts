@@ -1,4 +1,5 @@
 import { describeAllowedCcssCodes, generateQuestions } from './questionGenerator';
+import { createFriendlyExplanation } from './explanation';
 import { QuizSession } from '../types/quiz';
 
 const SESSION_STORAGE_KEY = 'mathixl-quiz-session';
@@ -31,6 +32,7 @@ export const buildSession = (
     allowedCcssCodes: questionSet.allowedCcssCodes,
     questions: questionSet.questions,
     currentIndex: 0,
+    completedQuestions: new Set<number>(),
   };
 };
 
@@ -39,20 +41,33 @@ export const loadSession = (): QuizSession | null => {
   if (!data) return null;
   try {
     const parsed = JSON.parse(data) as QuizSession;
+    const completed = Array.isArray((parsed as unknown as { completedQuestions?: number[] }).completedQuestions)
+      ? new Set<number>((parsed as unknown as { completedQuestions: number[] }).completedQuestions)
+      : new Set<number>();
     return {
       ...parsed,
       allowedCcssCodes:
         parsed.allowedCcssCodes ?? describeAllowedCcssCodes(parsed.grade, parsed.point),
-      questions: parsed.questions.map((question, index) => ({
-        ...question,
-        templateId: question.templateId ?? 'unknown-template',
-        type: 'mcq',
-        selectedIndex: question.selectedIndex ?? null,
-        response: question.response ?? null,
-        status: question.status ?? 'unanswered',
-        id: question.id ?? index + 1,
-        options: question.options ?? [],
-      })),
+      questions: parsed.questions.map((question, index) => {
+        const legacyStatus = (question as unknown as { status?: 'correct' | 'incorrect' | 'unanswered' }).status;
+        const fallbackIsCorrect =
+          legacyStatus === 'correct' ? true : legacyStatus === 'incorrect' ? false : null;
+        const legacySelectedIndex = (question as unknown as { selectedIndex?: number | null }).selectedIndex;
+        const legacyChoice =
+          typeof legacySelectedIndex === 'number' ? String.fromCharCode(65 + legacySelectedIndex) : null;
+
+        return {
+          ...question,
+          templateId: question.templateId ?? 'unknown-template',
+          type: 'mcq',
+          selectedChoice: question.selectedChoice ?? legacyChoice ?? null,
+          isCorrect: question.isCorrect ?? fallbackIsCorrect ?? null,
+          id: question.id ?? index + 1,
+          options: question.options ?? [],
+          explanation: createFriendlyExplanation(parsed.grade, question.explanation, question.answer),
+        };
+      }),
+      completedQuestions: completed,
     };
   } catch (error) {
     console.error('Failed to parse saved session', error);
@@ -61,7 +76,11 @@ export const loadSession = (): QuizSession | null => {
 };
 
 export const saveSession = (session: QuizSession) => {
-  localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(session));
+  const serialized = {
+    ...session,
+    completedQuestions: Array.from(session.completedQuestions),
+  };
+  localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(serialized));
 };
 
 export const clearSession = () => {

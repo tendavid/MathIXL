@@ -1,5 +1,6 @@
 import pacingData from '../data/pacing.json' with { type: 'json' };
-import { QuestionStatus, QuestionType, QuizQuestion } from '../types/quiz';
+import { QuestionType, QuizQuestion } from '../types/quiz';
+import { createFriendlyExplanation } from './explanation';
 
 type PacingPoint = {
   ccssCodes: string[];
@@ -587,19 +588,19 @@ export const generateQuestions = (
     const template = templates[Math.floor(rand() * templates.length)];
     const content = selectQuestionContent(rand, index, grade, point, difficulty, ccssCode, template);
     const options = buildOptionsForContent(rand, content, difficulty);
+    const explanation = createFriendlyExplanation(grade, content.explanation, content.answer);
 
     return {
       id: index + 1,
       prompt: content.prompt,
       type: 'mcq' as QuestionType,
       answer: content.answer,
-      explanation: content.explanation,
+      explanation,
       ccssCode,
       templateId: template.id,
       options,
-      selectedIndex: null,
-      response: null,
-      status: 'unanswered' as QuestionStatus,
+      selectedChoice: null,
+      isCorrect: null,
     };
   });
 

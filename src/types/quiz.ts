@@ -11,9 +11,8 @@ export type QuizQuestion = {
   ccssCode: string;
   templateId: string;
   options: string[];
-  selectedIndex: number | null;
-  response: string | null;
-  status: QuestionStatus;
+  selectedChoice: string | null;
+  isCorrect: boolean | null;
 };
 
 export type QuizSession = {
@@ -24,4 +23,5 @@ export type QuizSession = {
   allowedCcssCodes: string[];
   questions: QuizQuestion[];
   currentIndex: number;
+  completedQuestions: Set<number>;
 };
