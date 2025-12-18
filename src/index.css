@@ -304,6 +304,45 @@ button:disabled {
   font-weight: 600;
 }
 
+.explanation {
+  margin-top: 8px;
+  font-weight: 400;
+  color: #0f172a;
+}
+
+.explanation-steps {
+  margin: 8px 0 0 18px;
+  display: grid;
+  gap: 4px;
+  list-style: disc;
+}
+
+.explanation-summary {
+  margin-top: 8px;
+  color: #334155;
+}
+
+.debug-panel {
+  margin: 20px 0;
+  padding: 12px;
+  background: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 10px;
+}
+
+.debug-panel summary {
+  cursor: pointer;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.debug-content {
+  margin-top: 10px;
+  display: grid;
+  gap: 8px;
+  color: #0f172a;
+}
+
 .feedback.success {
   color: #15803d;
 }

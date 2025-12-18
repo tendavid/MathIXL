@@ -30,7 +30,7 @@ const Quiz = () => {
     return session.questions[session.currentIndex] ?? null;
   }, [session]);
 
-  const correctCount = useMemo(() => {
+  const completedCount = useMemo(() => {
     if (!session) return 0;
     return session.completedQuestions.size;
   }, [session]);
@@ -52,8 +52,6 @@ const Quiz = () => {
     const completedQuestions = new Set(session.completedQuestions);
     if (isCorrect) {
       completedQuestions.add(session.currentIndex);
-    } else {
-      completedQuestions.delete(session.currentIndex);
     }
 
     const updatedSession = { ...session, questions: updatedQuestions, completedQuestions };
@@ -102,9 +100,11 @@ const Quiz = () => {
   const currentStatus = evaluateStatus(currentQuestion);
   const friendlyExplanation = createFriendlyExplanation(
     session.grade,
-    currentQuestion.explanation,
+    currentQuestion.explanationSteps,
     currentQuestion.answer,
   );
+  const explanationSteps = currentQuestion.explanationSteps;
+  const showFeedback = currentQuestion.selectedChoice !== null;
 
   return (
     <main className="page">
@@ -131,11 +131,11 @@ const Quiz = () => {
             <div className="progress-fill" style={{ width: `${progressPercent}%` }} />
           </div>
           <div className="progress-text">
-            <span>
-              Question {session.currentIndex + 1} / {session.questions.length}
+            <span data-testid="progress-text">
+              Progress {completedCount}/{session.questions.length}
             </span>
             <span>
-              {correctCount}/{session.questions.length} correct
+              Current question {session.currentIndex + 1}/{session.questions.length}
             </span>
           </div>
         </div>
@@ -175,6 +175,7 @@ const Quiz = () => {
                   key={`${option}-${index}`}
                   type="button"
                   className={classes}
+                  data-testid={`option-${index}`}
                   onClick={() => handleAnswer(index)}
                 >
                   <span className="option-letter">{optionLetter}.</span>
@@ -184,25 +185,58 @@ const Quiz = () => {
             })}
           </div>
 
-          {currentQuestion.selectedChoice && (
+          {showFeedback && (
             <div
               className={`feedback ${currentStatus === 'correct' ? 'success' : 'error'}`}
               role="status"
             >
               <p>{currentStatus === 'correct' ? 'Correct! You can move to the next question.' : 'Incorrect.'}</p>
-              {currentStatus === 'incorrect' && (
-                <>
-                  <p>Correct answer: {currentQuestion.answer}</p>
-                  <p>Explanation: {friendlyExplanation}</p>
-                </>
-              )}
-              {currentStatus === 'correct' && <p>Explanation: {friendlyExplanation}</p>}
+              {currentStatus === 'incorrect' && <p>Correct answer: {currentQuestion.answer}</p>}
+              <div className="explanation">
+                <p>Explanation:</p>
+                <ul className="explanation-steps">
+                  {explanationSteps.length ? (
+                    explanationSteps.map((step, index) => <li key={`${step}-${index}`}>{step}</li>)
+                  ) : (
+                    <li>No steps available.</li>
+                  )}
+                </ul>
+                {friendlyExplanation && (
+                  <p className="explanation-summary">{friendlyExplanation}</p>
+                )}
+              </div>
             </div>
           )}
 
           <p className="ccss">CCSS: {currentQuestion.ccssCode}</p>
           <p className="ccss">Template: {currentQuestion.templateId ?? 'unknown'}</p>
         </article>
+
+        <details className="debug-panel" data-testid="debug-panel">
+          <summary>Debug</summary>
+          <div className="debug-content">
+            <p data-testid="debug-current-question">
+              Current question ID {currentQuestion.id} (index {session.currentIndex})
+            </p>
+            <p data-testid="debug-progress-value">
+              Progress value: {completedCount}/{session.questions.length} ({progressPercent}%)
+            </p>
+            <div>
+              <p data-testid="debug-completed-count">Completed questions ({completedCount}):</p>
+              <ul data-testid="debug-completed-list">
+                {completedCount ? (
+                  Array.from(session.completedQuestions)
+                    .sort((a, b) => a - b)
+                    .map((value) => (
+                      <li key={value}>Index {value + 1}</li>
+                    ))
+                ) : (
+                  <li>None</li>
+                )}
+              </ul>
+            </div>
+          </div>
+        </details>
 
         <footer className="actions">
           <button type="button" className="secondary" onClick={handleReset}>
