@@ -7,6 +7,7 @@ export type QuizQuestion = {
   answer: string;
   explanation: string;
   ccssCode: string;
+  templateId: string;
   options: string[];
   selectedIndex: number | null;
   response: string | null;
@@ -17,6 +18,7 @@ export type QuizSession = {
   grade: number;
   point: number;
   numberLimit: number;
+  allowedCcssCodes: string[];
   questions: QuizQuestion[];
   currentIndex: number;
 };
