@@ -24,6 +24,13 @@ describe('Quiz scoring and progress updates', () => {
     localStorage.clear();
   });
 
+  it('renders the first question after starting the quiz', async () => {
+    const { session } = renderQuizWithSeed('START-QUIZ');
+    const firstQuestion = session.questions[0];
+
+    expect(await screen.findByText(firstQuestion.prompt)).toBeInTheDocument();
+  });
+
   it('does not increase correctCount after a wrong answer', async () => {
     const { session, user } = renderQuizWithSeed('WRONG-ANSWER');
     const firstQuestion = session.questions[0];
