@@ -51,60 +51,62 @@ const Home = () => {
         </p>
 
         <form className="form" onSubmit={handleSubmit}>
-          <label className="field">
-            <span className="label">Grade</span>
-            <div className="card-grid">
-              {grades.map((value) => (
-                <button
-                  key={value}
-                  type="button"
-                  className={`selector-card${grade === value ? ' selector-card--selected' : ''}`}
-                  onClick={() => setGrade(value)}
-                >
-                  Grade {value}
-                </button>
-              ))}
-            </div>
-          </label>
+          <div className="selector-layout">
+            <label className="field">
+              <span className="section-header">Grade</span>
+              <div className="card-grid card-grid--scroll">
+                {grades.map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    className={`selector-card${grade === value ? ' selector-card--selected' : ''}`}
+                    onClick={() => setGrade(value)}
+                  >
+                    Grade {value}
+                  </button>
+                ))}
+              </div>
+            </label>
 
-          <label className="field">
-            <span className="label">Progression</span>
-            <div className="card-grid">
-              {pointOptions.length === 0 ? (
-                <span className="field-hint">Select a grade to unlock progression levels.</span>
-              ) : null}
-              {pointOptions.map((option) => (
-                <button
-                  key={option.value}
-                  type="button"
-                  className={`selector-card${point === option.value ? ' selector-card--selected' : ''}`}
-                  onClick={() => setPoint(option.value)}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          </label>
+            <label className="field">
+              <span className="section-header">Progression</span>
+              <div className="card-grid card-grid--progression">
+                {pointOptions.length === 0 ? (
+                  <span className="field-hint">Select a grade to unlock progression levels.</span>
+                ) : null}
+                {pointOptions.map((option) => (
+                  <button
+                    key={option.value}
+                    type="button"
+                    className={`selector-card${point === option.value ? ' selector-card--selected' : ''}`}
+                    onClick={() => setPoint(option.value)}
+                  >
+                    {option.label}
+                  </button>
+                ))}
+              </div>
+            </label>
 
-          <label className="field">
-            <span className="label">Number limit</span>
-            <div className="card-grid card-grid--compact">
-              {numberRange.map((value) => (
-                <button
-                  key={value}
-                  type="button"
-                  className={`selector-card selector-card--compact${
-                    numberLimit === value ? ' selector-card--selected' : ''
-                  }`}
-                  onClick={() => setNumberLimit(value)}
-                >
-                  {value}
-                </button>
-              ))}
-            </div>
-          </label>
+            <label className="field">
+              <span className="section-header">Number limit</span>
+              <div className="card-grid card-grid--compact">
+                {numberRange.map((value) => (
+                  <button
+                    key={value}
+                    type="button"
+                    className={`selector-card selector-card--compact${
+                      numberLimit === value ? ' selector-card--selected' : ''
+                    }`}
+                    onClick={() => setNumberLimit(value)}
+                  >
+                    {value}
+                  </button>
+                ))}
+              </div>
+            </label>
+          </div>
 
-          <button className="primary" type="submit" disabled={!canStart}>
+          <button className="primary form__submit" type="submit" disabled={!canStart}>
             Start
           </button>
         </form>
