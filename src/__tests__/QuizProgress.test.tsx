@@ -37,11 +37,14 @@ describe('Quiz progression and completion gating', () => {
 
     expect(screen.getByTestId('progress-text')).toHaveTextContent(`0/${session.questions.length}`);
     expect(screen.getByTestId('completed-label')).toHaveTextContent('Completed: 0/15');
-    expect(screen.getByTestId('debug-completed-count')).toHaveTextContent('Completed questions (0):');
     expect(screen.getByRole('button', { name: /Next/i })).toBeDisabled();
 
     await user.click(screen.getByText('Debug'));
-    expect(screen.getByTestId('debug-completed-list')).toHaveTextContent('None');
+    expect(screen.getByTestId('debug-progress-displayed')).toHaveTextContent('progressDisplayed: 0');
+    expect(screen.getByTestId('debug-completed-count')).toHaveTextContent(
+      'completedCorrectCount: 0',
+    );
+    expect(screen.getByTestId('debug-completed-set')).toHaveTextContent('completedCorrectSet: None');
 
     const correctIndex = firstQuestion.options.findIndex((option) => option === firstQuestion.answer);
     const correctButton = screen.getByTestId(`option-${correctIndex}`);
@@ -49,7 +52,10 @@ describe('Quiz progression and completion gating', () => {
 
     expect(screen.getByTestId('progress-text')).toHaveTextContent(`1/${session.questions.length}`);
     expect(screen.getByTestId('completed-label')).toHaveTextContent('Completed: 1/15');
-    expect(screen.getByTestId('debug-completed-count')).toHaveTextContent('Completed questions (1):');
+    expect(screen.getByTestId('debug-progress-displayed')).toHaveTextContent('progressDisplayed: 1');
+    expect(screen.getByTestId('debug-completed-count')).toHaveTextContent(
+      'completedCorrectCount: 1',
+    );
     expect(screen.getByRole('button', { name: /Next/i })).toBeEnabled();
   });
 });

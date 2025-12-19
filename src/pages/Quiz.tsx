@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { clearSession, loadSession, saveSession } from '../utils/session';
 import { QuestionStatus, QuizQuestion, QuizSession } from '../types/quiz';
@@ -15,6 +15,8 @@ export const calculateProgressPercent = (completedSet: Set<number>, totalQuestio
 const Quiz = () => {
   const navigate = useNavigate();
   const [session, setSession] = useState<QuizSession | null>(null);
+  const [showDebug, setShowDebug] = useState(false);
+  const previousProgressRef = useRef(0);
 
   useEffect(() => {
     const storedSession = loadSession();
@@ -85,9 +87,11 @@ const Quiz = () => {
     );
   }
 
+  const progressDisplayed = completedCount;
   const progressPercent = calculateProgressPercent(session.completedSet, session.questions.length);
   const atLastQuestion = session.currentIndex === session.questions.length - 1;
-  const nextDisabled = !session.completedSet.has(session.currentIndex) || atLastQuestion;
+  const canGoNext = session.completedSet.has(session.currentIndex) && !atLastQuestion;
+  const nextDisabled = !canGoNext;
   const allowedCodes = session.allowedCcssCodes ?? [];
   const typeLabelMap: Record<QuizQuestion['type'], string> = {
     mcq: 'Multiple choice',
@@ -105,6 +109,22 @@ const Quiz = () => {
   );
   const explanationSteps = currentQuestion.explanationSteps;
   const showFeedback = currentQuestion.selectedChoice !== null;
+  const lastAnswerWasCorrect =
+    currentQuestion.selectedChoice === null ? null : currentQuestion.isCorrect;
+  const completedCorrectList = Array.from(session.completedSet)
+    .sort((a, b) => a - b)
+    .map((index) => session.questions[index]?.id ?? index);
+
+  useEffect(() => {
+    if (!import.meta.env.DEV) {
+      previousProgressRef.current = progressDisplayed;
+      return;
+    }
+    if (lastAnswerWasCorrect === false && progressDisplayed > previousProgressRef.current) {
+      throw new Error('Progress increased after an incorrect answer.');
+    }
+    previousProgressRef.current = progressDisplayed;
+  }, [lastAnswerWasCorrect, progressDisplayed]);
 
   return (
     <main className="page">
@@ -132,13 +152,13 @@ const Quiz = () => {
           </div>
           <div className="progress-text">
             <span data-testid="progress-text">
-              Progress {completedCount}/{session.questions.length}
+              Progress {progressDisplayed}/{session.questions.length}
             </span>
             <span data-testid="completed-label">
               Completed: {session.completedSet.size}/{session.questions.length}
             </span>
             <span>
-              Current question {session.currentIndex + 1}/{session.questions.length}
+              Current question {currentQuestion.id}/{session.questions.length}
             </span>
           </div>
         </div>
@@ -215,31 +235,39 @@ const Quiz = () => {
           <p className="ccss">Template: {currentQuestion.templateId ?? 'unknown'}</p>
         </article>
 
-        <details className="debug-panel" data-testid="debug-panel">
-          <summary>Debug</summary>
-          <div className="debug-content">
-            <p data-testid="debug-current-question">
-              Current question ID {currentQuestion.id} (index {session.currentIndex})
-            </p>
-            <p data-testid="debug-progress-value">
-              Progress value: {completedCount}/{session.questions.length} ({progressPercent}%)
-            </p>
-            <div>
-              <p data-testid="debug-completed-count">Completed questions ({completedCount}):</p>
-              <ul data-testid="debug-completed-list">
-                {completedCount ? (
-                  Array.from(session.completedSet)
-                    .sort((a, b) => a - b)
-                    .map((value) => (
-                      <li key={value}>Index {value + 1}</li>
-                    ))
-                ) : (
-                  <li>None</li>
-                )}
-              </ul>
+        <div className="debug-panel">
+          <button
+            type="button"
+            className="secondary"
+            onClick={() => setShowDebug((prev) => !prev)}
+            aria-expanded={showDebug}
+          >
+            Debug
+          </button>
+          {showDebug && (
+            <div className="debug-content" data-testid="debug-panel">
+              <p data-testid="debug-current-index">currentIndex: {session.currentIndex}</p>
+              <p data-testid="debug-progress-displayed">
+                progressDisplayed: {progressDisplayed}
+              </p>
+              <p data-testid="debug-completed-count">
+                completedCorrectCount: {completedCount}
+              </p>
+              <p data-testid="debug-completed-set">
+                completedCorrectSet:{' '}
+                {completedCorrectList.length ? completedCorrectList.join(', ') : 'None'}
+              </p>
+              <p data-testid="debug-last-answer">
+                lastAnswerWasCorrect:{' '}
+                {lastAnswerWasCorrect === null ? 'null' : String(lastAnswerWasCorrect)}
+              </p>
+              <p data-testid="debug-can-go-next">canGoNext: {String(canGoNext)}</p>
+              <p data-testid="debug-progress-value">
+                Progress value: {progressDisplayed}/{session.questions.length} ({progressPercent}%)
+              </p>
             </div>
-          </div>
-        </details>
+          )}
+        </div>
 
         <footer className="actions">
           <button type="button" className="secondary" onClick={handleReset}>
