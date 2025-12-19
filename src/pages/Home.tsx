@@ -1,22 +1,10 @@
 import { FormEvent, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { buildSession, saveSession } from '../utils/session';
-import pacingData from '../data/pacing.json';
+import { getProgressionLabel } from '../utils/progressionLabel';
 
 const grades = Array.from({ length: 12 }, (_, index) => index + 1);
 const numberRange = Array.from({ length: 50 }, (_, index) => index + 1);
-
-type PacingPoint = {
-  title: string;
-  ccssCodes: string[];
-  masteryText: string;
-  quizGuidanceText: string;
-  sampleItems?: string[];
-};
-
-type PacingData = Record<string, Record<string, PacingPoint>>;
-
-const pacing = pacingData as PacingData;
 const points = Array.from({ length: 5 }, (_, index) => index + 1);
 
 const Home = () => {
@@ -36,11 +24,9 @@ const Home = () => {
 
   const pointOptions = useMemo(() => {
     if (grade === '') return [];
-    const gradeData = pacing[String(grade)];
     return points.map((value) => {
-      const pointData = gradeData?.[String(value)];
-      const title = pointData ? `Point ${value} — ${pointData.title}` : `Point ${value}`;
-      return { value, label: title };
+      const label = `Progression ${value} — ${getProgressionLabel(grade, value)}`;
+      return { value, label };
     });
   }, [grade]);
 
@@ -77,7 +63,7 @@ const Home = () => {
           </label>
 
           <label className="field">
-            <span className="label">Point</span>
+            <span className="label">Progression</span>
             <select
               value={point}
               onChange={(e) => setPoint(Number(e.target.value))}
@@ -85,7 +71,7 @@ const Home = () => {
               disabled={grade === ''}
             >
               <option value="" disabled>
-                Select point level
+                Select progression level
               </option>
               {pointOptions.map((option) => (
                 <option key={option.value} value={option.value}>
