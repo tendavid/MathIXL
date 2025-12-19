@@ -72,10 +72,10 @@ describe('quiz UI progression', () => {
     const secondCorrect = answerQuestionAtIndex(firstCorrect, 1, true);
     const incorrect = answerQuestionAtIndex(secondCorrect, 2, false);
 
-    const percent = calculateProgressPercent(incorrect.completedSet, incorrect.questions.length);
+    const percent = calculateProgressPercent(incorrect.completedSet, incorrect.goalCorrect);
 
     assert.equal(incorrect.completedSet.size, 2);
-    assert.equal(percent, Math.round((2 / incorrect.questions.length) * 100));
+    assert.equal(percent, Math.round((2 / incorrect.goalCorrect) * 100));
     assert.equal(attemptAdvance(incorrect), 2);
   });
 });

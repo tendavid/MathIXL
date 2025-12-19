@@ -614,11 +614,13 @@ const buildOptionsForContent = (
   return buildTextFallbackOptions(rand, content.answer);
 };
 
-export const generateQuestions = (
+const buildQuestionSet = (
   grade: number,
   point: number,
   numberLimit: number,
   seed: string,
+  count: number,
+  startIndex = 0,
 ): GeneratedQuestionSet => {
   const gradeData = pacing[String(grade)];
   const pointData = gradeData?.[String(point)];
@@ -642,17 +644,18 @@ export const generateQuestions = (
   const difficulty = clampNumberLimit(numberLimit);
   const orderedCodes = shuffle(rand, allowedCcssCodes);
 
-  const questions = Array.from({ length: 15 }, (_, index) => {
-    const ccssCode = orderedCodes[index % orderedCodes.length];
+  const questions = Array.from({ length: count }, (_, index) => {
+    const questionIndex = startIndex + index;
+    const ccssCode = orderedCodes[questionIndex % orderedCodes.length];
     const templates = codeTemplates[ccssCode];
     const template = templates[Math.floor(rand() * templates.length)];
-    const content = selectQuestionContent(rand, index, grade, point, difficulty, ccssCode, template);
+    const content = selectQuestionContent(rand, questionIndex, grade, point, difficulty, ccssCode, template);
     const options = buildOptionsForContent(rand, content, difficulty);
     const explanationSteps = normalizeExplanationSteps(content.explanationSteps, content.explanation);
     const explanation = createFriendlyExplanation(grade, explanationSteps, content.answer);
 
     return {
-      id: index + 1,
+      id: questionIndex + 1,
       prompt: content.prompt,
       type: 'mcq' as QuestionType,
       answer: content.answer,
@@ -668,6 +671,21 @@ export const generateQuestions = (
 
   return { questions, allowedCcssCodes };
 };
+
+export const generateQuestions = (
+  grade: number,
+  point: number,
+  numberLimit: number,
+  seed: string,
+): GeneratedQuestionSet => buildQuestionSet(grade, point, numberLimit, seed, 15);
+
+export const generateQuestion = (
+  grade: number,
+  point: number,
+  numberLimit: number,
+  seed: string,
+  index: number,
+): QuizQuestion => buildQuestionSet(grade, point, numberLimit, seed, 1, index).questions[0];
 
 export const getTemplateById = (id: string) => templateRegistry.find((template) => template.id === id);
 
