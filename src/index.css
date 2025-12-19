@@ -159,6 +159,23 @@ button {
     background 150ms ease;
 }
 
+.selector-card--progression {
+  display: flex;
+  align-items: flex-start;
+}
+
+.selector-card__label {
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+  overflow-wrap: anywhere;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
 .selector-card--compact {
   text-align: center;
   padding: 8px 10px;

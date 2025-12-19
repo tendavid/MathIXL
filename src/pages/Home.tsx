@@ -78,10 +78,12 @@ const Home = () => {
                   <button
                     key={option.value}
                     type="button"
-                    className={`selector-card${point === option.value ? ' selector-card--selected' : ''}`}
+                    className={`selector-card selector-card--progression${
+                      point === option.value ? ' selector-card--selected' : ''
+                    }`}
                     onClick={() => setPoint(option.value)}
                   >
-                    {option.label}
+                    <span className="selector-card__label">{option.label}</span>
                   </button>
                 ))}
               </div>
