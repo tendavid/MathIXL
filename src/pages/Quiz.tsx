@@ -39,7 +39,7 @@ const Quiz = () => {
 
   const handleAnswer = (optionIndex: number) => {
     if (!session || !currentQuestion) return;
-    if (evaluateStatus(currentQuestion) === 'correct') return;
+    if (currentQuestion.selectedChoice !== null) return;
 
     const selectedChoice = toChoiceLetter(optionIndex);
     const selectedOption = currentQuestion.options[optionIndex];
@@ -63,7 +63,6 @@ const Quiz = () => {
 
   const handleNext = () => {
     if (!session || !currentQuestion) return;
-    if (!session.completedSet.has(session.currentIndex)) return;
     const nextIndex = Math.min(session.questions.length - 1, session.currentIndex + 1);
     if (nextIndex === session.currentIndex) return;
     const updatedSession = { ...session, currentIndex: nextIndex };
@@ -90,7 +89,8 @@ const Quiz = () => {
   const progressDisplayed = completedCount;
   const progressPercent = calculateProgressPercent(session.completedSet, session.questions.length);
   const atLastQuestion = session.currentIndex === session.questions.length - 1;
-  const canGoNext = session.completedSet.has(session.currentIndex) && !atLastQuestion;
+  const hasAnsweredCurrent = currentQuestion.selectedChoice !== null;
+  const canGoNext = hasAnsweredCurrent && !atLastQuestion;
   const nextDisabled = !canGoNext;
   const allowedCodes = session.allowedCcssCodes ?? [];
   const typeLabelMap: Record<QuizQuestion['type'], string> = {
@@ -98,7 +98,7 @@ const Quiz = () => {
   };
   const statusLabels: Record<QuestionStatus, string> = {
     correct: 'Correct',
-    incorrect: 'Try again',
+    incorrect: 'Incorrect',
     unanswered: 'Pending',
   };
   const currentStatus = evaluateStatus(currentQuestion);
@@ -114,6 +114,9 @@ const Quiz = () => {
   const completedCorrectList = Array.from(session.completedSet)
     .sort((a, b) => a - b)
     .map((index) => session.questions[index]?.id ?? index);
+  const missedQuestions = session.questions.filter(
+    (question) => question.selectedChoice !== null && question.isCorrect === false,
+  );
 
   useEffect(() => {
     if (!import.meta.env.DEV) {
@@ -148,14 +151,15 @@ const Quiz = () => {
 
         <div className="progress">
           <div className="progress-bar">
-            <div className="progress-fill" style={{ width: `${progressPercent}%` }} />
+            <div
+              className="progress-fill"
+              style={{ width: `${progressPercent}%` }}
+              data-testid="progress-fill"
+            />
           </div>
           <div className="progress-text">
             <span data-testid="progress-text">
-              Progress {progressDisplayed}/{session.questions.length}
-            </span>
-            <span data-testid="completed-label">
-              Completed: {session.completedSet.size}/{session.questions.length}
+              Correct: {progressDisplayed}/{session.questions.length}
             </span>
             <span>
               Current question {currentQuestion.id}/{session.questions.length}
@@ -200,6 +204,7 @@ const Quiz = () => {
                   className={classes}
                   data-testid={`option-${index}`}
                   onClick={() => handleAnswer(index)}
+                  disabled={currentQuestion.selectedChoice !== null}
                 >
                   <span className="option-letter">{optionLetter}.</span>
                   <span>{option}</span>
@@ -278,8 +283,51 @@ const Quiz = () => {
           </button>
         </footer>
 
-        {atLastQuestion && session.completedSet.has(session.currentIndex) && (
-          <p className="notice">You have reached the end of this quiz session.</p>
+        {atLastQuestion && hasAnsweredCurrent && (
+          <section className="summary" aria-live="polite">
+            <p className="notice">You have reached the end of this quiz session.</p>
+            <h2>Summary</h2>
+            <p>
+              Score: {completedCount} out of {session.questions.length}
+            </p>
+            <div className="missed-questions">
+              <h3>Missed questions</h3>
+              {missedQuestions.length ? (
+                <ul>
+                  {missedQuestions.map((question) => {
+                    const explanation = createFriendlyExplanation(
+                      session.grade,
+                      question.explanationSteps,
+                      question.answer,
+                    );
+                    return (
+                      <li key={question.id}>
+                        <p>
+                          Question {question.id}: {question.prompt}
+                        </p>
+                        <p>Correct answer: {question.answer}</p>
+                        <div className="explanation">
+                          <p>Explanation:</p>
+                          <ul className="explanation-steps">
+                            {question.explanationSteps.length ? (
+                              question.explanationSteps.map((step, index) => (
+                                <li key={`${question.id}-${index}`}>{step}</li>
+                              ))
+                            ) : (
+                              <li>No steps available.</li>
+                            )}
+                          </ul>
+                          {explanation && <p className="explanation-summary">{explanation}</p>}
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <p>No missed questions. Nice work!</p>
+              )}
+            </div>
+          </section>
         )}
       </section>
     </main>
