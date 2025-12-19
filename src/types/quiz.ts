@@ -24,5 +24,5 @@ export type QuizSession = {
   allowedCcssCodes: string[];
   questions: QuizQuestion[];
   currentIndex: number;
-  completedQuestions: Set<number>;
+  completedSet: Set<number>;
 };

@@ -32,7 +32,7 @@ export const buildSession = (
     allowedCcssCodes: questionSet.allowedCcssCodes,
     questions: questionSet.questions,
     currentIndex: 0,
-    completedQuestions: new Set<number>(),
+    completedSet: new Set<number>(),
   };
 };
 
@@ -41,9 +41,12 @@ export const loadSession = (): QuizSession | null => {
   if (!data) return null;
   try {
     const parsed = JSON.parse(data) as QuizSession;
-    const completed = Array.isArray((parsed as unknown as { completedQuestions?: number[] }).completedQuestions)
+    const legacyCompleted = Array.isArray((parsed as unknown as { completedQuestions?: number[] }).completedQuestions)
       ? new Set<number>((parsed as unknown as { completedQuestions: number[] }).completedQuestions)
-      : new Set<number>();
+      : null;
+    const completed = Array.isArray((parsed as unknown as { completedSet?: number[] }).completedSet)
+      ? new Set<number>((parsed as unknown as { completedSet: number[] }).completedSet)
+      : legacyCompleted ?? new Set<number>();
     return {
       ...parsed,
       allowedCcssCodes:
@@ -73,7 +76,7 @@ export const loadSession = (): QuizSession | null => {
           explanation,
         };
       }),
-      completedQuestions: completed,
+      completedSet: completed,
     };
   } catch (error) {
     console.error('Failed to parse saved session', error);
@@ -84,7 +87,8 @@ export const loadSession = (): QuizSession | null => {
 export const saveSession = (session: QuizSession) => {
   const serialized = {
     ...session,
-    completedQuestions: Array.from(session.completedQuestions),
+    completedSet: Array.from(session.completedSet),
+    completedQuestions: Array.from(session.completedSet),
   };
   localStorage.setItem(SESSION_STORAGE_KEY, JSON.stringify(serialized));
 };
