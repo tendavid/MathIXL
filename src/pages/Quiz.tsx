@@ -27,11 +27,21 @@ const Quiz = () => {
     setSession(storedSession);
   }, [navigate]);
 
-  const questions = session?.questions ?? [];
-  const currentIndex = session?.currentIndex ?? 0;
-  const completedSet = session?.completedSet ?? new Set<number>();
-  const allowedCodes = session?.allowedCcssCodes ?? [];
-  const isReady = Boolean(session && Array.isArray(session.questions));
+  if (!session) {
+    return (
+      <main className="page">
+        <section className="card">
+          <p>Loading quiz…</p>
+        </section>
+      </main>
+    );
+  }
+
+  const questions = session.questions;
+  const currentIndex = session.currentIndex;
+  const completedSet = session.completedSet;
+  const allowedCodes = session.allowedCcssCodes;
+  const isReady = Array.isArray(session.questions);
 
   const currentQuestion = useMemo(() => {
     if (!isReady) return null;
@@ -95,7 +105,7 @@ const Quiz = () => {
   };
   const currentStatus = currentQuestion ? evaluateStatus(currentQuestion) : 'unanswered';
   const friendlyExplanation = createFriendlyExplanation(
-    session?.grade ?? 0,
+    session.grade,
     currentQuestion?.explanationSteps ?? [],
     currentQuestion?.answer ?? '',
   );
@@ -143,12 +153,12 @@ const Quiz = () => {
           <header className="quiz-header">
             <div>
               <p className="label">Session Code</p>
-              <p className="code">{session?.code ?? ''}</p>
+              <p className="code">{session.code}</p>
             </div>
             <div className="meta">
-              <span>Grade {session?.grade ?? 0}</span>
-              <span>Point {session?.point ?? 0}</span>
-              <span>Up to {session?.numberLimit ?? 0}</span>
+              <span>Grade {session.grade}</span>
+              <span>Point {session.point}</span>
+              <span>Up to {session.numberLimit}</span>
             </div>
           </header>
 
@@ -164,7 +174,7 @@ const Quiz = () => {
                 <ul>
                   {missedQuestions.map((question) => {
                     const explanation = createFriendlyExplanation(
-                      session?.grade ?? 0,
+                      session.grade,
                       question.explanationSteps,
                       question.answer,
                     );
@@ -384,7 +394,7 @@ const Quiz = () => {
                   <ul>
                     {missedQuestions.map((question) => {
                       const explanation = createFriendlyExplanation(
-                        session?.grade ?? 0,
+                        session.grade,
                         question.explanationSteps,
                         question.answer,
                       );
