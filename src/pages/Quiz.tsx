@@ -4,6 +4,7 @@ import { clearSession, loadSession, saveSession } from '../utils/session';
 import { QuestionStatus, QuizQuestion, QuizSession } from '../types/quiz';
 import { createFriendlyExplanation, toChoiceLetter } from '../utils/explanation';
 import { generateQuestion } from '../utils/questionGenerator';
+import { getProgressionLabel } from '../utils/progressionLabel';
 
 export const evaluateStatus = (question: QuizQuestion): QuestionStatus => {
   if (question.isCorrect === null) return 'unanswered';
@@ -25,7 +26,6 @@ const formatDuration = (durationMs: number) => {
 const Quiz = () => {
   const navigate = useNavigate();
   const [session, setSession] = useState<QuizSession | null>(null);
-  const [showDebug, setShowDebug] = useState(false);
   const previousProgressRef = useRef(0);
 
   useEffect(() => {
@@ -40,7 +40,6 @@ const Quiz = () => {
   const questions = session?.questions ?? [];
   const currentIndex = session?.currentIndex ?? 0;
   const completedSet = session?.completedSet ?? new Set<number>();
-  const allowedCodes = session?.allowedCcssCodes ?? [];
   const isReady = Boolean(session && Array.isArray(session.questions));
 
   const currentQuestion = useMemo(() => {
@@ -51,7 +50,6 @@ const Quiz = () => {
   const correctCount = session?.correctCount ?? completedSet.size;
   const attemptedCount = session?.attemptedCount ?? 0;
   const goalCorrect = session?.goalCorrect ?? 15;
-  const completedCount = useMemo(() => completedSet.size, [completedSet]);
 
   const handleAnswer = (optionIndex: number) => {
     if (!session || !currentQuestion) return;
@@ -152,10 +150,6 @@ const Quiz = () => {
   const showFeedback = Boolean(currentQuestion && currentQuestion.selectedChoice !== null);
   const lastAnswerWasCorrect =
     currentQuestion?.selectedChoice === null || !currentQuestion ? null : currentQuestion.isCorrect;
-  const completedCorrectList = Array.from(completedSet)
-    .sort((a, b) => a - b)
-    .map((index) => questions[index]?.id ?? index);
-  
   const isSummaryView = isReady && isComplete;
 
   useEffect(() => {
@@ -184,6 +178,8 @@ const Quiz = () => {
   }
 
   const s = session;
+  const progressionLabel = getProgressionLabel(s.grade, s.point);
+  const headerText = `Grade ${s.grade} - Progression ${s.point} : ${progressionLabel} - Number ${s.numberLimit}`;
   const friendlyExplanation = createFriendlyExplanation(
     s.grade,
     currentQuestion?.explanationSteps ?? [],
@@ -211,9 +207,7 @@ const Quiz = () => {
               <p className="code">{s.code}</p>
             </div>
             <div className="meta">
-              <span>Grade {s.grade}</span>
-              <span>Point {s.point}</span>
-              <span>Up to {s.numberLimit}</span>
+              <span>{headerText}</span>
             </div>
           </header>
 
@@ -268,15 +262,8 @@ const Quiz = () => {
             <p className="code">{s.code}</p>
           </div>
           <div className="meta">
-            <span>Grade {s.grade}</span>
-            <span>Point {s.point}</span>
-            <span>Up to {s.numberLimit}</span>
+            <span>{headerText}</span>
           </div>
-
-          <details className="ccss-allowed">
-            <summary>Allowed CCSS codes for this selection</summary>
-            <p>{allowedCodes.length ? allowedCodes.join(', ') : 'No allowed CCSS codes available.'}</p>
-          </details>
         </header>
 
         <div className="progress">
@@ -367,43 +354,7 @@ const Quiz = () => {
             </div>
           )}
 
-          <p className="ccss">CCSS: {currentQuestion.ccssCode}</p>
-          <p className="ccss">Template: {currentQuestion.templateId ?? 'unknown'}</p>
         </article>
-
-        <div className="debug-panel">
-          <button
-            type="button"
-            className="secondary"
-            onClick={() => setShowDebug((prev) => !prev)}
-            aria-expanded={showDebug}
-          >
-            Debug
-          </button>
-          {showDebug && (
-            <div className="debug-content" data-testid="debug-panel">
-              <p data-testid="debug-current-index">currentIndex: {s.currentIndex}</p>
-              <p data-testid="debug-progress-displayed">
-                progressDisplayed: {progressDisplayed}
-              </p>
-              <p data-testid="debug-completed-count">
-                completedCorrectCount: {completedCount}
-              </p>
-              <p data-testid="debug-completed-set">
-                completedCorrectSet:{' '}
-                {completedCorrectList.length ? completedCorrectList.join(', ') : 'None'}
-              </p>
-              <p data-testid="debug-last-answer">
-                lastAnswerWasCorrect:{' '}
-                {lastAnswerWasCorrect === null ? 'null' : String(lastAnswerWasCorrect)}
-              </p>
-              <p data-testid="debug-can-go-next">canGoNext: {String(canGoNext)}</p>
-              <p data-testid="debug-progress-value">
-                Progress value: {progressDisplayed}/{goalCorrect} ({progressPercent}%)
-              </p>
-            </div>
-          )}
-        </div>
 
         <footer className="actions">
           <button type="button" className="secondary" onClick={handleReset}>
