@@ -239,43 +239,6 @@ const Quiz = () => {
             <p>
               Score: {correctCount} out of {goalCorrect}
             </p>
-            <div className="missed-questions">
-              <h3>Missed questions</h3>
-              {missedQuestions.length ? (
-                <ul>
-                  {missedQuestions.map((question) => {
-                    const explanation = createFriendlyExplanation(
-                      s.grade,
-                      question.explanationSteps,
-                      question.answer,
-                    );
-                    return (
-                      <li key={question.id}>
-                        <p>
-                          Question {question.id}: {question.prompt}
-                        </p>
-                        <p>Correct answer: {question.answer}</p>
-                        <div className="explanation">
-                          <p>Explanation:</p>
-                          <ul className="explanation-steps">
-                            {question.explanationSteps.length ? (
-                              question.explanationSteps.map((step, index) => (
-                                <li key={`${question.id}-${index}`}>{step}</li>
-                              ))
-                            ) : (
-                              <li>No steps available.</li>
-                            )}
-                          </ul>
-                          {explanation && <p className="explanation-summary">{explanation}</p>}
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              ) : (
-                <p>No missed questions. Nice work!</p>
-              )}
-            </div>
           </section>
 
           <footer className="actions">
