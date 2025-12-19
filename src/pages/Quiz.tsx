@@ -3,14 +3,24 @@ import { useNavigate } from 'react-router-dom';
 import { clearSession, loadSession, saveSession } from '../utils/session';
 import { QuestionStatus, QuizQuestion, QuizSession } from '../types/quiz';
 import { createFriendlyExplanation, toChoiceLetter } from '../utils/explanation';
+import { generateQuestion } from '../utils/questionGenerator';
 
 export const evaluateStatus = (question: QuizQuestion): QuestionStatus => {
   if (question.isCorrect === null) return 'unanswered';
   return question.isCorrect ? 'correct' : 'incorrect';
 };
 
-export const calculateProgressPercent = (completedSet: Set<number>, totalQuestions: number) =>
-  Math.round((completedSet.size / Math.max(1, totalQuestions)) * 100);
+export const calculateProgressPercent = (correctCount: number | Set<number>, goalCorrect: number) => {
+  const normalizedCount = correctCount instanceof Set ? correctCount.size : correctCount;
+  return Math.round((normalizedCount / Math.max(1, goalCorrect)) * 100);
+};
+
+const formatDuration = (durationMs: number) => {
+  const totalSeconds = Math.max(0, Math.floor(durationMs / 1000));
+  const minutes = Math.floor(totalSeconds / 60);
+  const seconds = totalSeconds % 60;
+  return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+};
 
 const Quiz = () => {
   const navigate = useNavigate();
@@ -38,6 +48,9 @@ const Quiz = () => {
     return questions[currentIndex] ?? null;
   }, [currentIndex, isReady, questions]);
 
+  const correctCount = session?.correctCount ?? completedSet.size;
+  const attemptedCount = session?.attemptedCount ?? 0;
+  const goalCorrect = session?.goalCorrect ?? 15;
   const completedCount = useMemo(() => completedSet.size, [completedSet]);
 
   const handleAnswer = (optionIndex: number) => {
@@ -59,16 +72,57 @@ const Quiz = () => {
       completedSet.add(session.currentIndex);
     }
 
-    const updatedSession = { ...session, questions: updatedQuestions, completedSet };
+    const updatedSession = {
+      ...session,
+      questions: updatedQuestions,
+      completedSet,
+      attemptedCount: session.attemptedCount + 1,
+      correctCount: session.correctCount + (isCorrect ? 1 : 0),
+    };
     setSession(updatedSession);
     saveSession(updatedSession);
   };
 
   const handleNext = () => {
     if (!session || !currentQuestion) return;
-    const nextIndex = Math.min(session.questions.length - 1, session.currentIndex + 1);
-    if (nextIndex === session.currentIndex) return;
-    const updatedSession = { ...session, currentIndex: nextIndex };
+    if (session.correctCount >= session.goalCorrect) return;
+
+    const nextIndex = session.currentIndex + 1;
+    if (nextIndex < session.questions.length) {
+      const updatedSession = { ...session, currentIndex: nextIndex };
+      setSession(updatedSession);
+      saveSession(updatedSession);
+      return;
+    }
+
+    const usedPrompts = new Set(session.questions.map((question) => question.prompt));
+    const questionIndex = session.questions.length;
+    let attempts = 0;
+    let candidateQuestion = generateQuestion(
+      session.grade,
+      session.point,
+      session.numberLimit,
+      `${session.seedBase}-${session.nextQuestionIndex}-${attempts}`,
+      questionIndex,
+    );
+
+    while (usedPrompts.has(candidateQuestion.prompt) && attempts < 5) {
+      attempts += 1;
+      candidateQuestion = generateQuestion(
+        session.grade,
+        session.point,
+        session.numberLimit,
+        `${session.seedBase}-${session.nextQuestionIndex}-${attempts}`,
+        questionIndex,
+      );
+    }
+
+    const updatedSession = {
+      ...session,
+      questions: [...session.questions, candidateQuestion],
+      currentIndex: nextIndex,
+      nextQuestionIndex: session.nextQuestionIndex + 1,
+    };
     setSession(updatedSession);
     saveSession(updatedSession);
   };
@@ -79,11 +133,11 @@ const Quiz = () => {
     navigate('/');
   };
 
-  const progressDisplayed = completedCount;
-  const progressPercent = calculateProgressPercent(completedSet, questions.length);
-  const atLastQuestion = questions.length > 0 && currentIndex === questions.length - 1;
+  const progressDisplayed = correctCount;
+  const progressPercent = calculateProgressPercent(correctCount, goalCorrect);
+  const isComplete = correctCount >= goalCorrect;
   const hasAnsweredCurrent = currentQuestion?.selectedChoice !== null && currentQuestion !== null;
-  const canGoNext = Boolean(hasAnsweredCurrent && !atLastQuestion);
+  const canGoNext = Boolean(hasAnsweredCurrent && !isComplete);
   const nextDisabled = !canGoNext;
   const typeLabelMap: Record<QuizQuestion['type'], string> = {
     mcq: 'Multiple choice',
@@ -104,7 +158,7 @@ const Quiz = () => {
   const missedQuestions = questions.filter(
     (question) => question.selectedChoice !== null && question.isCorrect === false,
   );
-  const isSummaryView = isReady && currentIndex >= questions.length;
+  const isSummaryView = isReady && isComplete;
 
   useEffect(() => {
     if (!isReady) {
@@ -149,6 +203,7 @@ const Quiz = () => {
   }
 
   if (isSummaryView) {
+    const duration = formatDuration(Date.now() - s.startTime);
     return (
       <main className="page">
         <section className="card">
@@ -165,10 +220,24 @@ const Quiz = () => {
           </header>
 
           <section className="summary" aria-live="polite">
-            <p className="notice">You have reached the end of this quiz session.</p>
+            <p className="notice">You reached the goal of 15 correct answers.</p>
+            <div className="completion-panel">
+              <p>
+                <strong>Session Code:</strong> {s.code}
+              </p>
+              <p>
+                <strong>Time:</strong> {duration}
+              </p>
+              <p>
+                <strong>Correct:</strong> {correctCount}/{goalCorrect}
+              </p>
+              <p>
+                <strong>Attempts:</strong> {attemptedCount}
+              </p>
+            </div>
             <h2>Summary</h2>
             <p>
-              Score: {completedCount} out of {questions.length}
+              Score: {correctCount} out of {goalCorrect}
             </p>
             <div className="missed-questions">
               <h3>Missed questions</h3>
@@ -259,8 +328,9 @@ const Quiz = () => {
           </div>
           <div className="progress-text">
             <span data-testid="progress-text">
-              Correct: {progressDisplayed}/{s.questions.length}
+              Correct: {progressDisplayed}/{goalCorrect}
             </span>
+            <span className="attempted-count">Attempted: {attemptedCount}</span>
             <span>
               Current question {currentQuestion.id}/{s.questions.length}
             </span>
@@ -368,7 +438,7 @@ const Quiz = () => {
               </p>
               <p data-testid="debug-can-go-next">canGoNext: {String(canGoNext)}</p>
               <p data-testid="debug-progress-value">
-                Progress value: {progressDisplayed}/{s.questions.length} ({progressPercent}%)
+                Progress value: {progressDisplayed}/{goalCorrect} ({progressPercent}%)
               </p>
             </div>
           )}
@@ -382,53 +452,6 @@ const Quiz = () => {
             Next
           </button>
         </footer>
-
-          {atLastQuestion && hasAnsweredCurrent && (
-            <section className="summary" aria-live="polite">
-              <p className="notice">You have reached the end of this quiz session.</p>
-              <h2>Summary</h2>
-              <p>
-                Score: {completedCount} out of {questions.length}
-              </p>
-              <div className="missed-questions">
-                <h3>Missed questions</h3>
-                {missedQuestions.length ? (
-                  <ul>
-                    {missedQuestions.map((question) => {
-                      const explanation = createFriendlyExplanation(
-                        s.grade,
-                        question.explanationSteps,
-                        question.answer,
-                      );
-                      return (
-                        <li key={question.id}>
-                          <p>
-                            Question {question.id}: {question.prompt}
-                          </p>
-                          <p>Correct answer: {question.answer}</p>
-                          <div className="explanation">
-                            <p>Explanation:</p>
-                            <ul className="explanation-steps">
-                              {question.explanationSteps.length ? (
-                                question.explanationSteps.map((step, index) => (
-                                  <li key={`${question.id}-${index}`}>{step}</li>
-                                ))
-                              ) : (
-                                <li>No steps available.</li>
-                              )}
-                            </ul>
-                            {explanation && <p className="explanation-summary">{explanation}</p>}
-                          </div>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                ) : (
-                  <p>No missed questions. Nice work!</p>
-                )}
-              </div>
-            </section>
-          )}
       </section>
     </main>
   );

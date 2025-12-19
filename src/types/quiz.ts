@@ -21,6 +21,12 @@ export type QuizSession = {
   grade: number;
   point: number;
   numberLimit: number;
+  goalCorrect: number;
+  correctCount: number;
+  attemptedCount: number;
+  startTime: number;
+  seedBase: string;
+  nextQuestionIndex: number;
   allowedCcssCodes: string[];
   questions: QuizQuestion[];
   currentIndex: number;

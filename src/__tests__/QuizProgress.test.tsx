@@ -1,14 +1,16 @@
 import { MemoryRouter } from 'react-router-dom';
-import { beforeEach, describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Quiz from '../pages/Quiz';
 import { buildSession, saveSession } from '../utils/session';
 
-const renderQuizWithSeed = (seed: string) => {
+const renderQuizWithSeed = (seed: string, options?: { advanceTimers?: boolean }) => {
   const session = buildSession(3, 2, 10, seed);
   saveSession(session);
-  const user = userEvent.setup();
+  const user = userEvent.setup(
+    options?.advanceTimers ? { advanceTimers: vi.advanceTimersByTime } : undefined,
+  );
 
   render(
     <MemoryRouter initialEntries={['/quiz']}>
@@ -89,7 +91,68 @@ describe('Quiz scoring and progress updates', () => {
     );
     await user.click(screen.getByTestId(`option-${correctIndex}`));
 
-    const expectedPercent = Math.round((1 / session.questions.length) * 100);
+    const expectedPercent = Math.round((1 / session.goalCorrect) * 100);
     expect(screen.getByTestId('progress-fill')).toHaveStyle({ width: `${expectedPercent}%` });
+  });
+
+  it('does not end the session after 15 attempts without 15 correct', async () => {
+    const { session, user } = renderQuizWithSeed('ATTEMPT-COUNT');
+
+    for (let index = 0; index < 15; index += 1) {
+      const question = session.questions[index];
+      await screen.findByText(question.prompt);
+      const wrongIndex = question.options.findIndex((option) => option !== question.answer);
+      await user.click(screen.getByTestId(`option-${wrongIndex}`));
+      if (index < 14) {
+        await user.click(screen.getByRole('button', { name: /Next/i }));
+      }
+    }
+
+    await user.click(screen.getByRole('button', { name: /Next/i }));
+
+    expect(screen.getByTestId('progress-text')).toHaveTextContent('Correct: 0/15');
+    expect(screen.queryByText(/You reached the goal of 15 correct answers/i)).not.toBeInTheDocument();
+  });
+
+  it('ends the session when correctCount reaches 15', async () => {
+    const { session, user } = renderQuizWithSeed('COMPLETE-SESSION');
+
+    for (let index = 0; index < 15; index += 1) {
+      const question = session.questions[index];
+      await screen.findByText(question.prompt);
+      const correctIndex = question.options.findIndex((option) => option === question.answer);
+      await user.click(screen.getByTestId(`option-${correctIndex}`));
+      if (index < 14) {
+        await user.click(screen.getByRole('button', { name: /Next/i }));
+      }
+    }
+
+    expect(await screen.findByText('Correct: 15/15')).toBeInTheDocument();
+  });
+
+  it('shows duration and session code on completion', async () => {
+    vi.useFakeTimers();
+    vi.setSystemTime(new Date('2024-01-01T00:00:00Z'));
+    const { session, user } = renderQuizWithSeed('SHOW-DURATION', { advanceTimers: true });
+
+    for (let index = 0; index < 14; index += 1) {
+      const question = session.questions[index];
+      await screen.findByText(question.prompt);
+      const correctIndex = question.options.findIndex((option) => option === question.answer);
+      await user.click(screen.getByTestId(`option-${correctIndex}`));
+      await user.click(screen.getByRole('button', { name: /Next/i }));
+    }
+
+    vi.setSystemTime(new Date('2024-01-01T00:01:05Z'));
+    const finalQuestion = session.questions[14];
+    await screen.findByText(finalQuestion.prompt);
+    const finalCorrectIndex = finalQuestion.options.findIndex(
+      (option) => option === finalQuestion.answer,
+    );
+    await user.click(screen.getByTestId(`option-${finalCorrectIndex}`));
+
+    expect(await screen.findByText(`Session Code: ${session.code}`)).toBeInTheDocument();
+    expect(screen.getByText('Time: 01:05')).toBeInTheDocument();
+    vi.useRealTimers();
   });
 });

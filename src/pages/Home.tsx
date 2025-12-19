@@ -59,7 +59,7 @@ const Home = () => {
       </div>
       <section className="card">
         <h1 className="title">MathIXL Quiz Builder</h1>
-        <p className="subtitle">Choose your settings to start a 15-question practice session.</p>
+        <p className="subtitle">Choose your settings to start a session that ends after 15 correct answers.</p>
 
         <form className="form" onSubmit={handleSubmit}>
           <label className="field">
