@@ -155,9 +155,7 @@ const Quiz = () => {
   const completedCorrectList = Array.from(completedSet)
     .sort((a, b) => a - b)
     .map((index) => questions[index]?.id ?? index);
-  const missedQuestions = questions.filter(
-    (question) => question.selectedChoice !== null && question.isCorrect === false,
-  );
+  
   const isSummaryView = isReady && isComplete;
 
   useEffect(() => {
