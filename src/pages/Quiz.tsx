@@ -50,6 +50,7 @@ const Quiz = () => {
   const correctCount = session?.correctCount ?? completedSet.size;
   const attemptedCount = session?.attemptedCount ?? 0;
   const goalCorrect = session?.goalCorrect ?? 15;
+  const maxAttempts = 25;
 
   const handleAnswer = (optionIndex: number) => {
     if (!session || !currentQuestion) return;
@@ -83,7 +84,7 @@ const Quiz = () => {
 
   const handleNext = () => {
     if (!session || !currentQuestion) return;
-    if (session.correctCount >= session.goalCorrect) return;
+    if (session.correctCount >= session.goalCorrect || session.attemptedCount >= maxAttempts) return;
 
     const nextIndex = session.currentIndex + 1;
     if (nextIndex < session.questions.length) {
@@ -134,8 +135,9 @@ const Quiz = () => {
   const progressDisplayed = correctCount;
   const progressPercent = calculateProgressPercent(correctCount, goalCorrect);
   const isComplete = correctCount >= goalCorrect;
+  const hasReachedMaxAttempts = attemptedCount >= maxAttempts;
   const hasAnsweredCurrent = currentQuestion?.selectedChoice !== null && currentQuestion !== null;
-  const canGoNext = Boolean(hasAnsweredCurrent && !isComplete);
+  const canGoNext = Boolean(hasAnsweredCurrent && !isComplete && !hasReachedMaxAttempts);
   const nextDisabled = !canGoNext;
   const typeLabelMap: Record<QuizQuestion['type'], string> = {
     mcq: 'Multiple choice',
@@ -150,7 +152,7 @@ const Quiz = () => {
   const showFeedback = Boolean(currentQuestion && currentQuestion.selectedChoice !== null);
   const lastAnswerWasCorrect =
     currentQuestion?.selectedChoice === null || !currentQuestion ? null : currentQuestion.isCorrect;
-  const isSummaryView = isReady && isComplete;
+  const isSummaryView = isReady && (isComplete || hasReachedMaxAttempts);
 
   useEffect(() => {
     if (!isReady) {
@@ -198,6 +200,9 @@ const Quiz = () => {
 
   if (isSummaryView) {
     const duration = formatDuration(Date.now() - s.startTime);
+    const summaryNotice = isComplete
+      ? `You reached the goal of ${goalCorrect} correct answers.`
+      : `You reached the maximum of ${maxAttempts} questions.`;
     return (
       <main className="page">
         <section className="card">
@@ -212,7 +217,7 @@ const Quiz = () => {
           </header>
 
           <section className="summary" aria-live="polite">
-            <p className="notice">You reached the goal of 15 correct answers.</p>
+            <p className="notice">{summaryNotice}</p>
             <div className="completion-panel">
               <p>
                 <strong>Session Code:</strong> {s.code}

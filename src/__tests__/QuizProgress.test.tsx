@@ -95,15 +95,15 @@ describe('Quiz scoring and progress updates', () => {
     expect(screen.getByTestId('progress-fill')).toHaveStyle({ width: `${expectedPercent}%` });
   });
 
-  it('does not end the session after 15 attempts without 15 correct', async () => {
+  it('does not end the session after 24 attempts without 15 correct', async () => {
     const { session, user } = renderQuizWithSeed('ATTEMPT-COUNT');
 
-    for (let index = 0; index < 15; index += 1) {
+    for (let index = 0; index < 24; index += 1) {
       const question = session.questions[index];
       await screen.findByText(question.prompt);
       const wrongIndex = question.options.findIndex((option) => option !== question.answer);
       await user.click(screen.getByTestId(`option-${wrongIndex}`));
-      if (index < 14) {
+      if (index < 23) {
         await user.click(screen.getByRole('button', { name: /Next/i }));
       }
     }
@@ -112,6 +112,23 @@ describe('Quiz scoring and progress updates', () => {
 
     expect(screen.getByTestId('progress-text')).toHaveTextContent('Correct: 0/15');
     expect(screen.queryByText(/You reached the goal of 15 correct answers/i)).not.toBeInTheDocument();
+  });
+
+  it('ends the session after 25 attempts without 15 correct', async () => {
+    const { session, user } = renderQuizWithSeed('MAX-ATTEMPTS');
+
+    for (let index = 0; index < 25; index += 1) {
+      const question = session.questions[index];
+      await screen.findByText(question.prompt);
+      const wrongIndex = question.options.findIndex((option) => option !== question.answer);
+      await user.click(screen.getByTestId(`option-${wrongIndex}`));
+      if (index < 24) {
+        await user.click(screen.getByRole('button', { name: /Next/i }));
+      }
+    }
+
+    expect(await screen.findByText('You reached the maximum of 25 questions.')).toBeInTheDocument();
+    expect(screen.getByText(`Attempts: 25`)).toBeInTheDocument();
   });
 
   it('ends the session when correctCount reaches 15', async () => {
