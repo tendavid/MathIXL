@@ -27,15 +27,18 @@ const Quiz = () => {
     setSession(storedSession);
   }, [navigate]);
 
-  const currentQuestion = useMemo(() => {
-    if (!session) return null;
-    return session.questions[session.currentIndex] ?? null;
-  }, [session]);
+  const questions = session?.questions ?? [];
+  const currentIndex = session?.currentIndex ?? 0;
+  const completedSet = session?.completedSet ?? new Set<number>();
+  const allowedCodes = session?.allowedCcssCodes ?? [];
+  const isReady = Boolean(session && Array.isArray(session.questions));
 
-  const completedCount = useMemo(() => {
-    if (!session) return 0;
-    return session.completedSet.size;
-  }, [session]);
+  const currentQuestion = useMemo(() => {
+    if (!isReady) return null;
+    return questions[currentIndex] ?? null;
+  }, [currentIndex, isReady, questions]);
+
+  const completedCount = useMemo(() => completedSet.size, [completedSet]);
 
   const handleAnswer = (optionIndex: number) => {
     if (!session || !currentQuestion) return;
@@ -76,23 +79,12 @@ const Quiz = () => {
     navigate('/');
   };
 
-  if (!session || !currentQuestion) {
-    return (
-      <main className="page">
-        <section className="card">
-          <p>Loading session...</p>
-        </section>
-      </main>
-    );
-  }
-
   const progressDisplayed = completedCount;
-  const progressPercent = calculateProgressPercent(session.completedSet, session.questions.length);
-  const atLastQuestion = session.currentIndex === session.questions.length - 1;
-  const hasAnsweredCurrent = currentQuestion.selectedChoice !== null;
-  const canGoNext = hasAnsweredCurrent && !atLastQuestion;
+  const progressPercent = calculateProgressPercent(completedSet, questions.length);
+  const atLastQuestion = questions.length > 0 && currentIndex === questions.length - 1;
+  const hasAnsweredCurrent = currentQuestion?.selectedChoice !== null && currentQuestion !== null;
+  const canGoNext = Boolean(hasAnsweredCurrent && !atLastQuestion);
   const nextDisabled = !canGoNext;
-  const allowedCodes = session.allowedCcssCodes ?? [];
   const typeLabelMap: Record<QuizQuestion['type'], string> = {
     mcq: 'Multiple choice',
   };
@@ -101,24 +93,29 @@ const Quiz = () => {
     incorrect: 'Incorrect',
     unanswered: 'Pending',
   };
-  const currentStatus = evaluateStatus(currentQuestion);
+  const currentStatus = currentQuestion ? evaluateStatus(currentQuestion) : 'unanswered';
   const friendlyExplanation = createFriendlyExplanation(
-    session.grade,
-    currentQuestion.explanationSteps,
-    currentQuestion.answer,
+    session?.grade ?? 0,
+    currentQuestion?.explanationSteps ?? [],
+    currentQuestion?.answer ?? '',
   );
-  const explanationSteps = currentQuestion.explanationSteps;
-  const showFeedback = currentQuestion.selectedChoice !== null;
+  const explanationSteps = currentQuestion?.explanationSteps ?? [];
+  const showFeedback = Boolean(currentQuestion && currentQuestion.selectedChoice !== null);
   const lastAnswerWasCorrect =
-    currentQuestion.selectedChoice === null ? null : currentQuestion.isCorrect;
-  const completedCorrectList = Array.from(session.completedSet)
+    currentQuestion?.selectedChoice === null || !currentQuestion ? null : currentQuestion.isCorrect;
+  const completedCorrectList = Array.from(completedSet)
     .sort((a, b) => a - b)
-    .map((index) => session.questions[index]?.id ?? index);
-  const missedQuestions = session.questions.filter(
+    .map((index) => questions[index]?.id ?? index);
+  const missedQuestions = questions.filter(
     (question) => question.selectedChoice !== null && question.isCorrect === false,
   );
+  const isSummaryView = isReady && currentIndex >= questions.length;
 
   useEffect(() => {
+    if (!isReady) {
+      previousProgressRef.current = 0;
+      return;
+    }
     if (!import.meta.env.DEV) {
       previousProgressRef.current = progressDisplayed;
       return;
@@ -128,6 +125,97 @@ const Quiz = () => {
     }
     previousProgressRef.current = progressDisplayed;
   }, [lastAnswerWasCorrect, progressDisplayed]);
+
+  if (!isReady) {
+    return (
+      <main className="page">
+        <section className="card">
+          <p>Loading quiz…</p>
+        </section>
+      </main>
+    );
+  }
+
+  if (isSummaryView) {
+    return (
+      <main className="page">
+        <section className="card">
+          <header className="quiz-header">
+            <div>
+              <p className="label">Session Code</p>
+              <p className="code">{session?.code ?? ''}</p>
+            </div>
+            <div className="meta">
+              <span>Grade {session?.grade ?? 0}</span>
+              <span>Point {session?.point ?? 0}</span>
+              <span>Up to {session?.numberLimit ?? 0}</span>
+            </div>
+          </header>
+
+          <section className="summary" aria-live="polite">
+            <p className="notice">You have reached the end of this quiz session.</p>
+            <h2>Summary</h2>
+            <p>
+              Score: {completedCount} out of {questions.length}
+            </p>
+            <div className="missed-questions">
+              <h3>Missed questions</h3>
+              {missedQuestions.length ? (
+                <ul>
+                  {missedQuestions.map((question) => {
+                    const explanation = createFriendlyExplanation(
+                      session?.grade ?? 0,
+                      question.explanationSteps,
+                      question.answer,
+                    );
+                    return (
+                      <li key={question.id}>
+                        <p>
+                          Question {question.id}: {question.prompt}
+                        </p>
+                        <p>Correct answer: {question.answer}</p>
+                        <div className="explanation">
+                          <p>Explanation:</p>
+                          <ul className="explanation-steps">
+                            {question.explanationSteps.length ? (
+                              question.explanationSteps.map((step, index) => (
+                                <li key={`${question.id}-${index}`}>{step}</li>
+                              ))
+                            ) : (
+                              <li>No steps available.</li>
+                            )}
+                          </ul>
+                          {explanation && <p className="explanation-summary">{explanation}</p>}
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              ) : (
+                <p>No missed questions. Nice work!</p>
+              )}
+            </div>
+          </section>
+
+          <footer className="actions">
+            <button type="button" className="secondary" onClick={handleReset}>
+              End Session
+            </button>
+          </footer>
+        </section>
+      </main>
+    );
+  }
+
+  if (!currentQuestion) {
+    return (
+      <main className="page">
+        <section className="card">
+          <p>Loading quiz…</p>
+        </section>
+      </main>
+    );
+  }
 
   return (
     <main className="page">
@@ -283,52 +371,52 @@ const Quiz = () => {
           </button>
         </footer>
 
-        {atLastQuestion && hasAnsweredCurrent && (
-          <section className="summary" aria-live="polite">
-            <p className="notice">You have reached the end of this quiz session.</p>
-            <h2>Summary</h2>
-            <p>
-              Score: {completedCount} out of {session.questions.length}
-            </p>
-            <div className="missed-questions">
-              <h3>Missed questions</h3>
-              {missedQuestions.length ? (
-                <ul>
-                  {missedQuestions.map((question) => {
-                    const explanation = createFriendlyExplanation(
-                      session.grade,
-                      question.explanationSteps,
-                      question.answer,
-                    );
-                    return (
-                      <li key={question.id}>
-                        <p>
-                          Question {question.id}: {question.prompt}
-                        </p>
-                        <p>Correct answer: {question.answer}</p>
-                        <div className="explanation">
-                          <p>Explanation:</p>
-                          <ul className="explanation-steps">
-                            {question.explanationSteps.length ? (
-                              question.explanationSteps.map((step, index) => (
-                                <li key={`${question.id}-${index}`}>{step}</li>
-                              ))
-                            ) : (
-                              <li>No steps available.</li>
-                            )}
-                          </ul>
-                          {explanation && <p className="explanation-summary">{explanation}</p>}
-                        </div>
-                      </li>
-                    );
-                  })}
-                </ul>
-              ) : (
-                <p>No missed questions. Nice work!</p>
-              )}
-            </div>
-          </section>
-        )}
+          {atLastQuestion && hasAnsweredCurrent && (
+            <section className="summary" aria-live="polite">
+              <p className="notice">You have reached the end of this quiz session.</p>
+              <h2>Summary</h2>
+              <p>
+                Score: {completedCount} out of {questions.length}
+              </p>
+              <div className="missed-questions">
+                <h3>Missed questions</h3>
+                {missedQuestions.length ? (
+                  <ul>
+                    {missedQuestions.map((question) => {
+                      const explanation = createFriendlyExplanation(
+                        session?.grade ?? 0,
+                        question.explanationSteps,
+                        question.answer,
+                      );
+                      return (
+                        <li key={question.id}>
+                          <p>
+                            Question {question.id}: {question.prompt}
+                          </p>
+                          <p>Correct answer: {question.answer}</p>
+                          <div className="explanation">
+                            <p>Explanation:</p>
+                            <ul className="explanation-steps">
+                              {question.explanationSteps.length ? (
+                                question.explanationSteps.map((step, index) => (
+                                  <li key={`${question.id}-${index}`}>{step}</li>
+                                ))
+                              ) : (
+                                <li>No steps available.</li>
+                              )}
+                            </ul>
+                            {explanation && <p className="explanation-summary">{explanation}</p>}
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <p>No missed questions. Nice work!</p>
+                )}
+              </div>
+            </section>
+          )}
       </section>
     </main>
   );
