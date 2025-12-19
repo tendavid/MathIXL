@@ -17,18 +17,18 @@ const answerQuestionAtIndex = (session, questionIndex, correct) => {
     index === questionIndex ? { ...item, selectedChoice, isCorrect } : item,
   );
 
-  const completedQuestions = new Set(session.completedQuestions);
+  const completedSet = new Set(session.completedSet);
   if (isCorrect) {
-    completedQuestions.add(questionIndex);
+    completedSet.add(questionIndex);
   } else {
-    completedQuestions.delete(questionIndex);
+    completedSet.delete(questionIndex);
   }
 
-  return { ...session, questions: updatedQuestions, completedQuestions, currentIndex: questionIndex };
+  return { ...session, questions: updatedQuestions, completedSet, currentIndex: questionIndex };
 };
 
 const attemptAdvance = (session) => {
-  if (!session.completedQuestions.has(session.currentIndex)) return session.currentIndex;
+  if (!session.completedSet.has(session.currentIndex)) return session.currentIndex;
   return Math.min(session.questions.length - 1, session.currentIndex + 1);
 };
 
@@ -42,7 +42,7 @@ describe('quiz UI progression', () => {
 
     assert.equal(status, 'incorrect');
     assert.equal(nextIndex, 0);
-    assert.equal(updatedSession.completedQuestions.size, 0);
+    assert.equal(updatedSession.completedSet.size, 0);
   });
 
   it('correct answer advances exactly one step', () => {
@@ -52,7 +52,7 @@ describe('quiz UI progression', () => {
     const nextIndex = attemptAdvance(updatedSession);
 
     assert.equal(nextIndex, 1);
-    assert.equal(updatedSession.completedQuestions.size, 1);
+    assert.equal(updatedSession.completedSet.size, 1);
   });
 
   it('allows retrying an incorrect answer before advancing', () => {
@@ -63,7 +63,7 @@ describe('quiz UI progression', () => {
     const nextIndex = attemptAdvance(retry);
 
     assert.equal(nextIndex, 1);
-    assert.equal(retry.completedQuestions.size, 1);
+    assert.equal(retry.completedSet.size, 1);
   });
 
   it('progress only counts completed questions', () => {
@@ -72,9 +72,9 @@ describe('quiz UI progression', () => {
     const secondCorrect = answerQuestionAtIndex(firstCorrect, 1, true);
     const incorrect = answerQuestionAtIndex(secondCorrect, 2, false);
 
-    const percent = calculateProgressPercent(incorrect.completedQuestions, incorrect.questions.length);
+    const percent = calculateProgressPercent(incorrect.completedSet, incorrect.questions.length);
 
-    assert.equal(incorrect.completedQuestions.size, 2);
+    assert.equal(incorrect.completedSet.size, 2);
     assert.equal(percent, Math.round((2 / incorrect.questions.length) * 100));
     assert.equal(attemptAdvance(incorrect), 2);
   });

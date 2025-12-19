@@ -29,12 +29,14 @@ describe('Quiz progression and completion gating', () => {
     const firstQuestion = session.questions[0];
 
     await screen.findByText(firstQuestion.prompt);
+    expect(screen.getByTestId('completed-label')).toHaveTextContent('Completed: 0/15');
 
     const wrongIndex = firstQuestion.options.findIndex((option) => option !== firstQuestion.answer);
     const wrongButton = screen.getByTestId(`option-${wrongIndex}`);
     await user.click(wrongButton);
 
     expect(screen.getByTestId('progress-text')).toHaveTextContent(`0/${session.questions.length}`);
+    expect(screen.getByTestId('completed-label')).toHaveTextContent('Completed: 0/15');
     expect(screen.getByTestId('debug-completed-count')).toHaveTextContent('Completed questions (0):');
     expect(screen.getByRole('button', { name: /Next/i })).toBeDisabled();
 
@@ -46,6 +48,7 @@ describe('Quiz progression and completion gating', () => {
     await user.click(correctButton);
 
     expect(screen.getByTestId('progress-text')).toHaveTextContent(`1/${session.questions.length}`);
+    expect(screen.getByTestId('completed-label')).toHaveTextContent('Completed: 1/15');
     expect(screen.getByTestId('debug-completed-count')).toHaveTextContent('Completed questions (1):');
     expect(screen.getByRole('button', { name: /Next/i })).toBeEnabled();
   });

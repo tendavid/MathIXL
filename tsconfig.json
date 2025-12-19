@@ -10,6 +10,7 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
+    "typeRoots": ["./types", "./node_modules/@types"],
     "jsx": "react-jsx",
     "strict": true,
     "noUnusedLocals": true,

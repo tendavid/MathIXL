@@ -9,8 +9,8 @@ export const evaluateStatus = (question: QuizQuestion): QuestionStatus => {
   return question.isCorrect ? 'correct' : 'incorrect';
 };
 
-export const calculateProgressPercent = (completedQuestions: Set<number>, totalQuestions: number) =>
-  Math.round((completedQuestions.size / Math.max(1, totalQuestions)) * 100);
+export const calculateProgressPercent = (completedSet: Set<number>, totalQuestions: number) =>
+  Math.round((completedSet.size / Math.max(1, totalQuestions)) * 100);
 
 const Quiz = () => {
   const navigate = useNavigate();
@@ -32,7 +32,7 @@ const Quiz = () => {
 
   const completedCount = useMemo(() => {
     if (!session) return 0;
-    return session.completedQuestions.size;
+    return session.completedSet.size;
   }, [session]);
 
   const handleAnswer = (optionIndex: number) => {
@@ -49,19 +49,19 @@ const Quiz = () => {
         : question,
     );
 
-    const completedQuestions = new Set(session.completedQuestions);
+    const completedSet = new Set(session.completedSet);
     if (isCorrect) {
-      completedQuestions.add(session.currentIndex);
+      completedSet.add(session.currentIndex);
     }
 
-    const updatedSession = { ...session, questions: updatedQuestions, completedQuestions };
+    const updatedSession = { ...session, questions: updatedQuestions, completedSet };
     setSession(updatedSession);
     saveSession(updatedSession);
   };
 
   const handleNext = () => {
     if (!session || !currentQuestion) return;
-    if (!session.completedQuestions.has(session.currentIndex)) return;
+    if (!session.completedSet.has(session.currentIndex)) return;
     const nextIndex = Math.min(session.questions.length - 1, session.currentIndex + 1);
     if (nextIndex === session.currentIndex) return;
     const updatedSession = { ...session, currentIndex: nextIndex };
@@ -85,9 +85,9 @@ const Quiz = () => {
     );
   }
 
-  const progressPercent = calculateProgressPercent(session.completedQuestions, session.questions.length);
+  const progressPercent = calculateProgressPercent(session.completedSet, session.questions.length);
   const atLastQuestion = session.currentIndex === session.questions.length - 1;
-  const nextDisabled = !session.completedQuestions.has(session.currentIndex) || atLastQuestion;
+  const nextDisabled = !session.completedSet.has(session.currentIndex) || atLastQuestion;
   const allowedCodes = session.allowedCcssCodes ?? [];
   const typeLabelMap: Record<QuizQuestion['type'], string> = {
     mcq: 'Multiple choice',
@@ -133,6 +133,9 @@ const Quiz = () => {
           <div className="progress-text">
             <span data-testid="progress-text">
               Progress {completedCount}/{session.questions.length}
+            </span>
+            <span data-testid="completed-label">
+              Completed: {session.completedSet.size}/{session.questions.length}
             </span>
             <span>
               Current question {session.currentIndex + 1}/{session.questions.length}
@@ -225,7 +228,7 @@ const Quiz = () => {
               <p data-testid="debug-completed-count">Completed questions ({completedCount}):</p>
               <ul data-testid="debug-completed-list">
                 {completedCount ? (
-                  Array.from(session.completedQuestions)
+                  Array.from(session.completedSet)
                     .sort((a, b) => a - b)
                     .map((value) => (
                       <li key={value}>Index {value + 1}</li>
@@ -247,7 +250,7 @@ const Quiz = () => {
           </button>
         </footer>
 
-        {atLastQuestion && session.completedQuestions.has(session.currentIndex) && (
+        {atLastQuestion && session.completedSet.has(session.currentIndex) && (
           <p className="notice">You have reached the end of this quiz session.</p>
         )}
       </section>
