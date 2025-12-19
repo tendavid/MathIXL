@@ -94,11 +94,6 @@ const Quiz = () => {
     unanswered: 'Pending',
   };
   const currentStatus = currentQuestion ? evaluateStatus(currentQuestion) : 'unanswered';
-  const friendlyExplanation = createFriendlyExplanation(
-    session.grade,
-    currentQuestion?.explanationSteps ?? [],
-    currentQuestion?.answer ?? '',
-  );
   const explanationSteps = currentQuestion?.explanationSteps ?? [];
   const showFeedback = Boolean(currentQuestion && currentQuestion.selectedChoice !== null);
   const lastAnswerWasCorrect =
@@ -136,6 +131,13 @@ const Quiz = () => {
     );
   }
 
+  const s = session;
+  const friendlyExplanation = createFriendlyExplanation(
+    s.grade,
+    currentQuestion?.explanationSteps ?? [],
+    currentQuestion?.answer ?? '',
+  );
+
   if (!isReady) {
     return (
       <main className="page">
@@ -153,12 +155,12 @@ const Quiz = () => {
           <header className="quiz-header">
             <div>
               <p className="label">Session Code</p>
-              <p className="code">{session.code}</p>
+              <p className="code">{s.code}</p>
             </div>
             <div className="meta">
-              <span>Grade {session.grade}</span>
-              <span>Point {session.point}</span>
-              <span>Up to {session.numberLimit}</span>
+              <span>Grade {s.grade}</span>
+              <span>Point {s.point}</span>
+              <span>Up to {s.numberLimit}</span>
             </div>
           </header>
 
@@ -174,7 +176,7 @@ const Quiz = () => {
                 <ul>
                   {missedQuestions.map((question) => {
                     const explanation = createFriendlyExplanation(
-                      session.grade,
+                      s.grade,
                       question.explanationSteps,
                       question.answer,
                     );
@@ -233,12 +235,12 @@ const Quiz = () => {
         <header className="quiz-header">
           <div>
             <p className="label">Session Code</p>
-            <p className="code">{session.code}</p>
+            <p className="code">{s.code}</p>
           </div>
           <div className="meta">
-            <span>Grade {session.grade}</span>
-            <span>Point {session.point}</span>
-            <span>Up to {session.numberLimit}</span>
+            <span>Grade {s.grade}</span>
+            <span>Point {s.point}</span>
+            <span>Up to {s.numberLimit}</span>
           </div>
 
           <details className="ccss-allowed">
@@ -257,10 +259,10 @@ const Quiz = () => {
           </div>
           <div className="progress-text">
             <span data-testid="progress-text">
-              Correct: {progressDisplayed}/{session.questions.length}
+              Correct: {progressDisplayed}/{s.questions.length}
             </span>
             <span>
-              Current question {currentQuestion.id}/{session.questions.length}
+              Current question {currentQuestion.id}/{s.questions.length}
             </span>
           </div>
         </div>
@@ -349,7 +351,7 @@ const Quiz = () => {
           </button>
           {showDebug && (
             <div className="debug-content" data-testid="debug-panel">
-              <p data-testid="debug-current-index">currentIndex: {session.currentIndex}</p>
+              <p data-testid="debug-current-index">currentIndex: {s.currentIndex}</p>
               <p data-testid="debug-progress-displayed">
                 progressDisplayed: {progressDisplayed}
               </p>
@@ -366,7 +368,7 @@ const Quiz = () => {
               </p>
               <p data-testid="debug-can-go-next">canGoNext: {String(canGoNext)}</p>
               <p data-testid="debug-progress-value">
-                Progress value: {progressDisplayed}/{session.questions.length} ({progressPercent}%)
+                Progress value: {progressDisplayed}/{s.questions.length} ({progressPercent}%)
               </p>
             </div>
           )}
@@ -394,7 +396,7 @@ const Quiz = () => {
                   <ul>
                     {missedQuestions.map((question) => {
                       const explanation = createFriendlyExplanation(
-                        session.grade,
+                        s.grade,
                         question.explanationSteps,
                         question.answer,
                       );
