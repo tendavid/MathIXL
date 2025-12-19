@@ -53,53 +53,55 @@ const Home = () => {
         <form className="form" onSubmit={handleSubmit}>
           <label className="field">
             <span className="label">Grade</span>
-            <select value={grade} onChange={(e) => setGrade(Number(e.target.value))} required>
-              <option value="" disabled>
-                Select grade
-              </option>
+            <div className="card-grid">
               {grades.map((value) => (
-                <option key={value} value={value}>
+                <button
+                  key={value}
+                  type="button"
+                  className={`selector-card${grade === value ? ' selector-card--selected' : ''}`}
+                  onClick={() => setGrade(value)}
+                >
                   Grade {value}
-                </option>
+                </button>
               ))}
-            </select>
+            </div>
           </label>
 
           <label className="field">
             <span className="label">Progression</span>
-            <select
-              value={point}
-              onChange={(e) => setPoint(Number(e.target.value))}
-              required
-              disabled={grade === ''}
-            >
-              <option value="" disabled>
-                Select progression level
-              </option>
+            <div className="card-grid">
+              {pointOptions.length === 0 ? (
+                <span className="field-hint">Select a grade to unlock progression levels.</span>
+              ) : null}
               {pointOptions.map((option) => (
-                <option key={option.value} value={option.value}>
+                <button
+                  key={option.value}
+                  type="button"
+                  className={`selector-card${point === option.value ? ' selector-card--selected' : ''}`}
+                  onClick={() => setPoint(option.value)}
+                >
                   {option.label}
-                </option>
+                </button>
               ))}
-            </select>
+            </div>
           </label>
 
           <label className="field">
             <span className="label">Number limit</span>
-            <select
-              value={numberLimit}
-              onChange={(e) => setNumberLimit(Number(e.target.value))}
-              required
-            >
-              <option value="" disabled>
-                Select a number between 1 and 50
-              </option>
+            <div className="card-grid card-grid--compact">
               {numberRange.map((value) => (
-                <option key={value} value={value}>
+                <button
+                  key={value}
+                  type="button"
+                  className={`selector-card selector-card--compact${
+                    numberLimit === value ? ' selector-card--selected' : ''
+                  }`}
+                  onClick={() => setNumberLimit(value)}
+                >
                   {value}
-                </option>
+                </button>
               ))}
-            </select>
+            </div>
           </label>
 
           <button className="primary" type="submit" disabled={!canStart}>
