@@ -41,10 +41,14 @@ const Home = () => {
   return (
     <main className="page">
       <div className="page-banner">
-        <h1 className="page-banner__title">Elementary Math Quiz</h1>
+        <h1 className="page-banner__title">Daily Math Quiz</h1>
       </div>
       <section className="card">
-        <p className="subtitle">Choose your settings to start a 25-question practice session.</p>
+        <p className="subtitle">
+          Choose your setting to start 15 daily math quiz session.
+          <br />
+          The session ends after 15 correct answers or a total of 25 questions.
+        </p>
 
         <form className="form" onSubmit={handleSubmit}>
           <label className="field">
