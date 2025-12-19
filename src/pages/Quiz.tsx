@@ -27,21 +27,11 @@ const Quiz = () => {
     setSession(storedSession);
   }, [navigate]);
 
-  if (!session) {
-    return (
-      <main className="page">
-        <section className="card">
-          <p>Loading quiz…</p>
-        </section>
-      </main>
-    );
-  }
-
-  const questions = session.questions;
-  const currentIndex = session.currentIndex;
-  const completedSet = session.completedSet;
-  const allowedCodes = session.allowedCcssCodes;
-  const isReady = Array.isArray(session.questions);
+  const questions = session?.questions ?? [];
+  const currentIndex = session?.currentIndex ?? 0;
+  const completedSet = session?.completedSet ?? new Set<number>();
+  const allowedCodes = session?.allowedCcssCodes ?? [];
+  const isReady = Boolean(session && Array.isArray(session.questions));
 
   const currentQuestion = useMemo(() => {
     if (!isReady) return null;
@@ -135,6 +125,16 @@ const Quiz = () => {
     }
     previousProgressRef.current = progressDisplayed;
   }, [lastAnswerWasCorrect, progressDisplayed]);
+
+  if (!session) {
+    return (
+      <main className="page">
+        <section className="card">
+          <p>Loading quiz…</p>
+        </section>
+      </main>
+    );
+  }
 
   if (!isReady) {
     return (
