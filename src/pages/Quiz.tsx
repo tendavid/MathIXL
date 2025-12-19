@@ -5,6 +5,7 @@ import { QuestionStatus, QuizQuestion, QuizSession } from '../types/quiz';
 import { createFriendlyExplanation, toChoiceLetter } from '../utils/explanation';
 import { generateQuestion } from '../utils/questionGenerator';
 import { getProgressionLabel } from '../utils/progressionLabel';
+import { playCorrect, playWrong } from '../utils/sfx';
 
 export const evaluateStatus = (question: QuizQuestion): QuestionStatus => {
   if (question.isCorrect === null) return 'unanswered';
@@ -27,6 +28,20 @@ const Quiz = () => {
   const navigate = useNavigate();
   const [session, setSession] = useState<QuizSession | null>(null);
   const previousProgressRef = useRef(0);
+  const correctPhraseIndexRef = useRef(0);
+  const feedbackTimeoutRef = useRef<number | null>(null);
+  const [feedbackMessage, setFeedbackMessage] = useState<string | null>(null);
+  const [feedbackVariant, setFeedbackVariant] = useState<'correct' | 'incorrect' | null>(null);
+  const [soundEnabled, setSoundEnabled] = useState(() => {
+    if (typeof window === 'undefined') return true;
+    const stored = window.localStorage.getItem('quiz-sound-enabled');
+    if (stored === null) return true;
+    return stored === 'true';
+  });
+  const correctPhrases = useMemo(
+    () => ['Great job!', 'Nice work!', 'Awesome!', 'You got it!', 'Keep it up!'],
+    [],
+  );
 
   useEffect(() => {
     const storedSession = loadSession();
@@ -80,6 +95,31 @@ const Quiz = () => {
     };
     setSession(updatedSession);
     saveSession(updatedSession);
+
+    const nextMessage = isCorrect
+      ? correctPhrases[correctPhraseIndexRef.current % correctPhrases.length]
+      : 'Not quite — try again.';
+    if (isCorrect) {
+      correctPhraseIndexRef.current =
+        (correctPhraseIndexRef.current + 1) % correctPhrases.length;
+    }
+    setFeedbackMessage(nextMessage);
+    setFeedbackVariant(isCorrect ? 'correct' : 'incorrect');
+    if (feedbackTimeoutRef.current) {
+      window.clearTimeout(feedbackTimeoutRef.current);
+    }
+    feedbackTimeoutRef.current = window.setTimeout(() => {
+      setFeedbackMessage(null);
+      setFeedbackVariant(null);
+    }, 1200);
+
+    if (soundEnabled) {
+      if (isCorrect) {
+        playCorrect();
+      } else {
+        playWrong();
+      }
+    }
   };
 
   const handleNext = () => {
@@ -168,6 +208,20 @@ const Quiz = () => {
     }
     previousProgressRef.current = progressDisplayed;
   }, [lastAnswerWasCorrect, progressDisplayed]);
+
+  useEffect(() => {
+    if (feedbackTimeoutRef.current) {
+      window.clearTimeout(feedbackTimeoutRef.current);
+      feedbackTimeoutRef.current = null;
+    }
+    setFeedbackMessage(null);
+    setFeedbackVariant(null);
+  }, [currentQuestion?.id]);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    window.localStorage.setItem('quiz-sound-enabled', String(soundEnabled));
+  }, [soundEnabled]);
 
   if (!session) {
     return (
@@ -334,6 +388,30 @@ const Quiz = () => {
                 </button>
               );
             })}
+          </div>
+
+          {feedbackMessage && (
+            <div
+              className={`answer-feedback ${feedbackVariant ?? ''}`}
+              aria-live="polite"
+            >
+              {feedbackMessage}
+            </div>
+          )}
+
+          <div className="quiz-settings">
+            <label className="sound-toggle" htmlFor="sound-toggle">
+              Sound:
+            </label>
+            <button
+              id="sound-toggle"
+              type="button"
+              className="sound-toggle-button"
+              onClick={() => setSoundEnabled((prev) => !prev)}
+              aria-pressed={soundEnabled}
+            >
+              {soundEnabled ? 'On' : 'Off'}
+            </button>
           </div>
 
           {showFeedback && (
