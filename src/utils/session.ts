@@ -1,6 +1,6 @@
 import { describeAllowedCcssCodes, generateQuestions } from './questionGenerator';
 import { createFriendlyExplanation, normalizeExplanationSteps } from './explanation';
-import { QuizSession } from '../types/quiz';
+import { QuizQuestion, QuizSession } from '../types/quiz';
 
 const SESSION_STORAGE_KEY = 'mathixl-quiz-session';
 
@@ -49,7 +49,7 @@ export const loadSession = (): QuizSession | null => {
     const completed = Array.isArray((parsed as unknown as { completedSet?: number[] }).completedSet)
       ? new Set<number>((parsed as unknown as { completedSet: number[] }).completedSet)
       : legacyCompleted ?? new Set<number>();
-    const questions = parsed.questions.map((question, index) => {
+    const questions: QuizQuestion[] = parsed.questions.map((question, index): QuizQuestion => {
       const legacyStatus = (question as unknown as { status?: 'correct' | 'incorrect' | 'unanswered' }).status;
       const fallbackIsCorrect =
         legacyStatus === 'correct' ? true : legacyStatus === 'incorrect' ? false : null;
@@ -64,8 +64,8 @@ export const loadSession = (): QuizSession | null => {
 
       return {
         ...question,
-        templateId: question.templateId ?? 'unknown-template',
-        type: 'mcq',
+        templateId: typeof question.templateId === 'string' ? question.templateId : 'unknown-template',
+        type: 'mcq' as const,
         selectedChoice: question.selectedChoice ?? legacyChoice ?? null,
         isCorrect: question.isCorrect ?? fallbackIsCorrect ?? null,
         id: question.id ?? index + 1,
