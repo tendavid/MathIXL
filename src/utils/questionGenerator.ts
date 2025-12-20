@@ -226,7 +226,7 @@ const buildMeasurementQuestion = (args: TemplateBuilderArgs): TemplateBuildResul
   ]);
 
   return {
-    prompt: 'Select the total duration if a lesson runs and then pauses as described.',
+    prompt: `A lesson runs for ${minutes} minutes and then pauses for ${extra} minutes. How many minutes is that in total?`,
     answer: `${totalMinutes} minutes`,
     ...withExplanation([
       `Start with ${minutes} minutes of activity.`,
