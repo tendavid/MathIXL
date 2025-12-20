@@ -240,7 +240,9 @@ const expandedCompare = (rand: SeededRandom, hundreds: number, tens: number, one
 
 const buildMeasurementQuestion = (args: TemplateBuilderArgs): TemplateBuildResult => {
   const { rand, difficulty } = args;
-  const minutes = scaleWithDifficulty(difficulty, 15, 90);
+  const minMinutes = scaleWithDifficulty(difficulty, 10, 60);
+  const maxMinutes = scaleWithDifficulty(difficulty, 20, 90);
+  const minutes = randomInt(rand, minMinutes, Math.max(minMinutes, maxMinutes));
   const extra = randomInt(rand, 2, 12);
   const totalMinutes = minutes + extra;
   const options = finalizeOptions(rand, `${totalMinutes} minutes`, [
