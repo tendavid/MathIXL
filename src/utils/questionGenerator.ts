@@ -76,9 +76,33 @@ const shuffle = <T>(rand: SeededRandom, list: T[]): T[] => {
 const finalizeOptions = (rand: SeededRandom, answer: string, candidates: string[]) => {
   const unique = [answer, ...candidates.filter((option) => option !== answer)];
   const deduped = unique.filter((option, index) => unique.indexOf(option) === index);
+  const numericMatch = answer.match(/-?\d+(?:\.\d+)?/);
+  const numericValue = numericMatch ? Number(numericMatch[0]) : null;
+  let fallbackIndex = 0;
+
   while (deduped.length < 4) {
-    deduped.push(`${answer} (missing a detail ${deduped.length})`);
+    let fallback = '';
+    if (numericMatch && numericValue !== null && Number.isFinite(numericValue)) {
+      const magnitude = Math.floor(fallbackIndex / 2) + 1;
+      const direction = fallbackIndex % 2 === 0 ? 1 : -1;
+      const nextValue = numericValue + magnitude * direction;
+      fallback = answer.replace(numericMatch[0], nextValue.toString());
+    } else {
+      const fallbackLabels = [
+        `Not ${answer}`,
+        `Almost ${answer}`,
+        `A different result than ${answer}`,
+        `Close to ${answer}`,
+      ];
+      fallback = fallbackLabels[fallbackIndex % fallbackLabels.length];
+    }
+
+    fallbackIndex += 1;
+    if (!deduped.includes(fallback)) {
+      deduped.push(fallback);
+    }
   }
+
   return shuffle(rand, deduped.slice(0, 4));
 };
 
